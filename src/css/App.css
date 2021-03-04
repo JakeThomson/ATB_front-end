@@ -1,0 +1,67 @@
+* {
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: -moz-none;
+  -o-user-select: none;
+  user-select: none;
+}
+
+#wrapper{
+  position: relative;
+}
+
+.content{
+  position: relative;
+}
+
+#trade-stats-container {
+  position: relative;
+  float: left;
+  width: 480px;  height: 480px;
+  margin: 0px 0px 0px -238px;
+  background: white;
+  box-shadow: -7px -0px 15px rgba(0,0,0,0.16);
+  border-radius:50%;
+}
+
+.background{
+  position: absolute;
+  background-color: #F6F7FB;
+  width: 800px;  height: 480px;
+  top: 0;  left: 0;
+  z-index: -100;
+}
+
+#bg-square-1 {
+  position: absolute;
+  background: #8FCFD1;
+  border-radius: 0px 0px 100px 0px;
+  width: 445px;  height: 87px;
+  z-index: -99;
+}
+
+#bg-square-2 {
+  position: absolute;
+  background: #0F7173;
+  border-radius: 0px 0px 100px 0px;
+  width: 548px;  height: 64px;
+  z-index: -98;
+}
+
+#bg-square-3 {
+  position: absolute;
+  background: #0F7173;
+  border-radius: 0px 0px 0px 100px;
+  width: 53px;  height: 276px;
+  left: 747px;
+  z-index: -99;
+}
+
+#bg-square-4 {
+  position: absolute;
+  background: #8FCFD1;
+  border-radius: 0px 0px 0px 100px;
+  width: 30px;  height: 375px;
+  left: 770px;
+  z-index: -98;
+}

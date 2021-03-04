@@ -1,0 +1,33 @@
+
+#total-profit-loss-header {
+    position: absolute;
+    left: 250px; top: 206px;
+    font-size: 20px;
+    font-family: Helvetica;
+    color: #343434;
+  }
+  
+  #total-profit-loss-value {
+    position: absolute;
+    width: 220px;
+    left: 238px; top: 220px;
+    font-size: 55px;
+    font-family: Helvetica;
+    color: #343434;
+    text-align: right;
+  }
+  
+  #total-profit-loss-pct {
+    position: absolute;
+    left: 375px; top: 282px;
+    font-size: 22px;
+    font-family: Helvetica;
+    color: #343434;
+  }
+  
+  #total-profit-loss-graph {
+    position: absolute;
+    width: 120px;  height: 37px;
+    left: 250px; top: 290px;
+    background-color: #d8d8d8;
+  }

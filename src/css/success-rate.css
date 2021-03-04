@@ -1,0 +1,17 @@
+#success-rate-pct-header {
+    position: absolute;
+    left: 250px; top: 340px;
+    font-size: 20px;
+    font-family: Helvetica;
+    color: #343434;
+}
+
+#success-rate-pct {
+    position: absolute;
+    width: 155px;
+    left: 240px; top: 359px;
+    font-size: 55px;
+    font-family: Helvetica;
+    color: #343434;
+    text-align: right;
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import './css/App.css';
 import './bootstrap.min.css';
 import AtList from './components/AtList.js';
@@ -9,30 +9,76 @@ import SuccessRate from './components/SuccessRate.react.js';
 import WorldFlow from './components/WorldFlow.react.js';
 import News from './components/News.react.js';
 import TradeStats from './components/TradeStats.react';
+import socketClient  from "socket.io-client";
 
-function App() {
-  return (
-    <div id="wrapper">
-      <div id="content">
-        <WorldFlow playpause="play" date="02/01/2015" />
-        <AtStats qty="0" val="£0.0k" />
-        <AtList/>
-        <CtList/>
-        <News/>
-        <div id="trade-stats-container">
-          <TradeStats/>
-          <TotalProfit totalValue="£10,123" totalPct="(+34.4%)" figure="" />
-          <SuccessRate pct="68%" />
+class App extends Component {
+  constructor(props) {
+    super(props);
+
+    // Detect environment application is running on and choose API URL appropricately.
+    let serverURL = "";
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      serverURL = 'http://127.0.0.1:8080';
+    } else {
+      serverURL = 'https://trading-api.jake-t.codes';
+    }
+
+    this.state = {
+        server: serverURL,
+        backtestDate: ''
+    }
+  }
+
+  componentDidMount() {
+    // Set up socket connection & listeners.
+    this.socket = socketClient(this.state.server);
+    this.setupSocketListeners();
+
+    // Fill UI with data from database.
+    fetch(`${this.state.server}/backtest_properties/date`, {
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+      .then(response => response.json())
+      .then(data => this.setState({ backtestDate: data.backtest_date}));
+  }
+
+  setupSocketListeners() {
+    if(this.socket !== undefined) {
+      // Listen for updates to the backtest date.
+      this.socket.on('dateUpdated', (data) => {
+        this.setState({ backtestDate: data.backtestDate });
+      });
+    }
+  }
+
+  render() {
+
+    return (
+      <div id="wrapper">
+        <div id="content">
+          <WorldFlow playpause="play" date={this.state.backtestDate} />
+          <AtStats qty="0" val="£0.0k" />
+          <AtList/>
+          <CtList/>
+          <News/>
+          <div id="trade-stats-container">
+            <TradeStats/>
+            <TotalProfit totalValue="£10,123" totalPct="(+34.4%)" figure="" />
+            <SuccessRate pct="68%" />
+          </div>
+        </div>
+        <div className="background">
+          <div id="bg-square-1"/>
+          <div id="bg-square-2"/>
+          <div id="bg-square-3"/>
+          <div id="bg-square-4"/>
         </div>
       </div>
-      <div className="background">
-        <div id="bg-square-1"/>
-        <div id="bg-square-2"/>
-        <div id="bg-square-3"/>
-        <div id="bg-square-4"/>
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default App;

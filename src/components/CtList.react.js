@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import CtRow from './CtRow.react.js';
+// import CtRow from './CtRow.react.js';
 import '../css/ct-list.css';
 
 class CtList extends Component {

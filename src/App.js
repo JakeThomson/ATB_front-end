@@ -47,15 +47,16 @@ class App extends Component {
 
   setupSocketListeners() {
     if(this.socket !== undefined) {
+      console.log("Setting up socketlisteners");
       // Listen for updates to the backtest date.
       this.socket.on('dateUpdated', (data) => {
         this.setState({ backtestDate: data.backtestDate });
+        console.log(`Got new date: ${data.backtestDate}`)
       });
     }
   }
 
   render() {
-
     return (
       <div id="wrapper">
         <div id="content">

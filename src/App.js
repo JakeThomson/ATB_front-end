@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './css/App.css';
 import './bootstrap.min.css';
-import AtList from './components/AtList.js';
+import OtList from './components/OtList.js';
 import CtList from './components/CtList.react.js';
 import TotalProfit from './components/TotalProfit.react.js';
 import AtStats from './components/AtStats.react.js';
@@ -26,7 +26,8 @@ class App extends Component {
     this.state = {
         server: serverURL,
         backtestDate: '',
-        availableBalance: ''
+        availableBalance: '',
+        openTrades: []
     }
   }
 
@@ -72,7 +73,7 @@ class App extends Component {
           }
         })
         .then(response => response.json())
-        .then(data => this.setState({ backtestDate: data.backtestDate, availableBalance: this.formatCurrency(data.availableBalance)}));
+        .then(data => this.setState({ openTrades: data }));
       });
     }
   }
@@ -119,7 +120,7 @@ class App extends Component {
         <div id="content">
           <WorldFlow playpause="play" date={this.state.backtestDate} />
           <AtStats qty="0" val="£0.0k" />
-          <AtList/>
+          <OtList openTrades={this.state.openTrades}/>
           <CtList/>
           <News/>
           <div id="trade-stats-container">

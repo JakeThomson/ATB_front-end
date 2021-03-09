@@ -4,7 +4,7 @@ import './bootstrap.min.css';
 import OtList from './components/OtList.js';
 import CtList from './components/CtList.react.js';
 import TotalProfit from './components/TotalProfit.react.js';
-import AtStats from './components/AtStats.react.js';
+import OtStats from './components/OtStats.react.js';
 import SuccessRate from './components/SuccessRate.react.js';
 import WorldFlow from './components/WorldFlow.react.js';
 import News from './components/News.react.js';
@@ -119,7 +119,7 @@ class App extends Component {
       <div id="wrapper">
         <div id="content">
           <WorldFlow playpause="play" date={this.state.backtestDate} />
-          <AtStats qty="0" val="£0.0k" />
+          <OtStats openTrades={this.state.openTrades} />
           <OtList openTrades={this.state.openTrades}/>
           <CtList/>
           <News/>

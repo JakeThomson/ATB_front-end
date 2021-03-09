@@ -25,7 +25,8 @@ class App extends Component {
 
     this.state = {
         server: serverURL,
-        backtestDate: ''
+        backtestDate: '',
+        availableBalance: ''
     }
   }
 
@@ -35,26 +36,82 @@ class App extends Component {
     this.setupSocketListeners();
 
     // Fill UI with data from database.
-    fetch(`${this.state.server}/backtest_properties/date`, {
+    fetch(`${this.state.server}/backtest_properties`, {
       headers : { 
         'Content-Type': 'application/json',
         'Accept': 'application/json'
       }
     })
       .then(response => response.json())
-      .then(data => this.setState({ backtestDate: data.backtest_date}));
+      .then(data => this.setState({ backtestDate: data.backtestDate, availableBalance: this.formatCurrency(data.availableBalance)}));
   }
 
   setupSocketListeners() {
     if(this.socket !== undefined) {
       console.log("Setting up socketlisteners");
+
       // Listen for updates to the backtest date.
-      this.socket.on('dateUpdated', (data) => {
-        this.setState({ backtestDate: data.backtestDate });
-        console.log(`Got new date: ${data.backtestDate}`)
+      this.socket.on('backtestPropertiesUpdated', (data) => {
+
+        const availableBalance = this.formatCurrency(data.availableBalance),
+              backtestDate = data.backtestDate;
+
+        this.setState({
+          backtestDate: backtestDate || this.state.backtestDate,
+          availableBalance: availableBalance || this.state.availableBalance,
+        });
+      });
+
+      // Listen for updates to the backtest date.
+      this.socket.on('tradesUpdated', (data) => {
+        // Fill UI with data from database.
+        fetch(`${this.state.server}/trades`, {
+          headers : { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => this.setState({ backtestDate: data.backtestDate, availableBalance: this.formatCurrency(data.availableBalance)}));
       });
     }
   }
+
+  formatCurrency = (number) => {
+    if(number === undefined) {
+      return undefined
+    }
+
+    var maximumFractionDigits = null
+    if(number >= 1000) {
+      maximumFractionDigits = 0
+    } else {
+      maximumFractionDigits = 2
+    }
+
+    var letter = "";
+    if(number >= 100000) { 
+      if(number>=1000000) {
+        number = Math.round(number/1000)/1000
+        maximumFractionDigits = 2
+        letter = "M";
+      } else {
+        letter = "K";
+        number = Math.round(number/100)/10
+        maximumFractionDigits = 1
+      }
+    }
+
+    var formatter = new Intl.NumberFormat('en-GB', {
+      style: 'currency',
+      currency: 'GBP',
+      maximumFractionDigits: maximumFractionDigits,
+    });
+    const formatted_number = formatter.format(number);
+    
+    return formatted_number+letter
+  }
+  
 
   render() {
     return (
@@ -67,7 +124,7 @@ class App extends Component {
           <News/>
           <div id="trade-stats-container">
             <TradeStats/>
-            <TotalProfit totalValue="£10,123" totalPct="(+34.4%)" figure="" />
+            <TotalProfit totalValue={this.state.availableBalance} totalPct="(+34.4%)" figure="" />
             <SuccessRate pct="68%" />
           </div>
         </div>

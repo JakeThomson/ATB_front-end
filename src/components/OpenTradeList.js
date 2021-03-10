@@ -38,7 +38,7 @@ class OpenTradeList extends Component {
   }
 
   formatPct = (number) => {
-    const sign = number < 0 ? "-" : "+";
+    const sign = number < 0 ? "" : "+";
     const formattedPct = sign+number.toFixed(2).toString()+"%";
     return formattedPct
   }

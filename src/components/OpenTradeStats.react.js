@@ -21,7 +21,6 @@ class AtStats extends Component {
       maximumFractionDigits = 2
     }
 
-    console.log(maximumFractionDigits, number)
     var formatter = new Intl.NumberFormat('en-GB', {
       style: 'currency',
       currency: 'GBP',

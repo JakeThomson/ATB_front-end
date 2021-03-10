@@ -27,6 +27,7 @@ class App extends Component {
         server: serverURL,
         backtestDate: '',
         availableBalance: '',
+        totalBalance: '',
         openTrades: []
     }
   }
@@ -44,7 +45,7 @@ class App extends Component {
       }
     })
       .then(response => response.json())
-      .then(data => this.setState({ backtestDate: data.backtestDate, availableBalance: this.formatCurrency(data.availableBalance)}));
+      .then(data => this.setState({ backtestDate: data.backtestDate, totalBalance: this.formatCurrency(data.totalBalance), availableBalance: this.formatCurrency(data.availableBalance)}));
     
     fetch(`${this.state.server}/trades`, {
       headers : { 
@@ -65,11 +66,13 @@ class App extends Component {
       this.socket.on('backtestPropertiesUpdated', (data) => {
 
         const availableBalance = this.formatCurrency(data.availableBalance),
+              totalBalance = this.formatCurrency(data.totalBalance),
               backtestDate = data.backtestDate;
 
         this.setState({
           backtestDate: backtestDate || this.state.backtestDate,
           availableBalance: availableBalance || this.state.availableBalance,
+          totalBalance: totalBalance || this.state.totalBalance,
         });
       });
 
@@ -136,7 +139,7 @@ class App extends Component {
           <News/>
           <div id="trade-stats-container">
             <TradeStats/>
-            <TotalProfit totalValue={this.state.availableBalance} totalPct="(+34.4%)" figure="" />
+            <TotalProfit totalValue={this.state.totalBalance} totalPct="(+34.4%)" figure="" />
             <SuccessRate pct="68%" />
           </div>
         </div>

@@ -2,6 +2,12 @@ import React, { Component } from 'react';
 import Plot from 'react-plotly.js';
 
 class OpenTradeRow extends Component {
+  formatPct = (number) => {
+    const sign = number <= 0 ? "" : "+";
+    const formattedPct = sign+number.toFixed(2).toString()+"%";
+    return formattedPct
+  }
+
     render() {
         return (
             <div id="ot-list-row">
@@ -13,7 +19,7 @@ class OpenTradeRow extends Component {
                 <p id="at-current-price">
                 {this.props.currentPrice}
                 </p>
-                <p id="at-profit-loss-pct">{this.props.profitLossPct}</p>
+                <p id="at-profit-loss-pct" style={{color: this.props.profitLossPct > 0 ? "green" : this.props.profitLossPct === 0 ? "black" : "rgb(211, 63, 73)"}} >{this.formatPct(this.props.profitLossPct)}</p>
                 <div id="at-figure">
                   <Plot data={this.props.figData} layout={this.props.figLayout} config={{'staticPlot': true}}/>
                 </div>

@@ -37,24 +37,18 @@ class OpenTradeList extends Component {
     return formatted_number+letter
   }
 
-  formatPct = (number) => {
-    const sign = number < 0 ? "" : "+";
-    const formattedPct = sign+number.toFixed(2).toString()+"%";
-    return formattedPct
-  }
-
     render() {
         return (
           <div id="at-container">
             <p id="at-header">Open trades</p>
             <div id="ot-list-container">
-              {this.props.openTrades.map(({ tradeId, ticker, shareQty, investmentTotal, currentPrice, figure, figurePct }) => 
+              {this.props.openTrades.map(({ tradeId, ticker, shareQty, investmentTotal, currentPrice, figure, profitLossPct }) => 
                 <OpenTradeRow 
                   key={tradeId}
                   ticker={ticker} 
                   tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
                   currentPrice={currentPrice.toFixed(2)}
-                  profitLossPct={this.formatPct(figurePct)}
+                  profitLossPct={profitLossPct}
                   figData={figure.data}
                   figLayout={figure.layout}
                 />

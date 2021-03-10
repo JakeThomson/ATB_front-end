@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './css/App.css';
 import './bootstrap.min.css';
 import OpenTradeList from './components/OpenTradeList.js';
-import CtList from './components/CtList.react.js';
+import ClosedTradeList from './components/ClosedTradeList.react.js';
 import TotalProfit from './components/TotalProfit.react.js';
 import OpenTradeStats from './components/OpenTradeStats.react.js';
 import SuccessRate from './components/SuccessRate.react.js';
@@ -28,7 +28,8 @@ class App extends Component {
         backtestDate: '',
         availableBalance: '',
         totalBalance: '',
-        openTrades: []
+        openTrades: [],
+        closedTrades: []
     }
   }
 
@@ -54,7 +55,7 @@ class App extends Component {
       }
     })
     .then(response => response.json())
-    .then(data => this.setState({openTrades: data}))
+    .then(data => this.setState({openTrades: data[0], closedTrades: data[1]}))
 
   }
 
@@ -86,7 +87,7 @@ class App extends Component {
           }
         })
         .then(response => response.json())
-        .then(data => this.setState({openTrades: data}))
+        .then(data => this.setState({openTrades: data[0], closedTrades: data[1]}))
       });
     }
   }
@@ -135,7 +136,7 @@ class App extends Component {
           <WorldFlow playpause="play" date={this.state.backtestDate} />
           <OpenTradeStats openTrades={this.state.openTrades} />
           <OpenTradeList openTrades={this.state.openTrades}/>
-          <CtList/>
+          <ClosedTradeList closedTrades={this.state.closedTrades}/>
           <News/>
           <div id="trade-stats-container">
             <TradeStats/>

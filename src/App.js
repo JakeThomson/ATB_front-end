@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import './css/App.css';
 import './bootstrap.min.css';
-import OtList from './components/OtList.js';
+import OpenTradeList from './components/OpenTradeList.js';
 import CtList from './components/CtList.react.js';
 import TotalProfit from './components/TotalProfit.react.js';
-import OtStats from './components/OtStats.react.js';
+import OpenTradeStats from './components/OpenTradeStats.react.js';
 import SuccessRate from './components/SuccessRate.react.js';
 import WorldFlow from './components/WorldFlow.react.js';
 import News from './components/News.react.js';
@@ -45,6 +45,16 @@ class App extends Component {
     })
       .then(response => response.json())
       .then(data => this.setState({ backtestDate: data.backtestDate, availableBalance: this.formatCurrency(data.availableBalance)}));
+    
+    fetch(`${this.state.server}/trades`, {
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => this.setState({openTrades: data}))
+
   }
 
   setupSocketListeners() {
@@ -73,7 +83,7 @@ class App extends Component {
           }
         })
         .then(response => response.json())
-        .then(data => this.setState({ openTrades: data }));
+        .then(data => this.setState({openTrades: data}))
       });
     }
   }
@@ -106,6 +116,7 @@ class App extends Component {
     var formatter = new Intl.NumberFormat('en-GB', {
       style: 'currency',
       currency: 'GBP',
+      minimumFractionDigits: 0,
       maximumFractionDigits: maximumFractionDigits,
     });
     const formatted_number = formatter.format(number);
@@ -119,8 +130,8 @@ class App extends Component {
       <div id="wrapper">
         <div id="content">
           <WorldFlow playpause="play" date={this.state.backtestDate} />
-          <OtStats openTrades={this.state.openTrades} />
-          <OtList openTrades={this.state.openTrades}/>
+          <OpenTradeStats openTrades={this.state.openTrades} />
+          <OpenTradeList openTrades={this.state.openTrades}/>
           <CtList/>
           <News/>
           <div id="trade-stats-container">

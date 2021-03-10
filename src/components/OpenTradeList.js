@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import OtRow from './OtRow.react.js';
-import '../css/at-list.css';
+import OpenTradeRow from './OpenTradeRow.react.js';
+import '../css/ot-list.css';
 
 
-class OtList extends Component {
+class OpenTradeList extends Component {
   formatTradeQty = (qty, total) => {
     return `${qty} (${this.formatCurrency(total)})`
   }
@@ -29,6 +29,7 @@ class OtList extends Component {
     var formatter = new Intl.NumberFormat('en-GB', {
       style: 'currency',
       currency: 'GBP',
+      minimumFractionDigits: 0,
       maximumFractionDigits: maximumFractionDigits,
     });
     const formatted_number = formatter.format(number);
@@ -45,18 +46,23 @@ class OtList extends Component {
     render() {
         return (
           <div id="at-container">
-            <p id="at-header">Active trades</p>
-            <div id="at-list-container">
-              {this.props.openTrades.map(({ ticker, shareQty, investmentTotal, currentPrice, figurePct }) => <OtRow 
-                ticker={ticker} 
-                tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
-                currentPrice={currentPrice.toFixed(2)}
-                profitLossPct={this.formatPct(figurePct)}
-              />)}
+            <p id="at-header">Open trades</p>
+            <div id="ot-list-container">
+              {this.props.openTrades.map(({ tradeId, ticker, shareQty, investmentTotal, currentPrice, figure, figurePct }) => 
+                <OpenTradeRow 
+                  key={tradeId}
+                  ticker={ticker} 
+                  tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
+                  currentPrice={currentPrice.toFixed(2)}
+                  profitLossPct={this.formatPct(figurePct)}
+                  figData={figure.data}
+                  figLayout={figure.layout}
+                />
+              )}
             </div>
           </div>
         )
     }
 }
 
-export default OtList;
+export default OpenTradeList;

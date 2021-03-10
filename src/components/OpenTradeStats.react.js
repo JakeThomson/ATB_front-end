@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../css/at-stats.css';
+import '../css/ot-stats.css';
 
 class AtStats extends Component {
 
@@ -21,9 +21,11 @@ class AtStats extends Component {
       maximumFractionDigits = 2
     }
 
+    console.log(maximumFractionDigits, number)
     var formatter = new Intl.NumberFormat('en-GB', {
       style: 'currency',
       currency: 'GBP',
+      minimumFractionDigits: 0,
       maximumFractionDigits: maximumFractionDigits,
     });
     const formatted_number = formatter.format(number);
@@ -36,10 +38,10 @@ class AtStats extends Component {
       var numTrades = this.props.openTrades.length
       var totalValue = this.props.openTrades.reduce((a, b) => a + (b['investmentTotal'] || 0), 0);
         return (
-            <div id="at-stats-container">
-                <p id="at-stats-qty">{numTrades}</p>
-                <p id="at-stats-text">active trades<br/>valued</p>
-                <p id="at-stats-value">{this.formatCurrency(totalValue)}</p>
+            <div id="ot-stats-container">
+                <p id="ot-stats-qty">{numTrades}</p>
+                <p id="ot-stats-text">active trades<br/>valued</p>
+                <p id="ot-stats-value">{this.formatCurrency(totalValue)}</p>
             </div>
         )
       }

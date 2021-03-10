@@ -1,4 +1,4 @@
-#at-stats-container {
+#ot-stats-container {
     position: absolute;
     background: white;
     border-radius: 16px;
@@ -7,7 +7,7 @@
     box-shadow: 0px -0px 9px -2px rgba(0,0,0,0.1);
 }
 
-#at-stats-qty {
+#ot-stats-qty {
     position: relative;
     left: 10px; top: -7px;
     font-size: 51px;
@@ -15,7 +15,7 @@
     color: #343434;
 }
 
-#at-stats-text {
+#ot-stats-text {
     position: absolute;
     left: 43px; top: 8px;
     font-size: 15px;
@@ -23,7 +23,7 @@
     color: #343434;
 }
   
-#at-stats-value {
+#ot-stats-value {
     position: absolute;
     width: 108px;
     left: 95px; top: 20px;

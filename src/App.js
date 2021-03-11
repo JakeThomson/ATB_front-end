@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import './css/App.css';
 import './bootstrap.min.css';
+import blankProfitLossGraph from './content/blankProfitLossGraph.json'
 import OpenTradeList from './components/OpenTradeList.js';
-import CtList from './components/CtList.react.js';
+import ClosedTradeList from './components/ClosedTradeList.react.js';
 import TotalProfit from './components/TotalProfit.react.js';
 import OpenTradeStats from './components/OpenTradeStats.react.js';
 import SuccessRate from './components/SuccessRate.react.js';
@@ -27,7 +28,13 @@ class App extends Component {
         server: serverURL,
         backtestDate: '',
         availableBalance: '',
-        openTrades: []
+        totalBalance: '',
+        totalProfitLoss: '',
+        totalProfitLossPct: '',
+        totalProfitLossGraph: blankProfitLossGraph,
+        successRate: '',
+        openTrades: [],
+        closedTrades: []
     }
   }
 
@@ -44,7 +51,16 @@ class App extends Component {
       }
     })
       .then(response => response.json())
-      .then(data => this.setState({ backtestDate: data.backtestDate, availableBalance: this.formatCurrency(data.availableBalance)}));
+      .then(data => {
+        this.setState({ 
+        backtestDate: data.backtestDate, 
+        totalProfitLoss: data.totalProfitLoss,
+        totalProfitLossPct: this.formatPct(data.totalProfitLossPct),
+        totalProfitLossGraph: JSON.parse(JSON.parse(data.totalProfitLossGraph)),
+        totalBalance: this.formatCurrency(data.totalBalance), 
+        availableBalance: this.formatCurrency(data.availableBalance),
+        successRate: data.successRate || 0
+      })});
     
     fetch(`${this.state.server}/trades`, {
       headers : { 
@@ -53,7 +69,7 @@ class App extends Component {
       }
     })
     .then(response => response.json())
-    .then(data => this.setState({openTrades: data}))
+    .then(data => this.setState({openTrades: data[0], closedTrades: data[1]}))
 
   }
 
@@ -63,13 +79,22 @@ class App extends Component {
 
       // Listen for updates to the backtest date.
       this.socket.on('backtestPropertiesUpdated', (data) => {
-
         const availableBalance = this.formatCurrency(data.availableBalance),
-              backtestDate = data.backtestDate;
-
+              totalProfitLoss = data.totalProfitLoss,
+              totalProfitLossPct = this.formatPct(data.totalProfitLossPct),
+              totalProfitLossGraph = data.totalProfitLossGraph !== undefined ? JSON.parse(data.totalProfitLossGraph) : undefined,
+              totalBalance = this.formatCurrency(data.totalBalance),
+              backtestDate = data.backtestDate,
+              successRate = data.successRate;
+        
         this.setState({
           backtestDate: backtestDate || this.state.backtestDate,
+          totalProfitLoss: totalProfitLoss || this.state.totalProfitLoss,
+          totalProfitLossPct: totalProfitLossPct || this.state.totalProfitLossPct,
+          totalProfitLossGraph: totalProfitLossGraph || this.state.totalProfitLossGraph,
           availableBalance: availableBalance || this.state.availableBalance,
+          totalBalance: totalBalance || this.state.totalBalance,
+          successRate: successRate === undefined | successRate === null ? this.state.successRate : successRate
         });
       });
 
@@ -83,7 +108,7 @@ class App extends Component {
           }
         })
         .then(response => response.json())
-        .then(data => this.setState({openTrades: data}))
+        .then(data => this.setState({openTrades: data[0], closedTrades: data[1]}))
       });
     }
   }
@@ -123,7 +148,18 @@ class App extends Component {
     
     return formatted_number+letter
   }
-  
+
+  formatPct = (number) => {
+    if(number === undefined) {
+      return undefined
+    }
+
+    const decimalPts = number >= 10 ? 1 : 2 
+
+    const sign = number < 0 ? "" : "+";
+    const formattedPct = "("+sign+number.toFixed(decimalPts).toString()+"%)";
+    return formattedPct
+  }
 
   render() {
     return (
@@ -132,12 +168,12 @@ class App extends Component {
           <WorldFlow playpause="play" date={this.state.backtestDate} />
           <OpenTradeStats openTrades={this.state.openTrades} />
           <OpenTradeList openTrades={this.state.openTrades}/>
-          <CtList/>
+          <ClosedTradeList closedTrades={this.state.closedTrades}/>
           <News/>
           <div id="trade-stats-container">
             <TradeStats/>
-            <TotalProfit totalValue={this.state.availableBalance} totalPct="(+34.4%)" figure="" />
-            <SuccessRate pct="68%" />
+            <TotalProfit totalValue={this.state.totalBalance} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
+            <SuccessRate pct={this.state.successRate} />
           </div>
         </div>
         <div className="background">

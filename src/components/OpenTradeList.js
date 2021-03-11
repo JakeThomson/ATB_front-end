@@ -15,15 +15,28 @@ class OpenTradeList extends Component {
 
     var maximumFractionDigits = null
     var letter = "";
-    if(number >= 1000) {
+    if(number >= 1000000) {
+      number /= 1000000;
+      maximumFractionDigits = 2
+      letter ="m";
+    } else if(number >= 100000) {
+      number /= 1000;
+      maximumFractionDigits = 0
+      letter ="k";
+    }else if(number >= 100000) {
+      number /= 100000;
+      maximumFractionDigits = 2
+      letter ="k";
+    } else if(number >= 10000) {
       number /= 1000;
       maximumFractionDigits = 1
       letter ="k";
-    } else if(number >= 10000) {
+    } else if(number >= 1000) {
       maximumFractionDigits = 0
-      letter ="k";
+    } else if(number >= 100) {
+      maximumFractionDigits = 1
     } else {
-      maximumFractionDigits = 0
+      maximumFractionDigits = 2
     }
 
     var formatter = new Intl.NumberFormat('en-GB', {
@@ -37,24 +50,18 @@ class OpenTradeList extends Component {
     return formatted_number+letter
   }
 
-  formatPct = (number) => {
-    const sign = number < 0 ? "-" : "+";
-    const formattedPct = sign+number.toFixed(2).toString()+"%";
-    return formattedPct
-  }
-
     render() {
         return (
           <div id="at-container">
             <p id="at-header">Open trades</p>
             <div id="ot-list-container">
-              {this.props.openTrades.map(({ tradeId, ticker, shareQty, investmentTotal, currentPrice, figure, figurePct }) => 
+              {this.props.openTrades.map(({ tradeId, ticker, shareQty, investmentTotal, currentPrice, figure, profitLossPct }) => 
                 <OpenTradeRow 
                   key={tradeId}
                   ticker={ticker} 
                   tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
                   currentPrice={currentPrice.toFixed(2)}
-                  profitLossPct={this.formatPct(figurePct)}
+                  profitLossPct={profitLossPct}
                   figData={figure.data}
                   figLayout={figure.layout}
                 />

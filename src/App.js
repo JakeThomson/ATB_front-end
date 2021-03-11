@@ -28,6 +28,8 @@ class App extends Component {
         backtestDate: '',
         availableBalance: '',
         totalBalance: '',
+        totalProfitLoss: 0,
+        totalProfitLossPct: this.formatPct(0),
         openTrades: [],
         closedTrades: []
     }
@@ -46,7 +48,13 @@ class App extends Component {
       }
     })
       .then(response => response.json())
-      .then(data => this.setState({ backtestDate: data.backtestDate, totalBalance: this.formatCurrency(data.totalBalance), availableBalance: this.formatCurrency(data.availableBalance)}));
+      .then(data => this.setState({ 
+        backtestDate: data.backtestDate, 
+        totalProfitLoss: data.totalProfitLoss,
+        totalProfitLossPct: this.formatPct(data.totalProfitLossPct),
+        totalBalance: this.formatCurrency(data.totalBalance), 
+        availableBalance: this.formatCurrency(data.availableBalance)
+      }));
     
     fetch(`${this.state.server}/trades`, {
       headers : { 
@@ -65,13 +73,17 @@ class App extends Component {
 
       // Listen for updates to the backtest date.
       this.socket.on('backtestPropertiesUpdated', (data) => {
-
+        console.log(data, data.totalProfitLossPct)
         const availableBalance = this.formatCurrency(data.availableBalance),
+              totalProfitLoss = data.totalProfitLoss,
+              totalProfitLossPct = this.formatPct(data.totalProfitLossPct),
               totalBalance = this.formatCurrency(data.totalBalance),
               backtestDate = data.backtestDate;
 
         this.setState({
           backtestDate: backtestDate || this.state.backtestDate,
+          totalProfitLoss: totalProfitLoss || this.state.totalProfitLoss,
+          totalProfitLossPct: totalProfitLossPct || this.state.totalProfitLossPct,
           availableBalance: availableBalance || this.state.availableBalance,
           totalBalance: totalBalance || this.state.totalBalance,
         });
@@ -127,7 +139,18 @@ class App extends Component {
     
     return formatted_number+letter
   }
-  
+
+  formatPct = (number) => {
+    if(number === undefined) {
+      return undefined
+    }
+
+    const decimalPts = number >= 10 ? 1 : 2 
+
+    const sign = number < 0 ? "" : "+";
+    const formattedPct = "("+sign+number.toFixed(decimalPts).toString()+"%)";
+    return formattedPct
+  }
 
   render() {
     return (
@@ -140,7 +163,7 @@ class App extends Component {
           <News/>
           <div id="trade-stats-container">
             <TradeStats/>
-            <TotalProfit totalValue={this.state.totalBalance} totalPct="(+34.4%)" figure="" />
+            <TotalProfit totalValue={this.state.totalBalance} totalPct={this.state.totalProfitLossPct} figure="" />
             <SuccessRate pct="68%" />
           </div>
         </div>

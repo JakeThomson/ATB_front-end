@@ -7,8 +7,12 @@ class ClosedTradeList extends Component {
     return `${qty} (${this.formatCurrency(total)})`
   }
 
-  formatCurrency = (number) => {
-    const sign = number < 0 ? "" : "+";
+  formatCurrency = (number, isProfit) => {
+    var sign = "";
+
+    if (isProfit) {
+      sign = number < 0 ? "" : "+";
+    }
 
     if(number === undefined) {
       return undefined
@@ -16,13 +20,26 @@ class ClosedTradeList extends Component {
 
     var maximumFractionDigits = null
     var letter = "";
-    if(number >= 1000) {
+    if(number >= 1000000) {
+      number /= 1000000;
+      maximumFractionDigits = 2
+      letter ="m";
+    } else if(number >= 100000) {
+      number /= 1000;
+      maximumFractionDigits = 0
+      letter ="k";
+    }else if(number >= 100000) {
+      number /= 100000;
+      maximumFractionDigits = 2
+      letter ="k";
+    } else if(number >= 10000) {
       number /= 1000;
       maximumFractionDigits = 1
       letter ="k";
-    } else if(number >= 10000) {
+    } else if(number >= 1000) {
       maximumFractionDigits = 0
-      letter ="k";
+    } else if(number >= 100) {
+      maximumFractionDigits = 1
     } else {
       maximumFractionDigits = 2
     }
@@ -35,7 +52,7 @@ class ClosedTradeList extends Component {
     });
     const formatted_number = formatter.format(number);
     
-    return sign+formatted_number+letter
+    return sign+formatted_number+letter;
   }
 
     render() {
@@ -49,7 +66,7 @@ class ClosedTradeList extends Component {
                     ticker={ticker} 
                     tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
                     profitLossPct={profitLossPct}
-                    profitLossVal={this.formatCurrency(profitLoss)} 
+                    profitLossVal={this.formatCurrency(profitLoss, true)} 
                     figData={figure.data}
                     figLayout={figure.layout}
                   />

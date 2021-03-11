@@ -15,15 +15,28 @@ class OpenTradeList extends Component {
 
     var maximumFractionDigits = null
     var letter = "";
-    if(number >= 1000) {
+    if(number >= 1000000) {
+      number /= 1000000;
+      maximumFractionDigits = 2
+      letter ="m";
+    } else if(number >= 100000) {
+      number /= 1000;
+      maximumFractionDigits = 0
+      letter ="k";
+    }else if(number >= 100000) {
+      number /= 100000;
+      maximumFractionDigits = 2
+      letter ="k";
+    } else if(number >= 10000) {
       number /= 1000;
       maximumFractionDigits = 1
       letter ="k";
-    } else if(number >= 10000) {
+    } else if(number >= 1000) {
       maximumFractionDigits = 0
-      letter ="k";
+    } else if(number >= 100) {
+      maximumFractionDigits = 1
     } else {
-      maximumFractionDigits = 0
+      maximumFractionDigits = 2
     }
 
     var formatter = new Intl.NumberFormat('en-GB', {

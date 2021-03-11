@@ -30,6 +30,7 @@ class App extends Component {
         totalBalance: '',
         totalProfitLoss: 0,
         totalProfitLossPct: this.formatPct(0),
+        totalProfitLossGraph: {"graph": "placeholder"},
         openTrades: [],
         closedTrades: []
     }
@@ -52,6 +53,7 @@ class App extends Component {
         backtestDate: data.backtestDate, 
         totalProfitLoss: data.totalProfitLoss,
         totalProfitLossPct: this.formatPct(data.totalProfitLossPct),
+        totalProfitLossGraph: JSON.parse(JSON.parse(data.totalProfitLossGraph)),
         totalBalance: this.formatCurrency(data.totalBalance), 
         availableBalance: this.formatCurrency(data.availableBalance)
       }));
@@ -73,10 +75,10 @@ class App extends Component {
 
       // Listen for updates to the backtest date.
       this.socket.on('backtestPropertiesUpdated', (data) => {
-        console.log(data, data.totalProfitLossPct)
         const availableBalance = this.formatCurrency(data.availableBalance),
               totalProfitLoss = data.totalProfitLoss,
               totalProfitLossPct = this.formatPct(data.totalProfitLossPct),
+              totalProfitLossGraph = data.totalProfitLossGraph !== undefined ? JSON.parse(data.totalProfitLossGraph) : undefined,
               totalBalance = this.formatCurrency(data.totalBalance),
               backtestDate = data.backtestDate;
 
@@ -84,6 +86,7 @@ class App extends Component {
           backtestDate: backtestDate || this.state.backtestDate,
           totalProfitLoss: totalProfitLoss || this.state.totalProfitLoss,
           totalProfitLossPct: totalProfitLossPct || this.state.totalProfitLossPct,
+          totalProfitLossGraph: totalProfitLossGraph || this.state.totalProfitLossGraph,
           availableBalance: availableBalance || this.state.availableBalance,
           totalBalance: totalBalance || this.state.totalBalance,
         });
@@ -163,7 +166,7 @@ class App extends Component {
           <News/>
           <div id="trade-stats-container">
             <TradeStats/>
-            <TotalProfit totalValue={this.state.totalBalance} totalPct={this.state.totalProfitLossPct} figure="" />
+            <TotalProfit totalValue={this.state.totalBalance} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct="68%" />
           </div>
         </div>

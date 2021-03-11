@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './css/App.css';
 import './bootstrap.min.css';
+import blankProfitLossGraph from './content/blankProfitLossGraph.json'
 import OpenTradeList from './components/OpenTradeList.js';
 import ClosedTradeList from './components/ClosedTradeList.react.js';
 import TotalProfit from './components/TotalProfit.react.js';
@@ -28,9 +29,10 @@ class App extends Component {
         backtestDate: '',
         availableBalance: '',
         totalBalance: '',
-        totalProfitLoss: 0,
-        totalProfitLossPct: this.formatPct(0),
-        totalProfitLossGraph: {"graph": "placeholder"},
+        totalProfitLoss: '',
+        totalProfitLossPct: '',
+        totalProfitLossGraph: blankProfitLossGraph,
+        successRate: '',
         openTrades: [],
         closedTrades: []
     }
@@ -49,14 +51,16 @@ class App extends Component {
       }
     })
       .then(response => response.json())
-      .then(data => this.setState({ 
+      .then(data => {
+        this.setState({ 
         backtestDate: data.backtestDate, 
         totalProfitLoss: data.totalProfitLoss,
         totalProfitLossPct: this.formatPct(data.totalProfitLossPct),
         totalProfitLossGraph: JSON.parse(JSON.parse(data.totalProfitLossGraph)),
         totalBalance: this.formatCurrency(data.totalBalance), 
-        availableBalance: this.formatCurrency(data.availableBalance)
-      }));
+        availableBalance: this.formatCurrency(data.availableBalance),
+        successRate: data.successRate || 0
+      })});
     
     fetch(`${this.state.server}/trades`, {
       headers : { 
@@ -80,8 +84,9 @@ class App extends Component {
               totalProfitLossPct = this.formatPct(data.totalProfitLossPct),
               totalProfitLossGraph = data.totalProfitLossGraph !== undefined ? JSON.parse(data.totalProfitLossGraph) : undefined,
               totalBalance = this.formatCurrency(data.totalBalance),
-              backtestDate = data.backtestDate;
-
+              backtestDate = data.backtestDate,
+              successRate = data.successRate;
+        
         this.setState({
           backtestDate: backtestDate || this.state.backtestDate,
           totalProfitLoss: totalProfitLoss || this.state.totalProfitLoss,
@@ -89,6 +94,7 @@ class App extends Component {
           totalProfitLossGraph: totalProfitLossGraph || this.state.totalProfitLossGraph,
           availableBalance: availableBalance || this.state.availableBalance,
           totalBalance: totalBalance || this.state.totalBalance,
+          successRate: successRate === undefined | successRate === null ? this.state.successRate : successRate
         });
       });
 
@@ -167,7 +173,7 @@ class App extends Component {
           <div id="trade-stats-container">
             <TradeStats/>
             <TotalProfit totalValue={this.state.totalBalance} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
-            <SuccessRate pct="68%" />
+            <SuccessRate pct={this.state.successRate} />
           </div>
         </div>
         <div className="background">

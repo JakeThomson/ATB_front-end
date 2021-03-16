@@ -26,6 +26,7 @@ class App extends Component {
 
     this.state = {
         server: serverURL,
+        isPaused: false,
         backtestDate: '',
         availableBalance: '',
         totalBalance: '',
@@ -59,7 +60,8 @@ class App extends Component {
         totalProfitLossGraph: JSON.parse(JSON.parse(data.totalProfitLossGraph)),
         totalBalance: this.formatCurrency(data.totalBalance), 
         availableBalance: this.formatCurrency(data.availableBalance),
-        successRate: data.successRate || 0
+        successRate: data.successRate || 0,
+        isPaused: data.isPaused
       })});
     
     fetch(`${this.state.server}/trades`, {
@@ -85,16 +87,18 @@ class App extends Component {
               totalProfitLossGraph = data.totalProfitLossGraph !== undefined ? JSON.parse(data.totalProfitLossGraph) : undefined,
               totalBalance = this.formatCurrency(data.totalBalance),
               backtestDate = data.backtestDate,
-              successRate = data.successRate;
+              successRate = data.successRate,
+              isPaused = data.isPaused;
         
         this.setState({
-          backtestDate: backtestDate || this.state.backtestDate,
-          totalProfitLoss: totalProfitLoss || this.state.totalProfitLoss,
-          totalProfitLossPct: totalProfitLossPct || this.state.totalProfitLossPct,
-          totalProfitLossGraph: totalProfitLossGraph || this.state.totalProfitLossGraph,
-          availableBalance: availableBalance || this.state.availableBalance,
-          totalBalance: totalBalance || this.state.totalBalance,
-          successRate: successRate === undefined | successRate === null ? this.state.successRate : successRate
+          backtestDate: backtestDate ?? this.state.backtestDate,
+          totalProfitLoss: totalProfitLoss ?? this.state.totalProfitLoss,
+          totalProfitLossPct: totalProfitLossPct ?? this.state.totalProfitLossPct,
+          totalProfitLossGraph: totalProfitLossGraph ?? this.state.totalProfitLossGraph,
+          availableBalance: availableBalance ?? this.state.availableBalance,
+          totalBalance: totalBalance ?? this.state.totalBalance,
+          successRate: successRate ?? this.state.successRate,
+          isPaused: isPaused ?? this.state.isPaused
         });
       });
 
@@ -161,11 +165,30 @@ class App extends Component {
     return formattedPct
   }
 
+  togglePlayPause = () => {
+    const currentlyIsPaused = this.state.isPaused
+
+    this.setState({ isPaused: !currentlyIsPaused });
+
+    const data = { isPaused: !currentlyIsPaused }
+
+    fetch(this.state.server + "/backtest_properties/is_paused", {
+      method: 'PATCH',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(res => res.json())
+    .catch(err => console.error(err))
+  }
+
   render() {
     return (
       <div id="wrapper">
         <div id="content">
-          <WorldFlow playpause="play" date={this.state.backtestDate} />
+          <WorldFlow isPaused={this.state.isPaused} date={this.state.backtestDate} playPauseClicked={this.togglePlayPause}/>
           <OpenTradeStats openTrades={this.state.openTrades} />
           <OpenTradeList openTrades={this.state.openTrades}/>
           <ClosedTradeList closedTrades={this.state.closedTrades}/>

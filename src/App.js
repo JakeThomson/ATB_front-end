@@ -186,11 +186,6 @@ class App extends Component {
     .catch(err => console.error(err))
   }
 
-  onRestart = () => {
-    console.log("stopping")
-    this.socket.emit("stop");
-  }
-
   render() {
     return (
       <div id="wrapper">
@@ -205,7 +200,7 @@ class App extends Component {
             <TotalProfit totalValue={this.state.totalBalance} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>
-          <Settings onRestart={this.onRestart}/>
+          <Settings socket={this.socket}/>
         </div>
         <div className="background">
           <div id="bg-square-1"/>

@@ -9,7 +9,8 @@ import OpenTradeStats from './components/OpenTradeStats.react.js';
 import SuccessRate from './components/SuccessRate.react.js';
 import WorldFlow from './components/WorldFlow.react.js';
 import News from './components/News.react.js';
-import TradeStats from './components/TradeStats.react';
+import TradeStats from './components/TradeStats.react.js';
+import Settings from './components/Settings.react.js'
 import socketClient  from "socket.io-client";
 
 class App extends Component {
@@ -42,6 +43,7 @@ class App extends Component {
   componentDidMount() {
     // Set up socket connection & listeners.
     this.socket = socketClient(this.state.server);
+    
     this.setupSocketListeners();
 
     // Fill UI with data from database.
@@ -184,6 +186,11 @@ class App extends Component {
     .catch(err => console.error(err))
   }
 
+  onRestart = () => {
+    console.log("stopping")
+    this.socket.emit("stop");
+  }
+
   render() {
     return (
       <div id="wrapper">
@@ -192,12 +199,13 @@ class App extends Component {
           <OpenTradeStats openTrades={this.state.openTrades} />
           <OpenTradeList openTrades={this.state.openTrades}/>
           <ClosedTradeList closedTrades={this.state.closedTrades}/>
-          <News/>
+          <News />
           <div id="trade-stats-container">
-            <TradeStats/>
+            <TradeStats />
             <TotalProfit totalValue={this.state.totalBalance} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>
+          <Settings onRestart={this.onRestart}/>
         </div>
         <div className="background">
           <div id="bg-square-1"/>

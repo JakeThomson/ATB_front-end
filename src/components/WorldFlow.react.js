@@ -6,7 +6,7 @@ class WorldFlow extends Component {
     render() {
         return (
             <div id="date-container" className="d-flex flex-row justify-content-between">
-                <button id="play-pause-btn" className="px-2 pl-3" onClick={this.props.playPauseClicked}>
+                <button id="play-pause-btn" className="mx-2 ml-3 my-auto" onClick={this.props.playPauseClicked}>
                     <PlayPause id={this.props.isPaused ? "pause" : "play"} className="playPause" />
                 </button>
                 <p id="date" className="px-2 pr-3">{this.props.date}</p>

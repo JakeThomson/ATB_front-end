@@ -44,18 +44,22 @@
 }
 
 .modal-90w {
-  width: 1000px;
+  width: 400px;
   margin: 0 !important
 }
 
 .modal {
+  position: absolute;
   width: 800px;
   height: 480px;
   display: flex !important;
   
   justify-content: center;
   align-items: center;
+}
 
+.modal-open {
+  overflow: auto !important;
 }
 
 .modal * {

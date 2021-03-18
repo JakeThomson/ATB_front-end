@@ -36,7 +36,8 @@ class App extends Component {
         totalProfitLossGraph: blankProfitLossGraph,
         successRate: '',
         openTrades: [],
-        closedTrades: []
+        closedTrades: [],
+        backtestOnline: true
     }
   }
 
@@ -63,7 +64,8 @@ class App extends Component {
         totalBalance: this.formatCurrency(data.totalBalance), 
         availableBalance: this.formatCurrency(data.availableBalance),
         successRate: data.successRate || 0,
-        isPaused: data.isPaused
+        isPaused: data.isPaused,
+        backtestOnline: data.backtestOnline
       })});
     
     fetch(`${this.state.server}/trades`, {
@@ -88,7 +90,8 @@ class App extends Component {
               totalBalance = this.formatCurrency(data.totalBalance),
               backtestDate = data.backtestDate,
               successRate = data.successRate,
-              isPaused = data.isPaused;
+              isPaused = data.isPaused,
+              backtestOnline = data.backtestOnline;
         
         // Only update the state of properties that were included in the socket payload.
         this.setState({
@@ -99,7 +102,8 @@ class App extends Component {
           availableBalance: availableBalance ?? this.state.availableBalance,
           totalBalance: totalBalance ?? this.state.totalBalance,
           successRate: successRate ?? this.state.successRate,
-          isPaused: isPaused ?? this.state.isPaused
+          isPaused: isPaused ?? this.state.isPaused,
+          backtestOnline: backtestOnline ?? this.state.backtestOnline
         });
       });
 
@@ -193,7 +197,7 @@ class App extends Component {
     return (
       <div id="wrapper">
         <div id="content">
-          <WorldFlow isPaused={this.state.isPaused} date={this.state.backtestDate} playPauseClicked={this.togglePlayPause}/>
+          <WorldFlow isPaused={this.state.isPaused} date={this.state.backtestDate} playPauseClicked={this.togglePlayPause} backtestOnline={this.state.backtestOnline}/>
           <OpenTradeStats openTrades={this.state.openTrades} />
           <OpenTradeList openTrades={this.state.openTrades}/>
           <ClosedTradeList closedTrades={this.state.closedTrades}/>

@@ -16,6 +16,9 @@
   outline: none;
   box-shadow: none;
 }
+#settings-btn:hover {
+  cursor: default;
+}
 
 #settings-icon {
   height: 40px; width: 40px;
@@ -31,6 +34,20 @@
 }
 
 #settings-icon:hover {
+  cursor: pointer;
+  transition: 0.70s;
+  -webkit-transition: 0.70s;
+  -moz-transition: 0.70s;
+  -ms-transition: 0.70s;
+  -o-transition: 0.70s;
+  -webkit-transform: rotate(120deg);
+  -moz-transform: rotate(120deg);
+  -o-transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  transform: rotate(120deg);
+}
+
+.rotated {
   transition: 0.70s;
   -webkit-transition: 0.70s;
   -moz-transition: 0.70s;

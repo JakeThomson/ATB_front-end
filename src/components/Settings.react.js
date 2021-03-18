@@ -28,7 +28,7 @@ class News extends Component {
     return (
       <div id="settings-container" className="d-flex flex-row justify-content-center">
         <button id="settings-btn" onClick={handleShow}>
-          <SettingsSVG id="settings-icon"/>
+          <SettingsSVG id="settings-icon" className={this.state.show ? "rotated" : ""}/>
         </button>
         <Modal 
           dialogClassName="modal-90w"

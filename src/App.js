@@ -87,7 +87,7 @@ class App extends Component {
       }
     })
     .then(response => response.json())
-    .then(data => this.setState({tradeStats: data}))
+    .then(data => this.setState({tradeStats: data}));
   }
 
   setupSocketListeners() {
@@ -100,7 +100,6 @@ class App extends Component {
               totalProfitLossPct = this.formatPct(data.totalProfitLossPct),
               totalProfitLossGraph = data.totalProfitLossGraph !== undefined ? JSON.parse(data.totalProfitLossGraph) : undefined,
               totalBalance = this.formatCurrency(data.totalBalance),
-              startDate = data.startDate,
               backtestDate = data.backtestDate,
               successRate = data.successRate,
               isPaused = data.isPaused,
@@ -108,7 +107,6 @@ class App extends Component {
         
         // Only update the state of properties that were included in the socket payload.
         this.setState({
-          startDate: startDate ?? this.state.backtestDate,
           backtestDate: backtestDate ?? this.state.backtestDate,
           totalProfitLoss: totalProfitLoss ?? this.state.totalProfitLoss,
           totalProfitLossPct: totalProfitLossPct ?? this.state.totalProfitLossPct,
@@ -132,6 +130,19 @@ class App extends Component {
         })
         .then(response => response.json())
         .then(data => this.setState({openTrades: data[0], closedTrades: data[1]}))
+      });
+
+      // Listen for updates to the backtest date.
+      this.socket.on('updateStats', (data) => {
+        // Grab all open and closed trades from database.
+        fetch(`${this.state.server}/trades/stats?date=${this.state.startDate}`, {
+          headers : { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => this.setState({tradeStats: data ?? this.state.tradeStats}));
       });
     }
   }
@@ -217,7 +228,7 @@ class App extends Component {
           <ClosedTradeList closedTrades={this.state.closedTrades}/>
           <News />
           <div id="trade-stats-container">
-            <TradeStats backtestDate={this.state.backtestDate} stats={this.state.tradeStats}/>
+            <TradeStats backtestDate={this.state.backtestDate} stats={this.state.tradeStats} />
             <TotalProfit totalValue={this.state.totalBalance} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>

@@ -28,6 +28,7 @@ class App extends Component {
     this.state = {
         server: serverURL,
         isPaused: false,
+        startDate: '',
         backtestDate: '',
         availableBalance: '',
         totalBalance: '',
@@ -37,7 +38,8 @@ class App extends Component {
         successRate: '',
         openTrades: [],
         closedTrades: [],
-        backtestOnline: true
+        backtestOnline: true,
+        tradeStats: {},
     }
   }
 
@@ -58,6 +60,7 @@ class App extends Component {
       .then(data => {
         this.setState({ 
         backtestDate: data.backtestDate, 
+        startDate: data.startDate,
         totalProfitLoss: data.totalProfitLoss,
         totalProfitLossPct: this.formatPct(data.totalProfitLossPct),
         totalProfitLossGraph: JSON.parse(JSON.parse(data.totalProfitLossGraph)),
@@ -76,6 +79,15 @@ class App extends Component {
     })
     .then(response => response.json())
     .then(data => this.setState({openTrades: data[0], closedTrades: data[1]}))
+
+    fetch(`${this.state.server}/trades/stats?date=${this.state.startDate}`, {
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => this.setState({tradeStats: data}))
   }
 
   setupSocketListeners() {
@@ -88,6 +100,7 @@ class App extends Component {
               totalProfitLossPct = this.formatPct(data.totalProfitLossPct),
               totalProfitLossGraph = data.totalProfitLossGraph !== undefined ? JSON.parse(data.totalProfitLossGraph) : undefined,
               totalBalance = this.formatCurrency(data.totalBalance),
+              startDate = data.startDate,
               backtestDate = data.backtestDate,
               successRate = data.successRate,
               isPaused = data.isPaused,
@@ -95,6 +108,7 @@ class App extends Component {
         
         // Only update the state of properties that were included in the socket payload.
         this.setState({
+          startDate: startDate ?? this.state.backtestDate,
           backtestDate: backtestDate ?? this.state.backtestDate,
           totalProfitLoss: totalProfitLoss ?? this.state.totalProfitLoss,
           totalProfitLossPct: totalProfitLossPct ?? this.state.totalProfitLossPct,
@@ -203,7 +217,7 @@ class App extends Component {
           <ClosedTradeList closedTrades={this.state.closedTrades}/>
           <News />
           <div id="trade-stats-container">
-            <TradeStats />
+            <TradeStats backtestDate={this.state.backtestDate} stats={this.state.tradeStats}/>
             <TotalProfit totalValue={this.state.totalBalance} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>

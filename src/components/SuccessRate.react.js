@@ -3,6 +3,7 @@ import '../css/success-rate.css';
 
 class SuccessRate extends Component {
   formatPct = (number) => {
+    // Format percent to allow it to fit within the space of the div containing it.
     if(number === '') {
       return '';
     }

@@ -11,14 +11,13 @@ class News extends Component {
   }
 
   onRestart = () => {
+    // When restart button is clicked, emit restart socket event.
     this.props.socket.emit("restart");
     this.setShow(false);
   }
 
-  /**
-   * Sets the visibility of the editModal.
-   */
-   setShow = bool => {
+  setShow = bool => {
+    // Sets the visible state of the modal.
     this.setState({ show: bool});
   }
 

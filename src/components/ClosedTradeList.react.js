@@ -4,10 +4,12 @@ import '../css/ct-list.css';
 
 class ClosedTradeList extends Component {
   formatTradeQty = (qty, total) => {
+    // Format trade qauntity show the number of trades bought, and their total value.
     return `${qty} (${this.formatCurrency(total)})`
   }
 
   formatCurrency = (number, isProfit) => {
+    // Format currency to allow it to be shown within the space of the div containing it.
     var sign = "";
 
     if (isProfit) {
@@ -60,23 +62,17 @@ class ClosedTradeList extends Component {
             <div id="ct-container">
             <p id="ct-header">Closed trades</p>
                 <div id="ct-list-container">
-                {this.props.closedTrades.map(({ tradeId, ticker, shareQty, investmentTotal, profitLoss, figure, profitLossPct }) => 
-                  <ClosedTradeRow 
-                    key={tradeId}
-                    ticker={ticker} 
-                    tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
-                    profitLossPct={profitLossPct}
-                    profitLossVal={this.formatCurrency(profitLoss, true)} 
-                    figData={figure.data}
-                    figLayout={figure.layout}
-                  />
-                )}
-                {/* <ClosedTradeRow 
-                        ticker="AXPEDD" 
-                        tradeQty="138 (£4.8k)" 
-                        profitLossPct="+1.28%" 
-                        profitLossVal="+£2,453" 
-                    /> */}
+                  {this.props.closedTrades.map(({ tradeId, ticker, shareQty, investmentTotal, profitLoss, figure, profitLossPct }) => 
+                    <ClosedTradeRow 
+                      key={tradeId}
+                      ticker={ticker} 
+                      tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
+                      profitLossPct={profitLossPct}
+                      profitLossVal={this.formatCurrency(profitLoss, true)} 
+                      figData={figure.data}
+                      figLayout={figure.layout}
+                    />
+                  )}
                 </div>
             </div>
         )

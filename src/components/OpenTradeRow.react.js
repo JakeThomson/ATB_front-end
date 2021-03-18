@@ -3,6 +3,7 @@ import Plot from 'react-plotly.js';
 
 class OpenTradeRow extends Component {
   formatPct = (number) => {
+    // Format percent to allow it to fit within the space of the div containing it.
     const sign = number <= 0 ? "" : "+";
     const formattedPct = sign+number.toFixed(2).toString()+"%";
     return formattedPct

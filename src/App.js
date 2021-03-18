@@ -74,12 +74,10 @@ class App extends Component {
     })
     .then(response => response.json())
     .then(data => this.setState({openTrades: data[0], closedTrades: data[1]}))
-
   }
 
   setupSocketListeners() {
     if(this.socket !== undefined) {
-      console.log("Setting up socketlisteners");
 
       // Listen for updates to the backtest date.
       this.socket.on('backtestPropertiesUpdated', (data) => {
@@ -92,6 +90,7 @@ class App extends Component {
               successRate = data.successRate,
               isPaused = data.isPaused;
         
+        // Only update the state of properties that were included in the socket payload.
         this.setState({
           backtestDate: backtestDate ?? this.state.backtestDate,
           totalProfitLoss: totalProfitLoss ?? this.state.totalProfitLoss,
@@ -106,7 +105,7 @@ class App extends Component {
 
       // Listen for updates to the backtest date.
       this.socket.on('tradesUpdated', (data) => {
-        // Fill UI with data from database.
+        // Grab all open and closed trades from database.
         fetch(`${this.state.server}/trades`, {
           headers : { 
             'Content-Type': 'application/json',
@@ -120,6 +119,7 @@ class App extends Component {
   }
 
   formatCurrency = (number) => {
+    // Format currency to allow it to be shown within the space of the div containing it.
     if(number === undefined) {
       return undefined
     }
@@ -156,6 +156,7 @@ class App extends Component {
   }
 
   formatPct = (number) => {
+    // Format percent to allow it to fit within the space of the div containing it.
     if(number === undefined) {
       return undefined
     }
@@ -168,12 +169,14 @@ class App extends Component {
   }
 
   togglePlayPause = () => {
+    // Update the pause state in the backtest when playpause button is clicked.
     const currentlyIsPaused = this.state.isPaused
 
     this.setState({ isPaused: !currentlyIsPaused });
 
     const data = { isPaused: !currentlyIsPaused }
 
+    // Patch request to update database
     fetch(this.state.server + "/backtest_properties/is_paused", {
       method: 'PATCH',
       headers: {

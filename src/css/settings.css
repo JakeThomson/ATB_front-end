@@ -1,0 +1,93 @@
+#settings-container {
+  position: absolute;
+  background: white;
+  border-bottom-left-radius: 16px;
+  width: 65px; height: 55px;
+  left: 735px;
+  box-shadow: -4px 4px 10px -2px rgba(0,0,0,0.13);
+}
+
+#settings-btn {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+}
+#settings-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+#settings-btn:hover {
+  cursor: default;
+}
+
+#settings-icon {
+  height: 40px; width: 40px;
+  fill:#646464;
+  transition: 0.70s;
+  -webkit-transition: 0.70s;
+  -moz-transition: 0.70s;
+  -ms-transition: 0.70s;
+  -o-transition: 0.70s;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#settings-icon:hover {
+  cursor: pointer;
+  transition: 0.70s;
+  -webkit-transition: 0.70s;
+  -moz-transition: 0.70s;
+  -ms-transition: 0.70s;
+  -o-transition: 0.70s;
+  -webkit-transform: rotate(120deg);
+  -moz-transform: rotate(120deg);
+  -o-transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  transform: rotate(120deg);
+}
+
+.rotated {
+  transition: 0.70s;
+  -webkit-transition: 0.70s;
+  -moz-transition: 0.70s;
+  -ms-transition: 0.70s;
+  -o-transition: 0.70s;
+  -webkit-transform: rotate(120deg);
+  -moz-transform: rotate(120deg);
+  -o-transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  transform: rotate(120deg);
+}
+
+.modal-90w {
+  width: 400px;
+  margin: 0 !important
+}
+
+.modal {
+  position: absolute;
+  width: 800px;
+  height: 480px;
+  display: flex !important;
+  
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-open {
+  overflow: auto !important;
+}
+
+.modal * {
+  -webkit-user-select: text;
+  -khtml-user-select: text;
+  -moz-user-select: text;
+  -o-user-select: text;
+  user-select: text;
+}
+
+.modal-backdrop {
+  width: 800px;
+  height: 480px;
+}

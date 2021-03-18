@@ -4,6 +4,7 @@ import '../css/ot-stats.css';
 class AtStats extends Component {
 
   formatCurrency = (number) => {
+    // Format currency to allow it to be shown within the space of the div containing it.
     if(number === undefined) {
       return undefined
     }

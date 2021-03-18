@@ -5,10 +5,12 @@ import '../css/ot-list.css';
 
 class OpenTradeList extends Component {
   formatTradeQty = (qty, total) => {
+    // Format trade qauntity show the number of trades bought, and their total value.
     return `${qty} (${this.formatCurrency(total)})`
   }
 
   formatCurrency = (number) => {
+    // Format currency to allow it to be shown within the space of the div containing it.
     if(number === undefined) {
       return undefined
     }

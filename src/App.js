@@ -28,6 +28,7 @@ class App extends Component {
     this.state = {
         server: serverURL,
         isPaused: false,
+        startDate: '',
         backtestDate: '',
         availableBalance: '',
         totalBalance: '',
@@ -36,7 +37,9 @@ class App extends Component {
         totalProfitLossGraph: blankProfitLossGraph,
         successRate: '',
         openTrades: [],
-        closedTrades: []
+        closedTrades: [],
+        backtestOnline: true,
+        tradeStats: {},
     }
   }
 
@@ -57,13 +60,15 @@ class App extends Component {
       .then(data => {
         this.setState({ 
         backtestDate: data.backtestDate, 
+        startDate: data.startDate,
         totalProfitLoss: data.totalProfitLoss,
         totalProfitLossPct: this.formatPct(data.totalProfitLossPct),
         totalProfitLossGraph: JSON.parse(JSON.parse(data.totalProfitLossGraph)),
-        totalBalance: this.formatCurrency(data.totalBalance), 
-        availableBalance: this.formatCurrency(data.availableBalance),
+        totalBalance: data.totalBalance, 
+        availableBalance: data.availableBalance,
         successRate: data.successRate || 0,
-        isPaused: data.isPaused
+        isPaused: data.isPaused,
+        backtestOnline: data.backtestOnline
       })});
     
     fetch(`${this.state.server}/trades`, {
@@ -74,6 +79,15 @@ class App extends Component {
     })
     .then(response => response.json())
     .then(data => this.setState({openTrades: data[0], closedTrades: data[1]}))
+
+    fetch(`${this.state.server}/trades/stats?date=${this.state.startDate}`, {
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => this.setState({tradeStats: data}));
   }
 
   setupSocketListeners() {
@@ -81,14 +95,16 @@ class App extends Component {
 
       // Listen for updates to the backtest date.
       this.socket.on('backtestPropertiesUpdated', (data) => {
-        const availableBalance = this.formatCurrency(data.availableBalance),
+        const availableBalance = data.availableBalance,
               totalProfitLoss = data.totalProfitLoss,
               totalProfitLossPct = this.formatPct(data.totalProfitLossPct),
               totalProfitLossGraph = data.totalProfitLossGraph !== undefined ? JSON.parse(data.totalProfitLossGraph) : undefined,
-              totalBalance = this.formatCurrency(data.totalBalance),
+              totalBalance = data.totalBalance,
               backtestDate = data.backtestDate,
               successRate = data.successRate,
-              isPaused = data.isPaused;
+              isPaused = data.isPaused,
+              backtestOnline = data.backtestOnline,
+              tradeStats = data.tradeStats;
         
         // Only update the state of properties that were included in the socket payload.
         this.setState({
@@ -99,7 +115,9 @@ class App extends Component {
           availableBalance: availableBalance ?? this.state.availableBalance,
           totalBalance: totalBalance ?? this.state.totalBalance,
           successRate: successRate ?? this.state.successRate,
-          isPaused: isPaused ?? this.state.isPaused
+          isPaused: isPaused ?? this.state.isPaused,
+          backtestOnline: backtestOnline ?? this.state.backtestOnline,
+          tradeStats: tradeStats ?? this.state.tradeStats
         });
       });
 
@@ -115,44 +133,20 @@ class App extends Component {
         .then(response => response.json())
         .then(data => this.setState({openTrades: data[0], closedTrades: data[1]}))
       });
-    }
-  }
 
-  formatCurrency = (number) => {
-    // Format currency to allow it to be shown within the space of the div containing it.
-    if(number === undefined) {
-      return undefined
+      // Listen for updates to the backtest date.
+      this.socket.on('updateStats', (data) => {
+        // Grab all open and closed trades from database.
+        fetch(`${this.state.server}/trades/stats?date=${this.state.startDate}`, {
+          headers : { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        .then(response => response.json())
+        .then(data => this.setState({tradeStats: data ?? this.state.tradeStats}));
+      });
     }
-
-    var maximumFractionDigits = null
-    if(number >= 1000) {
-      maximumFractionDigits = 0
-    } else {
-      maximumFractionDigits = 2
-    }
-
-    var letter = "";
-    if(number >= 100000) { 
-      if(number>=1000000) {
-        number = Math.round(number/1000)/1000
-        maximumFractionDigits = 2
-        letter = "M";
-      } else {
-        letter = "K";
-        number = Math.round(number/100)/10
-        maximumFractionDigits = 1
-      }
-    }
-
-    var formatter = new Intl.NumberFormat('en-GB', {
-      style: 'currency',
-      currency: 'GBP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: maximumFractionDigits,
-    });
-    const formatted_number = formatter.format(number);
-    
-    return formatted_number+letter
   }
 
   formatPct = (number) => {
@@ -193,14 +187,14 @@ class App extends Component {
     return (
       <div id="wrapper">
         <div id="content">
-          <WorldFlow isPaused={this.state.isPaused} date={this.state.backtestDate} playPauseClicked={this.togglePlayPause}/>
+          <WorldFlow isPaused={this.state.isPaused} date={this.state.backtestDate} playPauseClicked={this.togglePlayPause} backtestOnline={this.state.backtestOnline}/>
           <OpenTradeStats openTrades={this.state.openTrades} />
           <OpenTradeList openTrades={this.state.openTrades}/>
           <ClosedTradeList closedTrades={this.state.closedTrades}/>
           <News />
           <div id="trade-stats-container">
-            <TradeStats />
-            <TotalProfit totalValue={this.state.totalBalance} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
+            <TradeStats backtestDate={this.state.backtestDate} stats={this.state.tradeStats} />
+            <TotalProfit totalValue={this.state.totalBalance} totalProfitLoss={this.state.totalProfitLoss} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>
           <Settings socket={this.socket}/>

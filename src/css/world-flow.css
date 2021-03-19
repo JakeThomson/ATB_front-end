@@ -1,45 +1,87 @@
 #date-container {
-    position: absolute;
-    background: white;
-    border-radius: 0px 0px 16px 16px;
-    width: 269px;  height: 55px;
-    left: 315px;
-    box-shadow: 0px -0px 15px rgba(0,0,0,0.16);
+  position: absolute;
+  background: white;
+  border-radius: 0px 0px 16px 16px;
+  width: 269px;  height: 55px;
+  left: 315px;
+  box-shadow: 0px -0px 15px rgba(0,0,0,0.16);
+}
+
+#backtest-availability-box {
+  transition: all 1s;
+  -webkit-transition: all 1s; /** Chrome & Safari **/
+  -moz-transition: all 1s; /** Firefox **/
+  -o-transition: all 1s; /** Opera **/
+  position: absolute;
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  padding-top: 6px;
+  background: rgb(255, 65, 65);
+  border-radius: 0px 0px 16px 16px;
+  width: 200px;  height: 30px;
+  left: 35px; 
+  top:20px;
+  box-shadow: 0px -0px 15px rgba(0,0,0,0.16);
+  z-index: -1;
+}
+#backtest-availability-box.offline {
+  animation-name: offline-color;
+  animation-duration: 3s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  transition: all 1s;
+  -webkit-transition: all 1s; /** Chrome & Safari **/
+  -moz-transition: all 1s; /** Firefox **/
+  -o-transition: all 1s; /** Opera **/
+  transform: translate(0px, 30px);
+}
+
+@keyframes offline-color {
+  0% {
+    background-color: rgb(255, 92, 92);
   }
+  50% {
+    background-color: rgb(255, 24, 24);
+  }
+  100% {
+    background-color: rgb(255, 92, 92);
+  }
+}
 
 #play-pause-btn{
-    padding: 0;
-    border: 0;
-    background-color: transparent;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
 }
 #play-pause-btn:focus {
-    outline: none;
-    box-shadow: none;
+  outline: none;
+  box-shadow: none;
 }
 
 #play {
-    height: 40px;
-    width: 40px;
-    left: 13px;  top: 8px;
-    fill: #8EB18D;
+  height: 40px;
+  width: 40px;
+  left: 13px;  top: 8px;
+  fill: #8EB18D;
 }
 #play:active {
-    fill: rgb(76, 102, 75);
+  fill: rgb(76, 102, 75);
 }
 
 #pause {
-    height: 40px;
-    width: 40px;
-    left: 13px;  top: 8px;
-    fill: rgb(211, 102, 102);
+  height: 40px;
+  width: 40px;
+  left: 13px;  top: 8px;
+  fill: rgb(211, 102, 102);
 }
 #pause:active {
-    fill: rgb(133, 58, 58);
+  fill: rgb(133, 58, 58);
 }
 
 #date {
-    font-size: 36px;
-    left:70px;  top: 0px;
-    font-family: Helvetica;
-    color: #343434;
+  font-size: 36px;
+  left:70px;  top: 0px;
+  font-family: Helvetica;
+  color: #343434;
 }

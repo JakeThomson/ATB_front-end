@@ -103,7 +103,8 @@ class App extends Component {
               backtestDate = data.backtestDate,
               successRate = data.successRate,
               isPaused = data.isPaused,
-              backtestOnline = data.backtestOnline;
+              backtestOnline = data.backtestOnline,
+              tradeStats = data.tradeStats;
         
         // Only update the state of properties that were included in the socket payload.
         this.setState({
@@ -115,7 +116,8 @@ class App extends Component {
           totalBalance: totalBalance ?? this.state.totalBalance,
           successRate: successRate ?? this.state.successRate,
           isPaused: isPaused ?? this.state.isPaused,
-          backtestOnline: backtestOnline ?? this.state.backtestOnline
+          backtestOnline: backtestOnline ?? this.state.backtestOnline,
+          tradeStats: tradeStats ?? this.state.tradeStats
         });
       });
 

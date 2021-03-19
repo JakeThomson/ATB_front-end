@@ -75,6 +75,10 @@
   align-items: center;
 }
 
+.modal-body {
+  padding-top: 0;
+}
+
 .modal-open {
   overflow: auto !important;
 }
@@ -90,4 +94,14 @@
 .modal-backdrop {
   width: 800px;
   height: 480px;
+}
+
+.settings-form-label {
+  font-size: 14px;
+}
+
+.settings-form-input {
+  font-size: 14px;
+  height: auto;
+  padding: .175rem .75rem;
 }

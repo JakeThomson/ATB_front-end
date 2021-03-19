@@ -27,7 +27,7 @@
 }
 #backtest-availability-box.offline {
   animation-name: offline-color;
-  animation-duration: 5s;
+  animation-duration: 3s;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
   transition: all 1s;

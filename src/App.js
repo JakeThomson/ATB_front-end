@@ -64,8 +64,8 @@ class App extends Component {
         totalProfitLoss: data.totalProfitLoss,
         totalProfitLossPct: this.formatPct(data.totalProfitLossPct),
         totalProfitLossGraph: JSON.parse(JSON.parse(data.totalProfitLossGraph)),
-        totalBalance: this.formatCurrency(data.totalBalance), 
-        availableBalance: this.formatCurrency(data.availableBalance),
+        totalBalance: data.totalBalance, 
+        availableBalance: data.availableBalance,
         successRate: data.successRate || 0,
         isPaused: data.isPaused,
         backtestOnline: data.backtestOnline
@@ -95,11 +95,11 @@ class App extends Component {
 
       // Listen for updates to the backtest date.
       this.socket.on('backtestPropertiesUpdated', (data) => {
-        const availableBalance = this.formatCurrency(data.availableBalance),
+        const availableBalance = data.availableBalance,
               totalProfitLoss = data.totalProfitLoss,
               totalProfitLossPct = this.formatPct(data.totalProfitLossPct),
               totalProfitLossGraph = data.totalProfitLossGraph !== undefined ? JSON.parse(data.totalProfitLossGraph) : undefined,
-              totalBalance = this.formatCurrency(data.totalBalance),
+              totalBalance = data.totalBalance,
               backtestDate = data.backtestDate,
               successRate = data.successRate,
               isPaused = data.isPaused,
@@ -149,43 +149,6 @@ class App extends Component {
     }
   }
 
-  formatCurrency = (number) => {
-    // Format currency to allow it to be shown within the space of the div containing it.
-    if(number === undefined) {
-      return undefined
-    }
-
-    var maximumFractionDigits = null
-    if(number >= 1000) {
-      maximumFractionDigits = 0
-    } else {
-      maximumFractionDigits = 2
-    }
-
-    var letter = "";
-    if(number >= 100000) { 
-      if(number>=1000000) {
-        number = Math.round(number/1000)/1000
-        maximumFractionDigits = 2
-        letter = "M";
-      } else {
-        letter = "K";
-        number = Math.round(number/100)/10
-        maximumFractionDigits = 1
-      }
-    }
-
-    var formatter = new Intl.NumberFormat('en-GB', {
-      style: 'currency',
-      currency: 'GBP',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: maximumFractionDigits,
-    });
-    const formatted_number = formatter.format(number);
-    
-    return formatted_number+letter
-  }
-
   formatPct = (number) => {
     // Format percent to allow it to fit within the space of the div containing it.
     if(number === undefined) {
@@ -231,7 +194,7 @@ class App extends Component {
           <News />
           <div id="trade-stats-container">
             <TradeStats backtestDate={this.state.backtestDate} stats={this.state.tradeStats} />
-            <TotalProfit totalValue={this.state.totalBalance} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
+            <TotalProfit totalValue={this.state.totalBalance} totalProfitLoss={this.state.totalProfitLoss} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>
           <Settings socket={this.socket}/>

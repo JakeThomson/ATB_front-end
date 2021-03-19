@@ -1,33 +1,77 @@
+#total-profit-container {
+  position: absolute;
+  left: 250px; top: 206px;
+  width: 217px; height: 130px;
+}
 
 #total-profit-loss-header {
-    position: absolute;
-    left: 250px; top: 206px;
-    font-size: 20px;
-    font-family: Helvetica;
-    color: #343434;
-  }
-  
-  #total-profit-loss-value {
-    position: absolute;
-    width: 220px;
-    left: 238px; top: 220px;
-    font-size: 55px;
-    font-family: Helvetica;
-    color: #343434;
-    text-align: right;
-  }
-  
-  #total-profit-loss-pct {
-    position: absolute;
-    left: 375px; top: 282px;
-    font-size: 22px;
-    font-family: Helvetica;
-    color: #343434;
-  }
-  
-  #total-profit-loss-graph {
-    position: absolute;
-    width: 120px;  height: 37px;
-    left: 250px; top: 290px;
-    background-color: #d8d8d8;
-  }
+  font-size: 20px;
+  font-family: Helvetica;
+  color: #343434;
+}
+
+#toggle-profit-balance-btn {
+  margin: 4px 0px 0px 3px;
+  width: 21px; height: 19px;
+  border-radius: 4px;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  z-index: 1;
+  transition: background-color 0.5s;
+  -webkit-transition: background-color 0.5s; /** Chrome & Safari **/
+  -moz-transition: background-color 0.5s; /** Firefox **/
+  -o-transition: background-color 0.5s; /** Opera **/
+}
+#toggle-profit-balance-btn:focus {
+  outline: none;
+  box-shadow: none;
+}
+#toggle-profit-balance-btn:hover {
+  background-color: #f0f0f0;
+  transition: background-color 0.5s;
+  -webkit-transition: background-color 0.5s; /** Chrome & Safari **/
+  -moz-transition: background-color 0.5s; /** Firefox **/
+  -o-transition: background-color 0.5s; /** Opera **/
+}
+#toggle-profit-balance-btn:hover #toggle-profit-balance-icon {
+  fill: #303030;
+  transition: fill 0.5s;
+  -webkit-transition: fill 0.5s; /** Chrome & Safari **/
+  -moz-transition: fill 0.5s; /** Firefox **/
+  -o-transition: fill 0.5s; /** Opera **/
+}
+
+
+#toggle-profit-balance-icon {
+  position: relative;
+  top: -5px;
+  max-width: 70%;
+  max-height: 70%;
+  fill: #868686;
+} 
+
+#total-profit-loss-value {
+  position: absolute;
+  width: 220px;
+  left: -8px; top: 14px;
+  font-size: 55px;
+  font-family: Helvetica;
+  color: #343434;
+  text-align: right;
+}
+
+#total-profit-loss-pct {
+  position: absolute;
+  left: 129px; top: 76px;
+  font-size: 22px;
+  font-family: Helvetica;
+  color: #343434;
+}
+
+#total-profit-loss-graph {
+  position: absolute;
+  width: 120px;  height: 37px;
+  top: 84px; left: 4px;
+  background-color: #d8d8d8;
+}

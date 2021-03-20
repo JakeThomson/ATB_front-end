@@ -105,3 +105,19 @@
   height: auto;
   padding: .175rem .75rem;
 }
+
+.settings-form-submit-btn {
+  font-size: 14px;
+  height: auto;
+  padding: .175rem .75rem;
+  background-color: #8cc2c4; 
+  border-color: #8cc2c4;
+}
+.settings-form-submit-btn:hover {
+  background-color: #72adaf; 
+  border-color: #72adaf;
+}
+.settings-form-submit-btn:disabled {
+  background-color: #6c757d; 
+  border-color: #6c757d;
+}

@@ -117,6 +117,15 @@
   background-color: #72adaf; 
   border-color: #72adaf;
 }
+.settings-form-submit-btn:active {
+  background-color: #72adaf !important; 
+  border-color: #72adaf !important;
+}
+.settings-form-submit-btn:focus {
+  background-color: #72adaf !important; 
+  border-color: #72adaf !important;
+  box-shadow: 0 0 0 0.2rem rgb(114 173 175 / 50%);
+}
 .settings-form-submit-btn:disabled {
   background-color: #6c757d; 
   border-color: #6c757d;

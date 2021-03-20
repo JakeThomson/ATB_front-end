@@ -38,7 +38,7 @@ class Settings extends Component {
           name = target.name;
 
     this.setState({
-      [name]: value,
+      [name]: parseFloat(value),
     })
   }
 
@@ -49,7 +49,7 @@ class Settings extends Component {
       adjustedDatetime.date(startDate.date());
       adjustedDatetime.month(startDate.month());
       adjustedDatetime.year(startDate.year());
-      this.setState({ startDate: adjustedDatetime._d});
+      this.setState({ startDate: adjustedDatetime});
     } else {
       this.setState({ startDate });
     }
@@ -62,14 +62,56 @@ class Settings extends Component {
       adjustedDatetime.date(endDate.date());
       adjustedDatetime.month(endDate.month());
       adjustedDatetime.year(endDate.year());
-      this.setState({ endDate: adjustedDatetime._d});
+      this.setState({ endDate: adjustedDatetime});
     } else {
       this.setState({ endDate });
     }
   }
 
   validSubmission = (data) => {
-    
+    console.log(data)
+    if(moment(data.startDate).isAfter(moment(data.endDate).subtract(1, 'months'))) {
+      this.setState({
+        error: `Start date must be at least a month before the end date.`,
+        submitting: false
+      })
+      return false;
+    }
+    if(data.startBalance < 500) {
+      this.setState({
+        error: `Starting balance must be £500 or more.`,
+        submitting: false
+      })
+      return false;
+    }
+    if(100 < data.capPct || data.capPct <= 0) {
+      this.setState({
+        error: `Balance % spent per trade must be between 1-100.`,
+        submitting: false
+      })
+      return false;
+    }
+    if(data.takeProfit <= data.stopLoss){
+      this.setState({
+        error: `Take profit must be higher than the stop loss.`,
+        submitting: false
+      })
+      return false;
+    }
+    if(data.takeProfit <= 1){
+      this.setState({
+        error: `Take profit must be higher than 1.`,
+        submitting: false
+      })
+      return false;
+    }
+    if(data.stopLoss >= 1){
+      this.setState({
+        error: `Stop loss must be less than 1.`,
+        submitting: false
+      })
+      return false;
+    }
     return true;
   }
 
@@ -91,8 +133,10 @@ class Settings extends Component {
 
     // Error handling
     if(this.validSubmission(data))  {
-      // Update the properties
-      console.log("Properties updated. ")
+      this.setState({
+        error: '',
+        submitting: false
+      })
     }
   }
 
@@ -113,6 +157,10 @@ class Settings extends Component {
             <Modal.Title>Backtest settings</Modal.Title>
           </Modal.Header>
           <Modal.Body>
+            {
+              // Show error message in form if request was invalid.
+              this.state.error !== "" ? <div className="mb-1 text-danger col-12 px-0 pt-2 text-center settings-form-input">{this.state.error}</div> : null
+            }
             <form className="container px-0 mx-auto settings-form" onSubmit={this.handleSubmit}>
               <div className="row col-12 mx-0 px-1" >
                 <div className="col-4 form-group px-1 pr-2">

@@ -46,7 +46,7 @@ class App extends Component {
           endDate: moment().startOf('day'),
           startBalance: 15000,
           marketIndex: "s&p500",
-          capPct: 25,
+          capPct: 0.25,
           takeProfit: 1.02,
           stopLoss: 0.99
         }
@@ -190,11 +190,23 @@ class App extends Component {
       body: JSON.stringify(data),
     })
     .then(res => res.json())
-    .catch(err => console.error(err))
+    .catch(err => console.error(err));
   }
 
   handleSubmitSettings = (data) => {
     this.setState({ settings: data });
+
+    // Patch request to update database
+    fetch(this.state.server + "/backtest_settings", {
+      method: 'PUT',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+    .then(res => res.json())
+    .catch(err => console.error(err));
   }
 
   render() {

@@ -15,7 +15,7 @@ class Settings extends Component {
     endDate: moment().startOf('day'),
     startBalance: 15000,
     marketIndex: "s&p500",
-    capPct: 25,
+    capPct: 0.25,
     takeProfit: 1.02,
     stopLoss: 0.99
   }
@@ -32,9 +32,14 @@ class Settings extends Component {
   }
 
   handleInputChange = event => {
-    const target = event.target,
+    let target = event.target,
           value = target.value,
           name = target.name;
+    console.log(name, value);
+    
+    if(name === "capPct") {
+      value /= 100;
+    }
 
     this.setState({
       [name]: parseFloat(value),
@@ -247,7 +252,7 @@ class Settings extends Component {
                       id="capPct" 
                       type="number"
                       name="capPct" 
-                      value={this.state.capPct} 
+                      value={this.state.capPct*100} 
                       onChange={this.handleInputChange}
                       required 
                       autoComplete="off"

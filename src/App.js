@@ -44,11 +44,11 @@ class App extends Component {
         settings: {
           startDate: moment("2015-01-01"),
           endDate: moment().startOf('day'),
-          startBalance: 15000,
-          marketIndex: "s&p500",
-          capPct: 0.25,
-          takeProfit: 1.02,
-          stopLoss: 0.99
+          startBalance: 0,
+          marketIndex: '',
+          capPct: 0,
+          takeProfit: 0,
+          stopLoss: 0
         }
     }
   }
@@ -66,11 +66,10 @@ class App extends Component {
         'Accept': 'application/json'
       }
     })
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ 
+    .then(response => response.json())
+    .then(data => {
+      this.setState({ 
         backtestDate: data.backtestDate, 
-        startDate: data.startDate,
         totalProfitLoss: data.totalProfitLoss,
         totalProfitLossPct: this.formatPct(data.totalProfitLossPct),
         totalProfitLossGraph: JSON.parse(JSON.parse(data.totalProfitLossGraph)),
@@ -79,7 +78,8 @@ class App extends Component {
         successRate: data.successRate || 0,
         isPaused: data.isPaused,
         backtestOnline: data.backtestOnline
-      })});
+      })
+    });
     
     fetch(`${this.state.server}/trades`, {
       headers : { 
@@ -209,6 +209,21 @@ class App extends Component {
     .catch(err => console.error(err));
   }
 
+  handleGetSettings = (data) => {
+    console.log(data);
+    this.setState({
+      settings: {
+        startDate: moment(data.startDate), 
+        endDate: moment(data.endDate),
+        startBalance: data.startBalance,
+        marketIndex: data.marketIndex,
+        capPct: data.capPct,
+        takeProfit: data.takeProfit,
+        stopLoss: data.stopLoss
+      }
+     });
+  }
+
   render() {
     return (
       <div id="wrapper">
@@ -223,7 +238,7 @@ class App extends Component {
             <TotalProfit totalValue={this.state.totalBalance} totalProfitLoss={this.state.totalProfitLoss} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>
-          <Settings socket={this.socket} onSubmitSettings={this.handleSubmitSettings} savedSettings={this.state.settings} />
+          <Settings socket={this.socket} onSubmitSettings={this.handleSubmitSettings} onGetSettings={this.handleGetSettings} savedSettings={this.state.settings} />
         </div>
         <div className="background">
           <div id="bg-square-1"/>

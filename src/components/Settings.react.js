@@ -8,16 +8,49 @@ import '../css/settings.css';
 
 class Settings extends Component {
   state = {
-    show: true,
+    show: false,
     error: "",
+    successMsg: "",
     submitting: false,
     startDate: moment("2015-01-01"),
     endDate: moment().startOf('day'),
-    startBalance: 15000,
-    marketIndex: "s&p500",
-    capPct: 0.25,
-    takeProfit: 1.02,
-    stopLoss: 0.99
+    startBalance: 0,
+    marketIndex: '',
+    capPct: 0,
+    takeProfit: 0,
+    stopLoss: 0
+  }
+
+  componentDidMount() {
+    // Detect environment application is running on and choose API URL appropricately.
+    let serverURL = "";
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      serverURL = 'http://127.0.0.1:8080';
+    } else {
+      serverURL = 'https://trading-api.jake-t.codes';
+    }
+
+    // Fill UI with data from database.
+    fetch(`${serverURL}/backtest_settings`, {
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      this.setState({ 
+        startDate: moment(data.startDate), 
+        endDate: moment(data.endDate),
+        startBalance: data.startBalance,
+        marketIndex: data.marketIndex,
+        capPct: data.capPct,
+        takeProfit: data.takeProfit,
+        stopLoss: data.stopLoss
+      })
+      this.props.onGetSettings(data);
+    });
   }
 
   onRestart = () => {
@@ -27,6 +60,10 @@ class Settings extends Component {
   }
 
   setShow = bool => {
+    if(!bool){
+      this.setState({successMsg: ""});
+    }
+
     // Sets the visible state of the modal.
     this.setState({ show: bool});
   }
@@ -43,6 +80,7 @@ class Settings extends Component {
 
     this.setState({
       [name]: parseFloat(value),
+      successMsg: ""
     })
   }
 
@@ -53,9 +91,9 @@ class Settings extends Component {
       adjustedDatetime.date(startDate.date());
       adjustedDatetime.month(startDate.month());
       adjustedDatetime.year(startDate.year());
-      this.setState({ startDate: adjustedDatetime});
+      this.setState({ startDate: adjustedDatetime, successMsg: "" });
     } else {
-      this.setState({ startDate });
+      this.setState({ startDate, successMsg: "" });
     }
   }
 
@@ -66,9 +104,9 @@ class Settings extends Component {
       adjustedDatetime.date(endDate.date());
       adjustedDatetime.month(endDate.month());
       adjustedDatetime.year(endDate.year());
-      this.setState({ endDate: adjustedDatetime});
+      this.setState({ endDate: adjustedDatetime, successMsg: "" });
     } else {
-      this.setState({ endDate });
+      this.setState({ endDate, successMsg: "" });
     }
   }
 
@@ -124,7 +162,7 @@ class Settings extends Component {
     // Stop form from being changed/resubmitted whilst query is executing.
     this.setState({
       submitting: true,
-    })
+    });
 
     // Deep clone component state, that the actual states are not altered.
     const data = JSON.parse(JSON.stringify(this.state));
@@ -133,6 +171,7 @@ class Settings extends Component {
     delete data.show;
     delete data.submitting;
     delete data.error;
+    delete data.successMsg;
     data.startDate = moment(data.startDate);
     data.endDate = moment(data.endDate);
 
@@ -140,6 +179,7 @@ class Settings extends Component {
     if(this.validSubmission(data))  {
       this.setState({
         error: '',
+        successMsg: 'Settings saved, backtest must be restarted for changes to take effect.',
         submitting: false
       });
       this.props.onSubmitSettings(data);
@@ -147,6 +187,7 @@ class Settings extends Component {
   }
 
   checkSettingsDifferent = () => {
+
     // Deep clone component state, that the actual states are not altered.
     const same = 
       this.props.savedSettings.startDate.isSame(this.state.startDate)
@@ -293,6 +334,10 @@ class Settings extends Component {
                     />
                   </div>
                 </div>
+                {
+                  // Show error message in form if request was invalid.
+                  this.state.successMsg !== "" ? <div className="mb-1 text-success col-12 px-0 pb-2 text-center settings-form-input">{this.state.successMsg}</div> : null
+                }
                 <Button className="mx-auto settings-form-submit-btn mb-3" variant="secondary" type="submit" disabled={settingsChanged}>
                   Save
                 </Button>

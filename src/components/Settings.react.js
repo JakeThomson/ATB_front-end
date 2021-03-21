@@ -12,7 +12,7 @@ class Settings extends Component {
     error: "",
     submitting: false,
     startDate: moment("2015-01-01"),
-    endDate: moment(),
+    endDate: moment().startOf('day'),
     startBalance: 15000,
     marketIndex: "s&p500",
     capPct: 25,
@@ -32,7 +32,6 @@ class Settings extends Component {
   }
 
   handleInputChange = event => {
-    console.log(event)
     const target = event.target,
           value = target.value,
           name = target.name;
@@ -69,7 +68,6 @@ class Settings extends Component {
   }
 
   validSubmission = (data) => {
-    console.log(data)
     if(moment(data.startDate).isAfter(moment(data.endDate).subtract(1, 'months'))) {
       this.setState({
         error: `Start date must be at least a month before the end date.`,
@@ -130,19 +128,38 @@ class Settings extends Component {
     delete data.show;
     delete data.submitting;
     delete data.error;
+    data.startDate = moment(data.startDate);
+    data.endDate = moment(data.endDate);
 
     // Error handling
     if(this.validSubmission(data))  {
       this.setState({
         error: '',
         submitting: false
-      })
+      });
+      this.props.onSubmitSettings(data);
     }
+  }
+
+  checkSettingsDifferent = () => {
+    // Deep clone component state, that the actual states are not altered.
+    const same = 
+      this.props.savedSettings.startDate.isSame(this.state.startDate)
+      && this.props.savedSettings.endDate.isSame(this.state.endDate)
+      && this.props.savedSettings.startBalance === this.state.startBalance
+      && this.props.savedSettings.marketIndex === this.state.marketIndex 
+      && this.props.savedSettings.capPct === this.state.capPct
+      && this.props.savedSettings.takeProfit === this.state.takeProfit
+      && this.props.savedSettings.stopLoss === this.state.stopLoss;
+
+    return same;
   }
 
   render() {
     const handleClose = () => this.setShow(false);
     const handleShow = () => this.setShow(true);
+    let settingsChanged = this.checkSettingsDifferent();
+
     return (
       <div id="settings-container" className="d-flex flex-row justify-content-center">
         <button id="settings-btn" onClick={handleShow}>
@@ -172,13 +189,14 @@ class Settings extends Component {
                       id: "startDate",
                       autoComplete: "off",
                       readOnly: false,
-                      disabled: this.state.submitting
+                      disabled: this.state.submitting,
                     }} 
                     value={this.state.startDate} 
                     initialViewDate={this.state.startDate} 
                     onChange={this.handleStartDateChange} 
                     dateFormat="DD-MM-YYYY" 
-                    timeFormat={false} 
+                    timeFormat={false}
+                    closeOnSelect={true}
                   />
                 </div>
                 <div className="col-4 form-group px-1 pr-2">
@@ -197,6 +215,7 @@ class Settings extends Component {
                     onChange={this.handleEndDateChange} 
                     dateFormat="DD-MM-YYYY" 
                     timeFormat={false} 
+                    closeOnSelect={true}
                   />
                 </div>
                 <div className="col-4 form-group px-1">
@@ -269,7 +288,7 @@ class Settings extends Component {
                     />
                   </div>
                 </div>
-                <Button className="mx-auto settings-form-submit-btn mb-3" variant="secondary" type="submit" disabled={this.state.submitting}>
+                <Button className="mx-auto settings-form-submit-btn mb-3" variant="secondary" type="submit" disabled={settingsChanged}>
                   Save
                 </Button>
               </div>

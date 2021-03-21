@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import './css/App.css';
 import './bootstrap.min.css';
 import blankProfitLossGraph from './content/blankProfitLossGraph.json'
@@ -40,6 +41,15 @@ class App extends Component {
         closedTrades: [],
         backtestOnline: true,
         tradeStats: {},
+        settings: {
+          startDate: moment("2015-01-01"),
+          endDate: moment().startOf('day'),
+          startBalance: 15000,
+          marketIndex: "s&p500",
+          capPct: 25,
+          takeProfit: 1.02,
+          stopLoss: 0.99
+        }
     }
   }
 
@@ -183,6 +193,10 @@ class App extends Component {
     .catch(err => console.error(err))
   }
 
+  handleSubmitSettings = (data) => {
+    this.setState({ settings: data });
+  }
+
   render() {
     return (
       <div id="wrapper">
@@ -197,7 +211,7 @@ class App extends Component {
             <TotalProfit totalValue={this.state.totalBalance} totalProfitLoss={this.state.totalProfitLoss} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>
-          <Settings socket={this.socket}/>
+          <Settings socket={this.socket} onSubmitSettings={this.handleSubmitSettings} savedSettings={this.state.settings} />
         </div>
         <div className="background">
           <div id="bg-square-1"/>

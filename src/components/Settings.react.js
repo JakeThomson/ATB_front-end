@@ -312,12 +312,12 @@ class Settings extends Component {
                 </div>
                 <div className="col-4 form-group px-1 pr-2">
                   <label className="px-0 col-form-label settings-form-label" htmlFor="marketIndex">Market index</label>
-                  <select className="form-control settings-form-input" id="marketIndex" name="marketIndex" defaultValue={this.state.marketIndex} onChange={this.handleInputChange} disabled={this.state.submitting} >
+                  <select className="form-control settings-form-input settings-form-select" id="marketIndex" name="marketIndex" defaultValue={this.state.marketIndex} onChange={this.handleInputChange} disabled={this.state.submitting} >
                     <option value="s&p500">{'S&P500'}</option>
                   </select>
                 </div>
                 <div className="col-4 form-group px-1 pr-2">
-                  <label className="px-0 col-form-label settings-form-label" htmlFor="capPct">Balance% / trade</label>
+                  <label className="px-0 col-form-label settings-form-label" htmlFor="capPct">% per trade</label>
                   <div className="input-group">
                     <input 
                       className="form-control settings-form-input" 

@@ -193,24 +193,11 @@ class App extends Component {
     .catch(err => console.error(err));
   }
 
-  handleSubmitSettings = (data) => {
+  handleSettingsSaved = (data) => {
     this.setState({ settings: data });
-
-    // Patch request to update database
-    fetch(this.state.server + "/backtest_settings", {
-      method: 'PUT',
-      headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-    .then(res => res.json())
-    .catch(err => console.error(err));
   }
 
   handleGetSettings = (data) => {
-    console.log(data);
     this.setState({
       settings: {
         startDate: moment(data.startDate), 
@@ -238,7 +225,7 @@ class App extends Component {
             <TotalProfit totalValue={this.state.totalBalance} totalProfitLoss={this.state.totalProfitLoss} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>
-          <Settings socket={this.socket} onSubmitSettings={this.handleSubmitSettings} onGetSettings={this.handleGetSettings} savedSettings={this.state.settings} />
+          <Settings socket={this.socket} onSettingsSaved={this.handleSettingsSaved} onGetSettings={this.handleGetSettings} savedSettings={this.state.settings} />
         </div>
         <div className="background">
           <div id="bg-square-1"/>

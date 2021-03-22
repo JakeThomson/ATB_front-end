@@ -7,21 +7,9 @@ import "react-datetime/css/react-datetime.css";
 import '../css/settings.css';
 
 class Settings extends Component {
-  state = {
-    show: false,
-    error: "",
-    successMsg: "",
-    submitting: false,
-    startDate: moment("2015-01-01"),
-    endDate: moment().startOf('day'),
-    startBalance: 0,
-    marketIndex: '',
-    capPct: 0,
-    takeProfit: 0,
-    stopLoss: 0
-  }
+  constructor(props) {
+    super(props);
 
-  componentDidMount() {
     // Detect environment application is running on and choose API URL appropricately.
     let serverURL = "";
     if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
@@ -30,8 +18,30 @@ class Settings extends Component {
       serverURL = 'https://trading-api.jake-t.codes';
     }
 
+    this.state = {
+      show: false,
+      error: "",
+      successMsg: "",
+      submitting: false,
+      startDate: moment("2015-01-01"),
+      endDate: moment().startOf('day'),
+      startBalance: 0,
+      marketIndex: '',
+      capPct: 0,
+      takeProfit: 0,
+      stopLoss: 0,
+      server: serverURL
+    }
+  }
+
+  componentDidMount() {
+
+    this.getSettings();
+  }
+
+  getSettings = () => {
     // Fill UI with data from database.
-    fetch(`${serverURL}/backtest_settings`, {
+    fetch(`${this.state.server}/backtest_settings`, {
       headers : { 
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -62,6 +72,8 @@ class Settings extends Component {
   setShow = bool => {
     if(!bool){
       this.setState({successMsg: ""});
+    } else {
+      this.getSettings();
     }
 
     // Sets the visible state of the modal.
@@ -177,17 +189,36 @@ class Settings extends Component {
 
     // Error handling
     if(this.validSubmission(data))  {
-      this.setState({
-        error: '',
-        successMsg: 'Settings saved, backtest must be restarted for changes to take effect.',
-        submitting: false
+      // Patch request to update database
+      fetch(this.state.server + "/backtest_settings", {
+        method: 'PUT',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      .then(res => res.json())
+      .then(res => {
+        this.setState({
+          error: '',
+          successMsg: 'Settings saved, backtest must be restarted for changes to take effect.',
+          submitting: false
+        });
+        this.props.onSettingsSaved(data);
+      })
+      .catch(err => {
+        console.error(err)
+        this.setState({
+          error: 'Error occurred when saving settings.',
+          successMsg: '',
+          submitting: false
+        });
       });
-      this.props.onSubmitSettings(data);
     }
   }
 
   checkSettingsDifferent = () => {
-
     // Deep clone component state, that the actual states are not altered.
     const same = 
       this.props.savedSettings.startDate.isSame(this.state.startDate)

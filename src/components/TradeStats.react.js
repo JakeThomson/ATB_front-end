@@ -25,7 +25,7 @@ class TradeStats extends Component {
       return undefined
     }
 
-    const decimalPts = number >= 10 ? 1 : 2 
+    const decimalPts = Math.abs(number) >= 10 ? 1 : 2 
 
     const formattedPct = number.toFixed(decimalPts).toString()+"%";
     return formattedPct

@@ -165,7 +165,7 @@ class App extends Component {
       return undefined
     }
 
-    const decimalPts = number >= 10 ? 1 : 2 
+    const decimalPts = Math.abs(number) >= 10 ? 1 : 2 
 
     const sign = number < 0 ? "" : "+";
     const formattedPct = "("+sign+number.toFixed(decimalPts).toString()+"%)";

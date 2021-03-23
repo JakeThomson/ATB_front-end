@@ -49,7 +49,6 @@ class Settings extends Component {
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data)
       this.setState({ 
         startDate: moment(data.startDate), 
         endDate: moment(data.endDate),
@@ -84,7 +83,6 @@ class Settings extends Component {
     let target = event.target,
           value = target.value,
           name = target.name;
-    console.log(name, value);
     
     if(name === "capPct") {
       value /= 100;

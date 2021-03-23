@@ -130,6 +130,20 @@ class Settings extends Component {
       })
       return false;
     }
+    if(moment(data.startDate).isAfter(moment(data.endDate).subtract(1, 'months'))) {
+      this.setState({
+        error: `Start date must be at least a month before the end date.`,
+        submitting: false
+      })
+      return false;
+    }
+    if(moment(data.endDate).isSameOrAfter(moment().startOf("day"))) {
+      this.setState({
+        error: `End date must be before today.`,
+        submitting: false
+      })
+      return false;
+    }
     if(data.startBalance < 500) {
       this.setState({
         error: `Starting balance must be £500 or more.`,
@@ -232,6 +246,26 @@ class Settings extends Component {
     return same;
   }
 
+  validStartDate = ( date ) => {
+    if(moment(date).isBefore(moment("2010-01-01"))) {
+      return false;
+    }
+    if(moment(date).isAfter(moment(this.state.endDate))) {
+      return false;
+    }
+    return true;
+  };
+  
+  validEndDate = ( date ) => {
+    if(moment(date).isAfter(moment().startOf("day"))) {
+      return false;
+    }
+    if(moment(date).isBefore(moment(this.state.startDate))) {
+      return false;
+    }
+    return true;
+  };
+
   render() {
     const handleClose = () => this.setShow(false);
     const handleShow = () => this.setShow(true);
@@ -268,6 +302,7 @@ class Settings extends Component {
                       readOnly: false,
                       disabled: this.state.submitting,
                     }} 
+                    isValidDate={ this.validStartDate }
                     value={this.state.startDate} 
                     initialViewDate={this.state.startDate} 
                     onChange={this.handleStartDateChange} 
@@ -287,6 +322,7 @@ class Settings extends Component {
                       readOnly: false,
                       disabled: this.state.submitting
                     }} 
+                    isValidDate={ this.validEndDate }
                     value={this.state.endDate} 
                     initialViewDate={this.state.endDate} 
                     onChange={this.handleEndDateChange} 

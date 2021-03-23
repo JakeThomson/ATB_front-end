@@ -1,6 +1,6 @@
 {
   "name": "atb_front-end",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.9",
@@ -10,6 +10,7 @@
     "plotly.js": "^1.58.4",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.2",
+    "react-datetime": "^3.0.4",
     "react-dom": "^17.0.1",
     "react-plotly.js": "^2.5.1",
     "react-scripts": "4.0.3",

@@ -17,25 +17,25 @@ class OpenTradeList extends Component {
 
     var maximumFractionDigits = null
     var letter = "";
-    if(number >= 1000000) {
+    if(Math.abs(number) >= 1000000) {
       number /= 1000000;
       maximumFractionDigits = 2
       letter ="m";
-    } else if(number >= 100000) {
+    } else if(Math.abs(number) >= 100000) {
       number /= 1000;
       maximumFractionDigits = 0
       letter ="k";
-    }else if(number >= 100000) {
+    }else if(Math.abs(number) >= 100000) {
       number /= 100000;
       maximumFractionDigits = 2
       letter ="k";
-    } else if(number >= 10000) {
+    } else if(Math.abs(number) >= 10000) {
       number /= 1000;
       maximumFractionDigits = 1
       letter ="k";
-    } else if(number >= 1000) {
+    } else if(Math.abs(number) >= 1000) {
       maximumFractionDigits = 0
-    } else if(number >= 100) {
+    } else if(Math.abs(number) >= 100) {
       maximumFractionDigits = 1
     } else {
       maximumFractionDigits = 2

@@ -20,15 +20,15 @@ class TotalProfit extends Component {
     }
 
     var maximumFractionDigits = null
-    if(number >= 1000) {
+    if(Math.abs(number) >= 1000) {
       maximumFractionDigits = 0
     } else {
       maximumFractionDigits = 2
     }
 
     var letter = "";
-    if(number >= 100000) { 
-      if(number>=1000000) {
+    if(Math.abs(number) >= 100000) { 
+      if(Math.abs(number)>=1000000) {
         number = Math.round(number/1000)/1000
         maximumFractionDigits = 2
         letter = "M";

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import moment from 'moment';
 import './css/App.css';
 import './bootstrap.min.css';
 import blankProfitLossGraph from './content/blankProfitLossGraph.json'
@@ -40,6 +41,15 @@ class App extends Component {
         closedTrades: [],
         backtestOnline: true,
         tradeStats: {},
+        settings: {
+          startDate: moment("2015-01-01"),
+          endDate: moment().startOf('day'),
+          startBalance: 0,
+          marketIndex: '',
+          capPct: 0,
+          takeProfit: 0,
+          stopLoss: 0
+        }
     }
   }
 
@@ -56,11 +66,10 @@ class App extends Component {
         'Accept': 'application/json'
       }
     })
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ 
+    .then(response => response.json())
+    .then(data => {
+      this.setState({ 
         backtestDate: data.backtestDate, 
-        startDate: data.startDate,
         totalProfitLoss: data.totalProfitLoss,
         totalProfitLossPct: this.formatPct(data.totalProfitLossPct),
         totalProfitLossGraph: JSON.parse(JSON.parse(data.totalProfitLossGraph)),
@@ -69,7 +78,8 @@ class App extends Component {
         successRate: data.successRate || 0,
         isPaused: data.isPaused,
         backtestOnline: data.backtestOnline
-      })});
+      })
+    });
     
     fetch(`${this.state.server}/trades`, {
       headers : { 
@@ -155,7 +165,7 @@ class App extends Component {
       return undefined
     }
 
-    const decimalPts = number >= 10 ? 1 : 2 
+    const decimalPts = Math.abs(number) >= 10 ? 1 : 2 
 
     const sign = number < 0 ? "" : "+";
     const formattedPct = "("+sign+number.toFixed(decimalPts).toString()+"%)";
@@ -180,7 +190,25 @@ class App extends Component {
       body: JSON.stringify(data),
     })
     .then(res => res.json())
-    .catch(err => console.error(err))
+    .catch(err => console.error(err));
+  }
+
+  handleSettingsSaved = (data) => {
+    this.setState({ settings: data });
+  }
+
+  handleGetSettings = (data) => {
+    this.setState({
+      settings: {
+        startDate: moment(data.startDate), 
+        endDate: moment(data.endDate),
+        startBalance: data.startBalance,
+        marketIndex: data.marketIndex,
+        capPct: data.capPct,
+        takeProfit: data.takeProfit,
+        stopLoss: data.stopLoss
+      }
+     });
   }
 
   render() {
@@ -197,7 +225,7 @@ class App extends Component {
             <TotalProfit totalValue={this.state.totalBalance} totalProfitLoss={this.state.totalProfitLoss} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>
-          <Settings socket={this.socket}/>
+          <Settings socket={this.socket} onSettingsSaved={this.handleSettingsSaved} onGetSettings={this.handleGetSettings} savedSettings={this.state.settings} />
         </div>
         <div className="background">
           <div id="bg-square-1"/>

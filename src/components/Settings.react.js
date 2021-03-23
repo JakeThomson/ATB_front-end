@@ -85,7 +85,8 @@ class Settings extends Component {
           name = target.name;
     
     if(name === "capPct") {
-      value /= 100;
+      value = value === "" ? "" : value/100;
+      console.log(value);
     }
 
     this.setState({
@@ -342,6 +343,8 @@ class Settings extends Component {
                     required 
                     autoComplete="off"
                     disabled={this.state.submitting} 
+                    inputMode="decimal"
+                    novalidate 
                   />
                 </div>
                 <div className="col-4 form-group px-1 pr-2">
@@ -358,11 +361,12 @@ class Settings extends Component {
                       id="capPct" 
                       type="number"
                       name="capPct" 
-                      value={this.state.capPct*100} 
+                      value={Math.round(this.state.capPct*100)} 
                       onChange={this.handleInputChange}
                       required 
                       autoComplete="off"
                       disabled={this.state.submitting} 
+                      inputMode="decimal"
                     />
                     <div className="input-group-append">
                       <span className="input-group-text settings-form-input px-2">%</span>
@@ -382,6 +386,7 @@ class Settings extends Component {
                       step={0.01}
                       required 
                       disabled={this.state.submitting} 
+                      inputMode="decimal"
                     />
                   </div>
                   <div className="form-group row pr-1">
@@ -396,6 +401,7 @@ class Settings extends Component {
                       step={0.01}
                       required 
                       disabled={this.state.submitting} 
+                      inputMode="decimal"
                     />
                   </div>
                 </div>

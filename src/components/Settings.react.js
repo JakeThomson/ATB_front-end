@@ -36,7 +36,6 @@ class Settings extends Component {
   }
 
   componentDidMount() {
-
     this.getSettings();
   }
 

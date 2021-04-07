@@ -10,7 +10,6 @@ import WorldFlow from '../components/WorldFlow.react.js';
 import News from '../components/News.react.js';
 import TradeStats from '../components/TradeStats.react.js';
 import Settings from '../components/Settings.react.js'
-import socketClient  from "socket.io-client";
 
 class App extends Component {
   _isMounted = false;
@@ -56,9 +55,8 @@ class App extends Component {
   componentDidMount() {
     this._isMounted = true;
 
-    this.socket = socketClient(this.state.server);
-
     this.setupSocketListeners();
+
     // Fill UI with data from database.
     fetch(`${this.state.server}/backtest_properties`, {
       headers : { 
@@ -88,7 +86,11 @@ class App extends Component {
       }
     })
     .then(response => response.json())
-    .then(data => this.setState({openTrades: data[0], closedTrades: data[1]}))
+    .then(data => {
+      if(this._isMounted) {
+        this.setState({openTrades: data[0], closedTrades: data[1]});
+      }
+    })
 
     fetch(`${this.state.server}/trades/stats?date=${this.state.startDate}`, {
       headers : { 
@@ -97,14 +99,18 @@ class App extends Component {
       }
     })
     .then(response => response.json())
-    .then(data => this.setState({tradeStats: data}));
+    .then(data => {
+      if(this._isMounted) {
+        this.setState({tradeStats: data});
+      }
+    });
   }
 
   setupSocketListeners() {
-    if(this.socket !== undefined) {
+    if(this.props.socket !== undefined) {
 
       // Listen for updates to the backtest date.
-      this.socket.on('backtestPropertiesUpdated', (data) => {
+      this.props.socket.on('backtestPropertiesUpdated', (data) => {
         const availableBalance = data.availableBalance,
               totalProfitLoss = data.totalProfitLoss,
               totalProfitLossPct = this.formatPct(data.totalProfitLossPct),
@@ -132,7 +138,7 @@ class App extends Component {
       });
 
       // Listen for updates to the backtest date.
-      this.socket.on('tradesUpdated', (data) => {
+      this.props.socket.on('tradesUpdated', (data) => {
         // Grab all open and closed trades from database.
         fetch(`${this.state.server}/trades`, {
           headers : { 
@@ -149,7 +155,7 @@ class App extends Component {
       });
 
       // Listen for updates to the backtest date.
-      this.socket.on('updateStats', (data) => {
+      this.props.socket.on('updateStats', (data) => {
         // Grab all open and closed trades from database.
         fetch(`${this.state.server}/trades/stats?date=${this.state.startDate}`, {
           headers : { 
@@ -221,7 +227,8 @@ class App extends Component {
 
   componentWillUnmount() {
     this._isMounted = false;
-    this.socket.close();
+    this.props.socket.off("tradesUpdated");
+    this.props.socket.off("updateStats");
   }
 
   render() {

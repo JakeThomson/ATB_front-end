@@ -13,6 +13,8 @@ import Settings from '../components/Settings.react.js'
 import socketClient  from "socket.io-client";
 
 class App extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -52,11 +54,11 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // Set up socket connection & listeners.
-    this.socket = socketClient(this.state.server);
-    
-    this.setupSocketListeners();
+    this._isMounted = true;
 
+    this.socket = socketClient(this.state.server);
+
+    this.setupSocketListeners();
     // Fill UI with data from database.
     fetch(`${this.state.server}/backtest_properties`, {
       headers : { 
@@ -139,7 +141,11 @@ class App extends Component {
           }
         })
         .then(response => response.json())
-        .then(data => this.setState({openTrades: data[0], closedTrades: data[1]}))
+        .then(data => {
+          if(this._isMounted) {
+            this.setState({openTrades: data[0], closedTrades: data[1]})
+          }
+        })
       });
 
       // Listen for updates to the backtest date.
@@ -152,7 +158,11 @@ class App extends Component {
           }
         })
         .then(response => response.json())
-        .then(data => this.setState({tradeStats: data ?? this.state.tradeStats}));
+        .then(data => {
+          if(this._isMounted) {
+            this.setState({tradeStats: data ?? this.state.tradeStats})
+          }
+        });
       });
     }
   }
@@ -207,6 +217,11 @@ class App extends Component {
         stopLoss: data.stopLoss
       }
      });
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+    this.socket.close();
   }
 
   render() {

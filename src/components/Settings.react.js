@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {ReactComponent as SettingsSVG} from '../images/settings.svg';
 import { Modal, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import Datetime from 'react-datetime';
 import moment from 'moment';
 import "react-datetime/css/react-datetime.css";
@@ -286,9 +287,16 @@ class Settings extends Component {
           <Modal.Body>
             {
               // Show error message in form if request was invalid.
-              this.state.error !== "" ? <div className="mb-1 text-danger col-12 px-0 pt-2 text-center settings-form-input">{this.state.error}</div> : null
+              this.state.error !== "" ? <div className="text-danger col-12 px-0 pt-2 text-center settings-form-input pb-0 mb-0">{this.state.error}</div> : null
             }
-            <form className="container px-0 mx-auto settings-form" onSubmit={this.handleSubmit}>
+            <div className="container row mx-0">
+              <Link to="/strategy-manager" className="mx-auto" >
+                <Button className="settings-form-submit-btn mb-3 mt-3 py-1" style={{fontSize: "16px"}} >
+                  Open Strategy Manager
+                </Button>
+              </Link>
+            </div>
+            <form noValidate className="container px-0 mx-auto settings-form" onSubmit={this.handleSubmit}>
               <div className="row col-12 mx-0 px-1" >
                 <div className="col-4 form-group px-1 pr-2">
                   <label className="px-0 col-form-label settings-form-label" htmlFor="startDate">Start date</label>
@@ -344,7 +352,6 @@ class Settings extends Component {
                     autoComplete="off"
                     disabled={this.state.submitting} 
                     inputMode="decimal"
-                    novalidate 
                   />
                 </div>
                 <div className="col-4 form-group px-1 pr-2">

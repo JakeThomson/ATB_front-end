@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import OpenTradeRow from './OpenTradeRow.react.js';
-import '../../css/ot-list.css';
+import '../../css/dashboard/ot-list.css';
 
 
 class OpenTradeList extends Component {

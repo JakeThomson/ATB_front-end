@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import Datetime from 'react-datetime';
 import moment from 'moment';
 import "react-datetime/css/react-datetime.css";
-import '../../css/settings.css';
+import '../../css/dashboard/settings.css';
 
 class Settings extends Component {
   constructor(props) {

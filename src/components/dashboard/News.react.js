@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../../css/news.css';
+import '../../css/dashboard/news.css';
 
 class News extends Component {
     render() {

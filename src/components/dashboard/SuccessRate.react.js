@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../../css/success-rate.css';
+import '../../css/dashboard/success-rate.css';
 
 class SuccessRate extends Component {
   formatPct = (number) => {

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import ClosedTradeRow from './ClosedTradeRow.react.js';
-import '../css/ct-list.css';
+import '../../css/ct-list.css';
 
 class ClosedTradeList extends Component {
   formatTradeQty = (qty, total) => {

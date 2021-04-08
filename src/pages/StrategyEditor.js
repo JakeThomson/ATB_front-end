@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-class StrategyManager extends Component {
+class StrategyEditor extends Component {
 
   render() {
     return (
@@ -14,4 +14,4 @@ class StrategyManager extends Component {
   }
 }
 
-export default StrategyManager;
+export default StrategyEditor;

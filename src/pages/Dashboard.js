@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import moment from 'moment';
 import blankProfitLossGraph from '../content/blankProfitLossGraph.json'
-import OpenTradeList from '../components/OpenTradeList.js';
-import ClosedTradeList from '../components/ClosedTradeList.react.js';
-import TotalProfit from '../components/TotalProfit.react.js';
-import OpenTradeStats from '../components/OpenTradeStats.react.js';
-import SuccessRate from '../components/SuccessRate.react.js';
-import WorldFlow from '../components/WorldFlow.react.js';
-import News from '../components/News.react.js';
-import TradeStats from '../components/TradeStats.react.js';
-import Settings from '../components/Settings.react.js'
+import OpenTradeList from '../components/dashboard/OpenTradeList.js';
+import ClosedTradeList from '../components/dashboard/ClosedTradeList.react.js';
+import TotalProfit from '../components/dashboard/TotalProfit.react.js';
+import OpenTradeStats from '../components/dashboard/OpenTradeStats.react.js';
+import SuccessRate from '../components/dashboard/SuccessRate.react.js';
+import WorldFlow from '../components/dashboard/WorldFlow.react.js';
+import News from '../components/dashboard/News.react.js';
+import TradeStats from '../components/dashboard/TradeStats.react.js';
+import Settings from '../components/dashboard/Settings.react.js'
 
 class App extends Component {
   _isMounted = false;

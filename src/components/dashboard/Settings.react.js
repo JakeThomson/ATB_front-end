@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import {ReactComponent as SettingsSVG} from '../images/settings.svg';
+import {ReactComponent as SettingsSVG} from '../../images/settings.svg';
 import { Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Datetime from 'react-datetime';
 import moment from 'moment';
 import "react-datetime/css/react-datetime.css";
-import '../css/settings.css';
+import '../../css/settings.css';
 
 class Settings extends Component {
   constructor(props) {
@@ -289,9 +289,9 @@ class Settings extends Component {
               this.state.error !== "" ? <div className="text-danger col-12 px-0 pt-2 text-center settings-form-input pb-0 mb-0">{this.state.error}</div> : null
             }
             <div className="container row mx-0">
-              <Link to="/strategy-manager" className="mx-auto" >
+              <Link to="/strategy-editor" className="mx-auto" >
                 <Button className="settings-form-submit-btn mb-3 mt-3 py-1" style={{fontSize: "16px"}} >
-                  Open Strategy Manager
+                  Open Strategy Editor
                 </Button>
               </Link>
             </div>

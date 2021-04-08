@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Plot from 'react-plotly.js';
-import {ReactComponent as SwapSVG} from '../images/swap.svg';
-import '../css/total-profit.css';
+import {ReactComponent as SwapSVG} from '../../images/swap.svg';
+import '../../css/total-profit.css';
 
 class TotalProfit extends Component {
   state = {

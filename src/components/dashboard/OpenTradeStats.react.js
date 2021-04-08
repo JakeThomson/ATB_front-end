@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../css/ot-stats.css';
+import '../../css/ot-stats.css';
 
 class AtStats extends Component {
 

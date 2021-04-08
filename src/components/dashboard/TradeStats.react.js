@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import '../css/trade-stats.css';
+import '../../css/trade-stats.css';
 
 export const Statistic = ({label, data}) => (
   <div id="stats-box" className="text-center" style={{maxWidth: "60px"}}>

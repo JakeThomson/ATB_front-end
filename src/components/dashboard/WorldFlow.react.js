@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {ReactComponent as PlayPause} from '../images/pause.svg';
-import '../css/world-flow.css';
+import {ReactComponent as PlayPause} from '../../images/pause.svg';
+import '../../css/world-flow.css';
 
 class WorldFlow extends Component {
   render() {

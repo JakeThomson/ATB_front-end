@@ -18,6 +18,8 @@ class StrategyEditor extends Component {
         <Selections />
         <SelectionConfig />
         <div className="background">
+          <div id="bg-square-1"/>
+          <div id="bg-square-2"/>
           <div id="bg-square-3"/>
           <div id="bg-square-4"/>
         </div>

@@ -12,16 +12,40 @@
   color: #343434;
 }
 
-#back-btn-container {
+#save-btn-container {
   position: absolute;
   background: white;
   border-radius: 16px;
   width: 65px; height: 50.4px;
   left: 585px; top: 30px;
   box-shadow: 0px -0px 9px -2px rgba(0,0,0,0.1);
+  border: 0;
 }
 
-#save-btn-container {
+#save-btn-icon{
+  height: 35px; width: 35px;
+  fill:#949494;
+  transition: 0.70s;
+  -webkit-transition: 0.70s;
+  -moz-transition: 0.70s;
+  -ms-transition: 0.70s;
+  -o-transition: 0.70s;
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+#save-btn-container:hover > #save-btn-icon{
+  cursor: pointer;
+  transition: 0.70s;
+  -webkit-transition: 0.70s;
+  -moz-transition: 0.70s;
+  -ms-transition: 0.70s;
+  -o-transition: 0.70s;
+  fill:#646464;
+}
+
+#back-btn-container {
   position: absolute;
   background: white;
   border-radius: 16px;

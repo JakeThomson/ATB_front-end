@@ -1,22 +1,137 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import SelectionRow from './SelectionRow.react';
 import AddModule from './AddModule.react';
 import '../../css/strategy-editor/selections.css';
 
+// fake data generator
+const getItems = count =>
+  Array.from({ length: count }, (v, k) => k).map(k => ({
+    id: `item-${k}`,
+    content: `item ${k}`
+  }));
 
-class Selections extends Component {
-    render() {
-        return (
-          <div id="selections-container" className="container py-2 px-3">
-            <h5 className="row col-12 strategy-editor-header">Module selection</h5>
-            <div id="selection-row-container">
-              <SelectionRow method="Moving Averages"/>
-              <SelectionRow method="Bollinger Bands"/>
-              <AddModule />
-            </div>
-          </div>
-        )
+// a little function to help us with reordering the result
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
+const grid = 8;
+
+const getItemStyle = (isDragging, draggableStyle) => ({
+  // some basic styles to make the items look a bit nicer
+  userSelect: "none",
+  padding: grid * 2,
+  margin: `0 0 ${grid}px 0`,
+
+  // change background colour if dragging
+  background: isDragging ? "lightgreen" : "grey",
+
+  // styles we need to apply on draggables
+  ...draggableStyle
+});
+
+const getListStyle = isDraggingOver => ({
+  background: isDraggingOver ? "lightblue" : "lightgrey",
+  padding: grid,
+  width: 250
+});
+
+const QuoteList = React.memo(function QuoteList({ items }) {
+  return items.map((item, index) => (
+    <SelectionRow method={item} index={index} key={item} />
+  ));
+});
+
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: ["Moving Averages", "BollingerBands"]
+    };
+    this.onDragEnd = this.onDragEnd.bind(this);
+  }
+
+  onDragEnd(result) {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
     }
+
+    const items = reorder(
+      this.state.items,
+      result.source.index,
+      result.destination.index
+    );
+
+    this.setState({
+      items
+    });
+  }
+
+  // Normally you would want to split things out into separate components.
+  // But in this example everything is just done in one place for simplicity
+  render() {
+    return (
+      <div id="selections-container" className="container py-2 px-3">
+        <h5 className="row col-12 strategy-editor-header">Module selection</h5>
+        <div id="selection-row-container">
+        <DragDropContext onDragEnd={this.onDragEnd}>
+          <Droppable droppableId="list" >
+            {provided => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                <QuoteList items={this.state.items} />
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+        <AddModule />
+        </div>
+      </div>
+    );
+  }
 }
 
-export default Selections;
+// return (
+//   <div id="selections-container" className="container py-2 px-3">
+//     <h5 className="row col-12 strategy-editor-header">Module selection</h5>
+//     <div id="selection-row-container">
+//       <DragDropContext onDragEnd={this.onDragEnd}>
+//         <Droppable droppableId="droppable">
+//           {(provided, snapshot) => (
+//             <div
+//               {...provided.droppableProps}
+//               ref={provided.innerRef}
+//               style={getListStyle(snapshot.isDraggingOver)}
+//             >
+//               {this.state.items.map((item, index) => (
+//               <Draggable key={item.id} draggableId={item.id} index={index}>
+//                 {(provided, snapshot) => (
+//                   <div
+//                     ref={provided.innerRef}
+//                     {...provided.draggableProps}
+//                     {...provided.dragHandleProps}
+//                     style={getItemStyle(
+//                       snapshot.isDragging,
+//                       provided.draggableProps.style
+//                     )}
+//                     >
+//                       {item.content}
+//                     </div>
+//                   )}
+//                 </Draggable>
+//               ))}
+//               {provided.placeholder}
+//             </div>
+//           )}
+//         </Droppable>
+//         <AddModule />
+//       </DragDropContext>
+//     </div>
+//   </div>
+// )

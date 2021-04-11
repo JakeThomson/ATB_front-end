@@ -8,13 +8,27 @@ class AddModule extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: false
+      show: false,
+      options: ["Moving Averages", "Bollinger Bands"]
     }
   }
 
   setShow = bool => {
     // Sets the visible state of the modal.
     this.setState({ show: bool});
+  }
+
+  handleClick = (method) => {
+    this.setState({ show: false })
+    this.props.handleClick(method)
+  }
+
+  isSelected = (method) => {
+    if(this.props.selected.includes(method)){
+      return true;
+    } else {
+      return false;
+    }
   }
 
   render() {
@@ -35,8 +49,10 @@ class AddModule extends Component {
           </Modal.Header>
           <Modal.Body>
             <div className="column row col-12 mx-auto pt-3 px-0" style={{height: "260px"}}>
-              <AnalysisModuleTile />
-              <AnalysisModuleTile />
+              {this.state.options.map((method, index) => 
+                <AnalysisModuleTile method={method} disabled={(method) => this.isSelected(method)} handleClick={this.handleClick} key={method}/>
+              )}
+            
             </div>
           </Modal.Body>
         </Modal>

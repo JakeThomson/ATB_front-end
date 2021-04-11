@@ -51,7 +51,7 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: ["Moving Averages", "BollingerBands"]
+      items: ["Moving Averages"]
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
@@ -73,6 +73,15 @@ export default class App extends Component {
     });
   }
 
+  handleClick = (method) => {
+    if(!this.state.items.includes(method)) {
+      const items = this.state.items.concat(method)
+      this.setState({
+        items
+      })
+    }
+  }
+
   // Normally you would want to split things out into separate components.
   // But in this example everything is just done in one place for simplicity
   render() {
@@ -90,7 +99,7 @@ export default class App extends Component {
             )}
           </Droppable>
         </DragDropContext>
-        <AddModule />
+        <AddModule handleClick={this.handleClick} selected={this.state.items} />
         </div>
       </div>
     );

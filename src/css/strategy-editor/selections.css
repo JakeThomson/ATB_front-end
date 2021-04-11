@@ -38,7 +38,21 @@ hr.header-rule {
 }
 
 #analysis-module-box {
+  height: 120px;
   text-align: center;
   border: 2px solid black;
   border-radius: 16px;
+}
+
+#analysis-module-box > h5 {
+  max-width: 80%;
+}
+
+
+#analysis-module-box.disabled {
+  border-color: rgb(216, 216, 216);
+}
+
+#analysis-module-box.disabled > h5 {
+  color: rgb(175, 175, 175);
 }

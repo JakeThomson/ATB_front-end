@@ -6,14 +6,21 @@ class AnalysisModuleTile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: true
+      disabled: this.props.disabled(this.props.method)
     }
   }
+
+  handleClick = () => {
+    if(!this.state.disabled) {
+      this.props.handleClick(this.props.method);
+    }
+  }
+
   render() {
     return (
-      <div className="col-6 px-1">
-        <div id="analysis-module-box" >
-          <h5 className="strategy-editor-header">Moving<br/>Averages</h5>
+      <div className="col-6 px-1" onClick={this.handleClick}>
+        <div id="analysis-module-box" className={"row col-12 mx-auto" + (this.state.disabled ? " disabled" : "")} >
+          <h5 className="strategy-editor-header m-auto">{this.props.method}</h5>
         </div>
       </div>
     )

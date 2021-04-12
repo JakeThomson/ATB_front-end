@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import Selections from '../components/strategy-editor/Selections.react';
 import SelectionConfig from '../components/strategy-editor/SelectionConfig.react';
-import styled from 'styled-components';
 import '../css/strategy-editor/strategy-editor.css';
+import { Link } from "react-router-dom";
 import {ReactComponent as SaveSVG} from '../images/save-file.svg';
 import {ReactComponent as CloseSVG} from '../images/close.svg';
 import {ReactComponent as EditSVG} from '../images/pencil.svg';
@@ -65,9 +65,9 @@ class StrategyEditor extends Component {
         <button id="save-btn-container" onMouseDown={e => e.preventDefault()}>
           <SaveSVG id="save-btn-icon" />
         </button>
-        <button id="back-btn-container" onMouseDown={e => e.preventDefault()}>
+        <Link to="/" id="back-btn-container" onMouseDown={e => e.preventDefault()}>
           <CloseSVG id="back-btn-icon" />
-        </button>
+        </Link>
         <Selections />
         <SelectionConfig />
         <div className="background">

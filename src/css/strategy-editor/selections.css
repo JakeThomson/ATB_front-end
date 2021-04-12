@@ -16,6 +16,7 @@
 }
 
 #selection-row {
+  background-color: white;
   border: 2px solid rgb(233, 233, 233);
   border-radius: 16px;
   width: 290px; height: 60px;
@@ -59,4 +60,33 @@ hr.header-rule {
 
 #analysis-module-box.disabled > h5 {
   color: rgb(175, 175, 175);
+}
+
+#remove-btn-container {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  top: -50%;
+  -ms-transform: translateY(60%);
+  transform: translateY(60%);
+}
+#remove-btn-icon{
+  height: 65%; width: 65%;
+  fill:#9c9c9c;
+  transition: 0.70s;
+  -webkit-transition: 0.70s;
+  -moz-transition: 0.70s;
+  -ms-transition: 0.70s;
+  -o-transition: 0.70s;
+  margin-right: auto;
+  margin-left: auto;
+}
+#remove-btn-container:hover > #remove-btn-icon{
+  cursor: pointer;
+  transition: 0.70s;
+  -webkit-transition: 0.70s;
+  -moz-transition: 0.70s;
+  -ms-transition: 0.70s;
+  -o-transition: 0.70s;
+  fill:#b85656;
 }

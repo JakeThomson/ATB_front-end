@@ -13,9 +13,9 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const QuoteList = React.memo(function QuoteList({ items, selected, handleClick }) {
+const SelectionList = React.memo(function SelectionList({ items, selected, handleModuleClick, handleRemoveClick }) {
   return items.map((item, index) => (
-    <SelectionRow method={item} index={index} selected={item === selected} handleClick={handleClick} key={item} />
+    <SelectionRow method={item} index={index} selected={item === selected} handleModuleClick={handleModuleClick} handleRemoveClick={handleRemoveClick} key={item} />
   ));
 });
 
@@ -58,6 +58,15 @@ export default class App extends Component {
     }
   }
 
+  handleRemoveClick = (method) => {
+    if(this.state.items.includes(method)) {
+      const items = this.state.items.filter(item => item !== method);
+      this.setState({
+        items
+      })
+    }
+  }
+
   handleAddModuleClick = (method) => {
     if(!this.state.items.includes(method)) {
       const items = this.state.items.concat(method)
@@ -78,7 +87,12 @@ export default class App extends Component {
           <Droppable droppableId="list" >
             {provided => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                <QuoteList items={this.state.items} selected={this.state.selected} handleClick={this.handleModuleClick} />
+                <SelectionList 
+                  items={this.state.items} 
+                  selected={this.state.selected} 
+                  handleModuleClick={this.handleModuleClick} 
+                  handleRemoveClick={this.handleRemoveClick} 
+                />
                 {provided.placeholder}
               </div>
             )}

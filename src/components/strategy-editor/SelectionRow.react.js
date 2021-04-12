@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import { Draggable } from "react-beautiful-dnd";
+import {ReactComponent as RemoveSVG} from '../../images/close.svg';
 
 
 class OpenTradeList extends Component {
 
-  handleClick = () => {
-    this.props.handleClick(this.props.method);
+  handleModuleClick = () => {
+    this.props.handleModuleClick(this.props.method);
+  }
+
+  handleRemoveClick = (e) => {
+    e.stopPropagation();
+    this.props.handleRemoveClick(this.props.method);
   }
   
   render() {
@@ -13,12 +19,18 @@ class OpenTradeList extends Component {
       <Draggable draggableId={this.props.method} index={this.props.index}>
         {provided => (
           <div
-            onClick={this.handleClick}
+            onClick={this.handleModuleClick}
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            id="selection-row" className={"row col-12 mx-auto" + (this.props.selected ? " selected" : "")}>
-            <h3 className="strategy-editor-header my-auto">{this.props.method}</h3>
+            id="selection-row" className={"row col-12 mx-auto" + (this.props.selected ? " selected" : "")}
+          >
+            <h3 className="col-11 px-0 strategy-editor-header my-auto">{this.props.method}</h3>
+            <div className="col-1 px-0">
+              <button id="remove-btn-container" className="my-auto" onClick={this.handleRemoveClick} onMouseDown={e => e.preventDefault()}>
+                <RemoveSVG id="remove-btn-icon"/>
+              </button>
+            </div>
           </div>
         )}
       </Draggable>

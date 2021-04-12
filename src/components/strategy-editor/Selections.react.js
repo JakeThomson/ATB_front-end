@@ -1,15 +1,8 @@
 import React, { Component } from "react";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import SelectionRow from './SelectionRow.react';
 import AddModule from './AddModule.react';
 import '../../css/strategy-editor/selections.css';
-
-// fake data generator
-const getItems = count =>
-  Array.from({ length: count }, (v, k) => k).map(k => ({
-    id: `item-${k}`,
-    content: `item ${k}`
-  }));
 
 // a little function to help us with reordering the result
 const reorder = (list, startIndex, endIndex) => {
@@ -20,30 +13,9 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const grid = 8;
-
-const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: "none",
-  padding: grid * 2,
-  margin: `0 0 ${grid}px 0`,
-
-  // change background colour if dragging
-  background: isDragging ? "lightgreen" : "grey",
-
-  // styles we need to apply on draggables
-  ...draggableStyle
-});
-
-const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? "lightblue" : "lightgrey",
-  padding: grid,
-  width: 250
-});
-
-const QuoteList = React.memo(function QuoteList({ items }) {
+const QuoteList = React.memo(function QuoteList({ items, selected, handleClick }) {
   return items.map((item, index) => (
-    <SelectionRow method={item} index={index} key={item} />
+    <SelectionRow method={item} index={index} selected={item === selected} handleClick={handleClick} key={item} />
   ));
 });
 
@@ -51,7 +23,8 @@ export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: ["Moving Averages"]
+      items: ["Moving Averages"],
+      selected: undefined
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
@@ -73,7 +46,19 @@ export default class App extends Component {
     });
   }
 
-  handleClick = (method) => {
+  handleModuleClick = (method) => {
+    if(this.state.selected !== method) {
+      this.setState({
+        selected: method
+      })
+    } else {
+      this.setState({
+        selected: undefined
+      })
+    }
+  }
+
+  handleAddModuleClick = (method) => {
     if(!this.state.items.includes(method)) {
       const items = this.state.items.concat(method)
       this.setState({
@@ -93,13 +78,13 @@ export default class App extends Component {
           <Droppable droppableId="list" >
             {provided => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                <QuoteList items={this.state.items} />
+                <QuoteList items={this.state.items} selected={this.state.selected} handleClick={this.handleModuleClick} />
                 {provided.placeholder}
               </div>
             )}
           </Droppable>
         </DragDropContext>
-        <AddModule handleClick={this.handleClick} selected={this.state.items} />
+        <AddModule handleClick={this.handleAddModuleClick} selected={this.state.items} />
         </div>
       </div>
     );

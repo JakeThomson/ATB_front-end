@@ -22,6 +22,10 @@
   margin-bottom: 3px;
 }
 
+#selection-row.selected {
+  background-color: rgb(235, 235, 235);
+}
+
 .add-module-btn {
   background-color: white !important;
   text-align: left;

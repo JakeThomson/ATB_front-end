@@ -25,7 +25,7 @@ class StrategyEditor extends Component {
 
     this.state = {
       server: serverURL,
-      title: "Strategy 1",
+      title: "",
       editing: false,
       submitting: false,
       selected: undefined,
@@ -36,7 +36,6 @@ class StrategyEditor extends Component {
   }
 
   componentDidMount() {
-    console.log("mounted")
     // Fill UI with data from database.
     fetch(`${this.state.server}/strategies/modules`, {
       headers : { 
@@ -128,7 +127,7 @@ class StrategyEditor extends Component {
     let newStrategyData = JSON.parse(JSON.stringify(this.state.strategyData));
     for(var i = 0; i < this.state.strategyData.length; i += 1) {
       if(this.state.strategyData[i].name === event.target.getAttribute('form')) {
-        newStrategyData[i].config[event.target.id] = event.target.value;
+        newStrategyData[i].config[event.target.id] = event.target.type === "number" ? parseInt(event.target.value) : event.target.value;
       }
     }
     this.setState({strategyData: newStrategyData});

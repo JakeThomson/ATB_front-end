@@ -86,7 +86,6 @@ class Settings extends Component {
     
     if(name === "capPct") {
       value = value === "" ? "" : value/100;
-      console.log(value);
     }
 
     this.setState({

@@ -245,7 +245,7 @@ class App extends Component {
             <TotalProfit totalValue={this.state.totalBalance} totalProfitLoss={this.state.totalProfitLoss} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>
-          <Settings socket={this.socket} onSettingsSaved={this.handleSettingsSaved} onGetSettings={this.handleGetSettings} savedSettings={this.state.settings} />
+          <Settings socket={this.props.socket} onSettingsSaved={this.handleSettingsSaved} onGetSettings={this.handleGetSettings} savedSettings={this.state.settings} />
         </div>
         <div className="background">
           <div id="bg-square-1"/>

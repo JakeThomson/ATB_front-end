@@ -8,7 +8,7 @@ class SelectionConfig extends Component {
             <div id="selection-config-container" className="container py-2 px-3">
               <h5 className="row col-12 strategy-editor-header">Configuration</h5>
               <div id="selection-config-editor-container">
-
+                <p>Config options for {this.props.selected}</p>
               </div>
             </div>
         )

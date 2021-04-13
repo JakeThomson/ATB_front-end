@@ -11,7 +11,32 @@ import {ReactComponent as EditSVG} from '../images/pencil.svg';
 class StrategyEditor extends Component {
   state = {
     title: "Strategy 1",
-    editing: false
+    editing: false,
+    selected: undefined,
+    configurationForms: {
+      "Moving Averages": [
+        {
+          "label": "Short-term MA type",
+          "type": "multi-select",
+          "options": ["SMA", "EMA"]
+        },
+        {
+          "label": "Short-term period (days)",
+          "type": "number",
+          "limits": [0, 365]
+        },
+        {
+          "label": "Long-term MA type",
+          "type": "multi-select",
+          "options": ["SMA", "EMA"]
+        },
+        {
+          "label": "Long-term period (days)",
+          "type": "number",
+          "limits": [0, 365]
+        }
+      ]
+    }
   }
 
   constructor(props) {
@@ -25,6 +50,10 @@ class StrategyEditor extends Component {
 
   handleSave = (val) => {
     this.setState({title: val});
+  }
+
+  handleSelected = (selected) => {
+    this.setState({selected});
   }
 
   handleChange(event) {
@@ -68,8 +97,8 @@ class StrategyEditor extends Component {
         <Link to="/" id="back-btn-container" onMouseDown={e => e.preventDefault()}>
           <CloseSVG id="back-btn-icon" />
         </Link>
-        <Selections />
-        <SelectionConfig />
+        <Selections handleSelected={this.handleSelected} selected={this.state.selected} />
+        <SelectionConfig selected={this.state.selected} configurationForms={this.state.configurationForms} />
         <div className="background">
           <div id="bg-square-1"/>
           <div id="bg-square-2"/>

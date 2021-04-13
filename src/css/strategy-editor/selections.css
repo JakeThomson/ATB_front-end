@@ -47,6 +47,7 @@ hr.header-rule {
   text-align: center;
   border: 2px solid black;
   border-radius: 16px;
+  cursor: pointer;
 }
 
 #analysis-module-box > h5 {
@@ -56,6 +57,7 @@ hr.header-rule {
 
 #analysis-module-box.disabled {
   border-color: rgb(216, 216, 216);
+  cursor: default;
 }
 
 #analysis-module-box.disabled > h5 {

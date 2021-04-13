@@ -24,7 +24,7 @@ class AddModule extends Component {
   }
 
   isSelected = (method) => {
-    if(this.props.selected.includes(method)){
+    if(this.props.selectedModules.includes(method)){
       return true;
     } else {
       return false;

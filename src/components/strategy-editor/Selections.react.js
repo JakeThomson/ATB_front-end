@@ -24,7 +24,6 @@ export default class App extends Component {
     super(props);
     this.state = {
       items: ["Moving Averages"],
-      selected: undefined
     };
     this.onDragEnd = this.onDragEnd.bind(this);
   }
@@ -47,23 +46,22 @@ export default class App extends Component {
   }
 
   handleModuleClick = (method) => {
-    if(this.state.selected !== method) {
-      this.setState({
-        selected: method
-      })
+    if(this.props.selected !== method) {
+      this.props.handleSelected(method);
     } else {
-      this.setState({
-        selected: undefined
-      })
+      this.props.handleSelected(undefined);
     }
   }
 
   handleRemoveClick = (method) => {
     if(this.state.items.includes(method)) {
+      if(this.props.selected === method) {
+        this.props.handleSelected(undefined);
+      }
       const items = this.state.items.filter(item => item !== method);
       this.setState({
         items
-      })
+      });
     }
   }
 
@@ -89,7 +87,7 @@ export default class App extends Component {
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 <SelectionList 
                   items={this.state.items} 
-                  selected={this.state.selected} 
+                  selected={this.props.selected} 
                   handleModuleClick={this.handleModuleClick} 
                   handleRemoveClick={this.handleRemoveClick} 
                 />
@@ -98,7 +96,7 @@ export default class App extends Component {
             )}
           </Droppable>
         </DragDropContext>
-        <AddModule handleClick={this.handleAddModuleClick} selected={this.state.items} />
+        <AddModule handleClick={this.handleAddModuleClick} selectedModules={this.state.items} />
         </div>
       </div>
     );

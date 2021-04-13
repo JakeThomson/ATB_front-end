@@ -62,6 +62,7 @@ export default class App extends Component {
       this.setState({
         items
       });
+      this.props.handleRemoveModuleClick(method);
     }
   }
 

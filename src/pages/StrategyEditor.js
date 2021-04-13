@@ -100,6 +100,13 @@ class StrategyEditor extends Component {
     });
   }
 
+  handleRemoveModuleClick = (method) => {
+    const newStrategyData = this.state.strategyData.filter(item => item.name !== method);
+    this.setState({
+      strategyData: newStrategyData
+    })
+  }
+
   handleAddModuleClick = (method) => {
     const config = {};
 
@@ -170,7 +177,7 @@ class StrategyEditor extends Component {
         <Link to="/" id="back-btn-container" onMouseDown={e => e.preventDefault()}>
           <CloseSVG id="back-btn-icon" />
         </Link>
-        <Selections handleSelected={this.handleSelected} selected={this.state.selected} handleAddModuleClick={this.handleAddModuleClick} />
+        <Selections handleSelected={this.handleSelected} selected={this.state.selected} handleAddModuleClick={this.handleAddModuleClick} handleRemoveModuleClick={this.handleRemoveModuleClick} />
         <SelectionConfig selected={this.state.selected} formConfigurations={this.state.formConfigurations} strategyData={this.state.strategyData} handleInputChange={this.handleFormInputChange} />
         <div className="background">
           <div id="bg-square-1"/>

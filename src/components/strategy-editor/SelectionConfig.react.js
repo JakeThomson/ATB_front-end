@@ -5,8 +5,6 @@ import '../../css/strategy-editor/selection-config.css';
 class NumberForm extends Component {
   render() {
     return (
-      <div  className="form-group px-1">
-        <label htmlFor={this.props.id}>{this.props.label}</label>
         <input 
           form={this.props.method}
           className="form-control" 
@@ -18,7 +16,6 @@ class NumberForm extends Component {
           required 
           autoComplete="off"
         />
-      </div>
     )
   }
 }
@@ -26,12 +23,9 @@ class NumberForm extends Component {
 class MultiSelect extends Component {
   render() {
     return (
-      <div className="form-group px-1">
-          <label htmlFor={this.props.id}>{this.props.label}</label>
           <select form={this.props.method} className="form-control" id={this.props.id} name={this.props.id} value={this.props.value} onChange={this.props.handleInputChange}>
               {this.props.options.map(option => <option value={option} key={this.props.id+"-"+option}>{option}</option>)}
           </select>
-      </div>
     )
   }
 }
@@ -46,15 +40,25 @@ const UnrecognisedFormType = config => {
 
 class ConfigFormItem extends Component {
         
-    formItems = {
-        number: NumberForm,
-        multiSelect: MultiSelect
-    };
+  formItems = {
+      number: NumberForm,
+      multiSelect: MultiSelect
+  };
 
-    render() {
-        const FormItem = this.formItems[this.props.config.type] || UnrecognisedFormType;
-        return <FormItem method={this.props.method} {...this.props.config} value={this.props.value} handleInputChange={this.props.handleInputChange} />
-    }
+  render() {
+    const FormItem = this.formItems[this.props.config.type] || UnrecognisedFormType;
+    return (
+      <div className="form-group px-1 mb-3">
+        <label  className="mb-1" htmlFor={this.props.config.id}>{this.props.config.label}</label>
+        <FormItem 
+          method={this.props.method} 
+          {...this.props.config} 
+          value={this.props.value} 
+          handleInputChange={this.props.handleInputChange} 
+        />
+      </div>
+    )
+  }
 }
 
 

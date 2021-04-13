@@ -40,6 +40,11 @@ export default class App extends Component {
       result.destination.index
     );
 
+    this.props.handleModuleReorder(
+      result.source.index,
+      result.destination.index
+    );
+
     this.setState({
       items
     });

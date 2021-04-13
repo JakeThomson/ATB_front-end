@@ -114,8 +114,8 @@ class StrategyEditor extends Component {
     // This essentially allows form data to be read from the existing strategy data, and if it doesn't 
     // exist, it uses the default set in the formConfigurations object.
     for(var i = 0; i < this.state.formConfigurations[method].length; i += 1) {
-      config[this.state.formConfigurations[method][i].id] 
-        = this.state.existingStrategyData.find(el => el.name === method)?.config[this.state.formConfigurations[method][i].id] 
+      config[this.state.formConfigurations[method][i].id] = 
+        this.state.existingStrategyData.find(el => el.name === method)?.config[this.state.formConfigurations[method][i].id] 
           || this.state.formConfigurations[method][i].default
     }
 
@@ -141,6 +141,15 @@ class StrategyEditor extends Component {
     }
     this.setState({strategyData: newStrategyData});
   }
+
+  // a little function to help us with reordering the result
+  handleModuleReorder = (startIndex, endIndex) => {
+    const result = Array.from(this.state.strategyData);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    this.setState({strategyData: result});
+  };
 
   render() {
     return (
@@ -177,7 +186,7 @@ class StrategyEditor extends Component {
         <Link to="/" id="back-btn-container" onMouseDown={e => e.preventDefault()}>
           <CloseSVG id="back-btn-icon" />
         </Link>
-        <Selections handleSelected={this.handleSelected} selected={this.state.selected} handleAddModuleClick={this.handleAddModuleClick} handleRemoveModuleClick={this.handleRemoveModuleClick} />
+        <Selections handleSelected={this.handleSelected} selected={this.state.selected} handleModuleReorder={this.handleModuleReorder} handleAddModuleClick={this.handleAddModuleClick} handleRemoveModuleClick={this.handleRemoveModuleClick} />
         <SelectionConfig selected={this.state.selected} formConfigurations={this.state.formConfigurations} strategyData={this.state.strategyData} handleInputChange={this.handleFormInputChange} />
         <div className="background">
           <div id="bg-square-1"/>

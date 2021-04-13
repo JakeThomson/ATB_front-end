@@ -72,7 +72,7 @@ class SelectionConfig extends Component {
       <div id="selection-config-container" className="container py-2 px-3">
         <h5 className="row col-12 strategy-editor-header">Configuration</h5>
         <div id="selection-config-editor-container">
-          {this.props.configurationForms[this.props.selected]?.map(config => {
+          {this.props.formConfigurations[this.props.selected]?.map(config => {
             const value = this.getModuleConfigData(this.props.strategyData, config.id, this.props.selected)
             return (
               <ConfigFormItem method={this.props.selected} config={config} value={value} key={config.id} handleInputChange={this.props.handleInputChange} />

@@ -27,31 +27,35 @@ class StrategyEditor extends Component {
     selected: undefined,
     existingStrategyData: this.existingData,
     strategyData: this.existingData,
-    configurationForms: {
+    formConfigurations: {
       "Moving Averages": [
         {
           "id": "shortTermType",
           "label": "Short-term MA type",
           "type": "multiSelect",
           "options": ["SMA", "EMA"],
+          "default": "SMA"
         },
         {
           "id": "shortTermDayPeriod",
           "label": "Short-term period (days)",
           "type": "number",
-          "limits": [0, 365]
+          "limits": [0, 365],
+          "default": 20
         },
         {
           "id": "longTermType",
           "label": "Long-term MA type",
           "type": "multiSelect",
-          "options": ["SMA", "EMA"]
+          "options": ["SMA", "EMA"],
+          "default": "SMA"
         },
         {
           "id": "longTermDayPeriod",
           "label": "Long-term period (days)",
           "type": "number",
-          "limits": [0, 365]
+          "limits": [0, 365],
+          "default": 50
         }
       ],
       "Bollinger Bands": [
@@ -59,7 +63,8 @@ class StrategyEditor extends Component {
           "id": "dayPeriod",
           "label": "Period (days)",
           "type": "number",
-          "limits": [0, 365]
+          "limits": [0, 365],
+          "default": 20
         }
       ]
     }
@@ -82,12 +87,11 @@ class StrategyEditor extends Component {
   handleSelected = (selected) => {
     this.setState({
       selected,
-      formData: this.state.configurationForms[selected].map
     });
   }
 
   handleRenameClick = (selected) => {
-    this.setState({selected});
+    this.setState({selected, editing: !this.state.editing});
   }
 
   handleSelected = (selected) => {
@@ -97,7 +101,22 @@ class StrategyEditor extends Component {
   }
 
   handleAddModuleClick = (method) => {
-    this.state.strategyData.push()
+    const config = {};
+
+    // What an absolutely horrifying chunk of code.
+    // This essentially allows form data to be read from the existing strategy data, and if it doesn't 
+    // exist, it uses the default set in the formConfigurations object.
+    for(var i = 0; i < this.state.formConfigurations[method].length; i += 1) {
+      config[this.state.formConfigurations[method][i].id] 
+        = this.state.existingStrategyData.find(el => el.name === method)?.config[this.state.formConfigurations[method][i].id] 
+          || this.state.formConfigurations[method][i].default
+    }
+
+    let newStrategyData = JSON.parse(JSON.stringify(this.state.strategyData));
+    newStrategyData.push({"name": method, "config": config});
+    this.setState({
+      strategyData: newStrategyData
+    })
   }
 
   handleChange(event) {
@@ -151,8 +170,8 @@ class StrategyEditor extends Component {
         <Link to="/" id="back-btn-container" onMouseDown={e => e.preventDefault()}>
           <CloseSVG id="back-btn-icon" />
         </Link>
-        <Selections handleSelected={this.handleSelected} selected={this.state.selected} />
-        <SelectionConfig selected={this.state.selected} configurationForms={this.state.configurationForms} strategyData={this.state.strategyData} handleInputChange={this.handleFormInputChange} />
+        <Selections handleSelected={this.handleSelected} selected={this.state.selected} handleAddModuleClick={this.handleAddModuleClick} />
+        <SelectionConfig selected={this.state.selected} formConfigurations={this.state.formConfigurations} strategyData={this.state.strategyData} handleInputChange={this.handleFormInputChange} />
         <div className="background">
           <div id="bg-square-1"/>
           <div id="bg-square-2"/>

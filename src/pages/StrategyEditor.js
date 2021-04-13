@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Selections from '../components/strategy-editor/Selections.react';
 import SelectionConfig from '../components/strategy-editor/SelectionConfig.react';
 import '../css/strategy-editor/strategy-editor.css';
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import {ReactComponent as SaveSVG} from '../images/save-file.svg';
 import {ReactComponent as CloseSVG} from '../images/close.svg';
 import {ReactComponent as EditSVG} from '../images/pencil.svg';
@@ -21,59 +21,46 @@ class StrategyEditor extends Component {
       }
     ]
 
-  state = {
-    title: "Strategy 1",
-    editing: false,
-    selected: undefined,
-    existingStrategyData: this.existingData,
-    strategyData: this.existingData,
-    formConfigurations: {
-      "Moving Averages": [
-        {
-          "id": "shortTermType",
-          "label": "Short-term MA type",
-          "type": "multiSelect",
-          "options": ["SMA", "EMA"],
-          "default": "SMA"
-        },
-        {
-          "id": "shortTermDayPeriod",
-          "label": "Short-term period (days)",
-          "type": "number",
-          "limits": [0, 365],
-          "default": 20
-        },
-        {
-          "id": "longTermType",
-          "label": "Long-term MA type",
-          "type": "multiSelect",
-          "options": ["SMA", "EMA"],
-          "default": "SMA"
-        },
-        {
-          "id": "longTermDayPeriod",
-          "label": "Long-term period (days)",
-          "type": "number",
-          "limits": [0, 365],
-          "default": 50
-        }
-      ],
-      "Bollinger Bands": [
-        {
-          "id": "dayPeriod",
-          "label": "Period (days)",
-          "type": "number",
-          "limits": [0, 365],
-          "default": 20
-        }
-      ]
-    }
-  }
 
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleFormInputChange = this.handleFormInputChange.bind(this);
+
+    // Detect environment application is running on and choose API URL appropriately.
+    let serverURL = "";
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      serverURL = 'http://127.0.0.1:8080';
+    } else {
+      serverURL = 'https://trading-api.jake-t.codes';
+    }
+
+    this.state = {
+      server: serverURL,
+      title: "Strategy 1",
+      editing: false,
+      submitting: false,
+      selected: undefined,
+      existingStrategyData: this.existingData,
+      strategyData: this.existingData,
+      formConfigurations: {}
+    }
+  }
+
+  componentDidMount() {
+    // Fill UI with data from database.
+    fetch(`${this.state.server}/strategies/modules`, {
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({ 
+        formConfigurations: data
+      })
+    });
   }
 
   handleClick(bool) {
@@ -151,6 +138,30 @@ class StrategyEditor extends Component {
     this.setState({strategyData: result});
   };
 
+  handleSaveClick = (e) => {
+    this.setState({submitting: true});
+
+    const body = {
+      "strategyName": this.state.title,
+      "strategyData": this.state.strategyData
+    }
+
+    // Patch request to update database
+    fetch(this.state.server + "/strategies", {
+      method: 'PUT',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    })
+    .then(() => this.props.history.push('/'))
+    .catch(err => {
+      this.setState({submitting: false})
+      console.error(err)
+    });
+  }
+
   render() {
     return (
       <div id="wrapper">
@@ -180,13 +191,13 @@ class StrategyEditor extends Component {
             </div>
           }
         </div>
-        <button id="save-btn-container" onMouseDown={e => e.preventDefault()}>
+        <button id="save-btn-container" onMouseDown={e => e.preventDefault()} onClick={this.handleSaveClick} >
           <SaveSVG id="save-btn-icon" />
         </button>
         <Link to="/" id="back-btn-container" onMouseDown={e => e.preventDefault()}>
           <CloseSVG id="back-btn-icon" />
         </Link>
-        <Selections handleSelected={this.handleSelected} selected={this.state.selected} handleModuleReorder={this.handleModuleReorder} handleAddModuleClick={this.handleAddModuleClick} handleRemoveModuleClick={this.handleRemoveModuleClick} />
+        <Selections handleSelected={this.handleSelected} selected={this.state.selected} handleModuleReorder={this.handleModuleReorder} handleAddModuleClick={this.handleAddModuleClick} handleRemoveModuleClick={this.handleRemoveModuleClick} options={Object.keys(this.state.formConfigurations)} />
         <SelectionConfig selected={this.state.selected} formConfigurations={this.state.formConfigurations} strategyData={this.state.strategyData} handleInputChange={this.handleFormInputChange} />
         <div className="background">
           <div id="bg-square-1"/>
@@ -199,4 +210,4 @@ class StrategyEditor extends Component {
   }
 }
 
-export default StrategyEditor;
+export default withRouter(StrategyEditor);

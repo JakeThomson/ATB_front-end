@@ -9,7 +9,6 @@ class AddModule extends Component {
     super(props);
     this.state = {
       show: false,
-      options: ["Moving Averages", "Bollinger Bands"]
     }
   }
 
@@ -49,7 +48,7 @@ class AddModule extends Component {
           </Modal.Header>
           <Modal.Body>
             <div className="column row col-12 mx-auto pt-3 px-0" style={{height: "260px"}}>
-              {this.state.options.map((method, index) => 
+              {this.props.options.map((method, index) => 
                 <AnalysisModuleTile method={method} disabled={(method) => this.isSelected(method)} handleClick={this.handleClick} key={method}/>
               )}
             

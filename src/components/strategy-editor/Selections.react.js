@@ -103,48 +103,9 @@ export default class App extends Component {
             )}
           </Droppable>
         </DragDropContext>
-        <AddModule handleClick={this.handleAddModuleClick} selectedModules={this.state.items} />
+        <AddModule handleClick={this.handleAddModuleClick} selectedModules={this.state.items} options={this.props.options} />
         </div>
       </div>
     );
   }
 }
-
-// return (
-//   <div id="selections-container" className="container py-2 px-3">
-//     <h5 className="row col-12 strategy-editor-header">Module selection</h5>
-//     <div id="selection-row-container">
-//       <DragDropContext onDragEnd={this.onDragEnd}>
-//         <Droppable droppableId="droppable">
-//           {(provided, snapshot) => (
-//             <div
-//               {...provided.droppableProps}
-//               ref={provided.innerRef}
-//               style={getListStyle(snapshot.isDraggingOver)}
-//             >
-//               {this.state.items.map((item, index) => (
-//               <Draggable key={item.id} draggableId={item.id} index={index}>
-//                 {(provided, snapshot) => (
-//                   <div
-//                     ref={provided.innerRef}
-//                     {...provided.draggableProps}
-//                     {...provided.dragHandleProps}
-//                     style={getItemStyle(
-//                       snapshot.isDragging,
-//                       provided.draggableProps.style
-//                     )}
-//                     >
-//                       {item.content}
-//                     </div>
-//                   )}
-//                 </Draggable>
-//               ))}
-//               {provided.placeholder}
-//             </div>
-//           )}
-//         </Droppable>
-//         <AddModule />
-//       </DragDropContext>
-//     </div>
-//   </div>
-// )

@@ -22,10 +22,17 @@ const SelectionList = React.memo(function SelectionList({ items, selected, handl
 export default class App extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      items: ["Moving Averages"],
-    };
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.state = {
+      items: []
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.strategyData !== this.props.strategyData) {
+      let items = this.props.strategyData.map(a => a.name);
+      this.setState({items});
+    }
   }
 
   onDragEnd(result) {

@@ -9,18 +9,6 @@ import {ReactComponent as EditSVG} from '../images/pencil.svg';
 
 
 class StrategyEditor extends Component {
-  existingData = [
-      {
-        "name": "Moving Averages",
-        "config": {
-          "shortTermType": "EMA",
-          "shortTermDayPeriod": 20,
-          "longTermType": "SMA",
-          "longTermDayPeriod": 50,
-        }
-      }
-    ]
-
 
   constructor(props) {
     super(props);
@@ -41,13 +29,14 @@ class StrategyEditor extends Component {
       editing: false,
       submitting: false,
       selected: undefined,
-      existingStrategyData: this.existingData,
-      strategyData: this.existingData,
+      existingStrategyData: [],
+      strategyData: [],
       formConfigurations: {}
     }
   }
 
   componentDidMount() {
+    console.log("mounted")
     // Fill UI with data from database.
     fetch(`${this.state.server}/strategies/modules`, {
       headers : { 
@@ -59,6 +48,22 @@ class StrategyEditor extends Component {
     .then(data => {
       this.setState({ 
         formConfigurations: data
+      })
+    });
+
+    // Fill UI with data from database.
+    fetch(`${this.state.server}/strategies`, {
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({ 
+        title: data.strategyName,
+        existingStrategyData: data.technicalAnalysis,
+        strategyData: data.technicalAnalysis,
       })
     });
   }
@@ -197,7 +202,7 @@ class StrategyEditor extends Component {
         <Link to="/" id="back-btn-container" onMouseDown={e => e.preventDefault()}>
           <CloseSVG id="back-btn-icon" />
         </Link>
-        <Selections handleSelected={this.handleSelected} selected={this.state.selected} handleModuleReorder={this.handleModuleReorder} handleAddModuleClick={this.handleAddModuleClick} handleRemoveModuleClick={this.handleRemoveModuleClick} options={Object.keys(this.state.formConfigurations)} />
+        <Selections handleSelected={this.handleSelected} strategyData={this.state.strategyData} selected={this.state.selected} handleModuleReorder={this.handleModuleReorder} handleAddModuleClick={this.handleAddModuleClick} handleRemoveModuleClick={this.handleRemoveModuleClick} options={Object.keys(this.state.formConfigurations)} />
         <SelectionConfig selected={this.state.selected} formConfigurations={this.state.formConfigurations} strategyData={this.state.strategyData} handleInputChange={this.handleFormInputChange} />
         <div className="background">
           <div id="bg-square-1"/>

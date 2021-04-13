@@ -13,7 +13,7 @@ class StrategyEditor extends Component {
       {
         "name": "Moving Averages",
         "config": {
-          "shortTermType": "SMA",
+          "shortTermType": "EMA",
           "shortTermDayPeriod": 20,
           "longTermType": "SMA",
           "longTermDayPeriod": 50,

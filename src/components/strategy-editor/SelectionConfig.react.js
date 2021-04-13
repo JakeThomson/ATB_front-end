@@ -3,35 +3,37 @@ import '../../css/strategy-editor/selection-config.css';
 
 
 class NumberForm extends Component {
-    render() {
-      return (
-        <div  className="form-group px-1">
-          <label htmlFor={this.props.id}>{this.props.label}</label>
-          <input 
-            form={this.props.method}
-            className="form-control" 
-            id={this.props.id}
-            type="number"
-            name={this.props.id} 
-            value={this.props.value} 
-            onChange={this.props.handleInputChange}
-            required 
-            autoComplete="off"
-          />
-        </div>
-      )
+  render() {
+    return (
+      <div  className="form-group px-1">
+        <label htmlFor={this.props.id}>{this.props.label}</label>
+        <input 
+          form={this.props.method}
+          className="form-control" 
+          id={this.props.id}
+          type="number"
+          name={this.props.id} 
+          value={this.props.value} 
+          onChange={this.props.handleInputChange}
+          required 
+          autoComplete="off"
+        />
+      </div>
+    )
   }
 }
 
-const MultiSelect = ({id, label, type, options}, value) => {
+class MultiSelect extends Component {
+  render() {
     return (
-        <div className="form-group px-1">
-            <label htmlFor={id}>{label}</label>
-            <select className="form-control" id={id} name={id} >
-                {options.map(option => <option value={value} key={id+"-"+option}>{option}</option>)}
-            </select>
-        </div>
+      <div className="form-group px-1">
+          <label htmlFor={this.props.id}>{this.props.label}</label>
+          <select form={this.props.method} className="form-control" id={this.props.id} name={this.props.id} value={this.props.value} onChange={this.props.handleInputChange}>
+              {this.props.options.map(option => <option value={option} key={this.props.id+"-"+option}>{option}</option>)}
+          </select>
+      </div>
     )
+  }
 }
 
 const UnrecognisedFormType = config => {

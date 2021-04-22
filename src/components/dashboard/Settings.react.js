@@ -288,9 +288,9 @@ class Settings extends Component {
               this.state.error !== "" ? <div className="text-danger col-12 px-0 pt-2 text-center settings-form-input pb-0 mb-0">{this.state.error}</div> : null
             }
             <div className="container row mx-0">
-              <Link to="/strategy-editor" className="mx-auto my-3" >
+              <Link to="/strategy-manager" className="mx-auto my-3" >
                 <Button className="settings-form-submit-btn py-1" style={{fontSize: "16px"}} >
-                  Open Strategy Editor
+                  Open Strategy Manager
                 </Button>
               </Link>
             </div>

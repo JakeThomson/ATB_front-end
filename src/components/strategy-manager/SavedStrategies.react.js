@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import '../../css/strategy-manager/saved-strategies.css';
 import {ReactComponent as CloseSVG} from '../../images/close.svg';
+import {ReactComponent as HistorySVG} from '../../images/history.svg';
+import {ReactComponent as SuccessSVG} from '../../images/checked.svg';
 import { Link } from "react-router-dom";
 
 class SelectionRow extends Component {
@@ -14,17 +16,70 @@ class SelectionRow extends Component {
     this.props.handleRemoveClick(this.props.strategy);
   }
   
-  render() {
+  render() {  
+    const WIDTH = 101; // 0 to 100
+    const HEIGHT = 1;
+    let context;
+
+    function initCanvas(gradientColors) // gradientColors [colorA, colorB, ..]
+    {
+      // Canvas
+      const canvasElement = document.createElement("CANVAS");
+      canvasElement.width = WIDTH;
+      canvasElement.height = HEIGHT;
+
+      context = canvasElement.getContext("2d");
+      
+      // Gradient
+      const gradient = context.createLinearGradient(0, 0, WIDTH, 0); // x0, y0, x1, y1
+      
+      const step = 1 / (gradientColors.length - 1); // need to validate at least two colors in gradientColors
+      let val = 0;
+      gradientColors.forEach(color => {
+        gradient.addColorStop(val, color);
+        val += step;
+      });
+
+      // Fill with gradient
+      context.fillStyle = gradient;
+      context.fillRect(0, 0, WIDTH, HEIGHT); // x, y, width, height
+    }
+
+    function getColor(percent) // percent [0..100]
+    {
+      const color = context.getImageData(percent, 0, 1, 1); // x, y, width, height
+      const rgba = color.data;
+      
+      return `rgb(${ rgba[0] }, ${ rgba[1] }, ${ rgba[2] })`;
+    }
+
+    initCanvas(['red', '#D11D1D', 'orange', 'green', '#14D717', 'lime']);
+
     return (
         <div
           onClick={this.handleStrategyClick}
           id="selection-row" className={"row col-12 mx-auto" + (this.props.selected ? " selected" : "")}
         >
-          <h3 className="col-11 px-0 strategy-editor-header my-auto">{this.props.strategy}</h3>
-          <div className="col-1 px-0">
-            <button id="remove-btn-container" className="my-auto" onClick={this.handleDeleteClick} onMouseDown={e => e.preventDefault()}>
-              <CloseSVG id="remove-btn-icon"/>
-            </button>
+          <div className="saved-strategy-name-container container row">
+            <h5 className="col-12 px-0 saved-strategy-name py-1">{this.props.strategy.name}</h5>
+            <div className="col-5 pl-0 pr-1">
+              { this.props.strategy.active === true ? 
+                <div className="d-flex">
+                  <HistorySVG id="last-run-icon" className="my-auto mr-1"/>
+                  <p className="m-0" style={{fontSize: "10pt"}}>Running...</p>
+                </div> :
+                <div className="d-flex">
+                    <HistorySVG id="last-run-icon" className="my-auto mr-1"/>
+                    <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.lastRun}</p>
+                </div>
+              }
+            </div>
+            <div className="col-3 pl-0 pr-1">
+              <div className="d-flex">
+                  <SuccessSVG id="avg-success-icon" className="my-auto mr-1" style={{fill: getColor(this.props.strategy.avgSuccess)}}/>
+                  <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.avgSuccess}%</p>
+              </div>
+            </div>
           </div>
         </div>
     )
@@ -32,13 +87,6 @@ class SelectionRow extends Component {
 }
 
 export default class SavedStrategies extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      items: ["Strategy 1", "Test Strategy"]
-    }
-  }
-
   handleStrategyClick = (method) => {
     if(this.props.selected !== method) {
       this.props.handleSelected(method);
@@ -57,7 +105,7 @@ export default class SavedStrategies extends Component {
         </Link>
         <div id="selection-row-container">
           {
-            this.state.items.map((strategy, i) => <SelectionRow selected={strategy === this.props.selected} strategy={strategy} handleStrategyClick={this.handleStrategyClick} key={i}/>)
+            this.props.savedStrategyData.map((strategy, i) => <SelectionRow selected={strategy === this.props.selected} strategy={strategy} handleStrategyClick={this.handleStrategyClick} key={i}/>)
           }
         </div>
       </div>

@@ -48,3 +48,26 @@
   -o-transition: 0.70s;
   background-color:#e9e9e9;
 }
+
+#last-run-icon{
+  height: 16px; width: 16px;
+  fill:#949494;
+}
+
+#avg-success-icon{
+  height: 14px; width: 14px;
+  fill:#949494;
+}
+
+.saved-strategy-name-container h5 {
+  width: 256px;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.saved-strategy-name {
+  font-family: helvetica;
+  color: #343434;
+  font-size: 13pt;
+}

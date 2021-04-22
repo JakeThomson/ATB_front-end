@@ -3,7 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 import {ReactComponent as RemoveSVG} from '../../images/close.svg';
 
 
-class OpenTradeList extends Component {
+class SelectionRow extends Component {
 
   handleModuleClick = () => {
     this.props.handleModuleClick(this.props.method);
@@ -38,4 +38,4 @@ class OpenTradeList extends Component {
   }
 }
 
-export default OpenTradeList;
+export default SelectionRow;

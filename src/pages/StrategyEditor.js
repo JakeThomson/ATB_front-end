@@ -159,7 +159,7 @@ class StrategyEditor extends Component {
       },
       body: JSON.stringify(body),
     })
-    .then(() => this.props.history.push('/'))
+    .then(() => this.props.history.push('/strategy-manager'))
     .catch(err => {
       this.setState({submitting: false})
       console.error(err)
@@ -198,7 +198,7 @@ class StrategyEditor extends Component {
         <button id="save-btn-container" onMouseDown={e => e.preventDefault()} onClick={this.handleSaveClick} >
           <SaveSVG id="save-btn-icon" />
         </button>
-        <Link to="/" id="back-btn-container" onMouseDown={e => e.preventDefault()}>
+        <Link to="/strategy-manager" id="back-btn-container" onMouseDown={e => e.preventDefault()}>
           <CloseSVG id="back-btn-icon" />
         </Link>
         <Selections handleSelected={this.handleSelected} strategyData={this.state.strategyData} selected={this.state.selected} handleModuleReorder={this.handleModuleReorder} handleAddModuleClick={this.handleAddModuleClick} handleRemoveModuleClick={this.handleRemoveModuleClick} options={Object.keys(this.state.formConfigurations)} />

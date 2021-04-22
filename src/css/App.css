@@ -6,6 +6,14 @@
   user-select: none;
 }
 
+input {
+  -webkit-user-select: all;
+  -khtml-user-select: all;
+  -moz-user-select: -moz-all;
+  -o-user-select: all;
+  user-select: all;
+}
+
 #wrapper{
   position: relative;
 }

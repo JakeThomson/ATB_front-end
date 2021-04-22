@@ -1,21 +1,16 @@
 import React, { Component } from 'react';
-import ClosedTradeRow from './ClosedTradeRow.react.js';
-import '../css/ct-list.css';
+import OpenTradeRow from './OpenTradeRow.react.js';
+import '../../css/dashboard/ot-list.css';
 
-class ClosedTradeList extends Component {
+
+class OpenTradeList extends Component {
   formatTradeQty = (qty, total) => {
     // Format trade qauntity show the number of trades bought, and their total value.
     return `${qty} (${this.formatCurrency(total)})`
   }
 
-  formatCurrency = (number, isProfit) => {
+  formatCurrency = (number) => {
     // Format currency to allow it to be shown within the space of the div containing it.
-    var sign = "";
-
-    if (isProfit) {
-      sign = number < 0 ? "" : "+";
-    }
-
     if(number === undefined) {
       return undefined
     }
@@ -54,29 +49,29 @@ class ClosedTradeList extends Component {
     });
     const formatted_number = formatter.format(number);
     
-    return sign+formatted_number+letter;
+    return formatted_number+letter
   }
 
     render() {
         return (
-            <div id="ct-container">
-            <p id="ct-header">Closed trades</p>
-                <div id="ct-list-container">
-                  {this.props.closedTrades.map(({ tradeId, ticker, shareQty, investmentTotal, profitLoss, figure, profitLossPct }) => 
-                    <ClosedTradeRow 
-                      key={tradeId}
-                      ticker={ticker} 
-                      tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
-                      profitLossPct={profitLossPct}
-                      profitLossVal={this.formatCurrency(profitLoss, true)} 
-                      figData={figure.data}
-                      figLayout={figure.layout}
-                    />
-                  )}
-                </div>
+          <div id="at-container">
+            <p id="at-header">Open trades</p>
+            <div id="ot-list-container">
+              {this.props.openTrades.map(({ tradeId, ticker, shareQty, investmentTotal, currentPrice, figure, profitLossPct }) => 
+                <OpenTradeRow 
+                  key={tradeId}
+                  ticker={ticker} 
+                  tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
+                  currentPrice={currentPrice.toFixed(2)}
+                  profitLossPct={profitLossPct}
+                  figData={figure.data}
+                  figLayout={figure.layout}
+                />
+              )}
             </div>
+          </div>
         )
     }
 }
 
-export default ClosedTradeList;
+export default OpenTradeList;

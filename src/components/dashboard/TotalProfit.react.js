@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Plot from 'react-plotly.js';
-import {ReactComponent as SwapSVG} from '../images/swap.svg';
-import '../css/total-profit.css';
+import {ReactComponent as SwapSVG} from '../../images/swap.svg';
+import '../../css/dashboard/total-profit.css';
 
 class TotalProfit extends Component {
   state = {
@@ -28,7 +28,7 @@ class TotalProfit extends Component {
 
     var letter = "";
     if(Math.abs(number) >= 100000) { 
-      if(Math.abs(number)>=1000000) {
+      if(Math.abs(number) >= 1000000) {
         number = Math.round(number/1000)/1000
         maximumFractionDigits = 2
         letter = "M";
@@ -55,7 +55,7 @@ class TotalProfit extends Component {
     return (
       <div id="total-profit-container">
         <div className="d-flex">
-        <p id="total-profit-loss-heaer">Total {this.state.display}</p>
+        <p id="total-profit-loss-header">Total {this.state.display}</p>
           <button id="toggle-profit-balance-btn" onClick={handleClick}>
             <SwapSVG id="toggle-profit-balance-icon" />
           </button>

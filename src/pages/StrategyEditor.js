@@ -35,11 +35,11 @@ class StrategyEditor extends Component {
   }
 
   componentDidMount() {
-    if(this.props.location.state) {
-      const { strategyId, strategyName, technicalAnalysis } = this.props.location.state;
-      this.setState({strategyId, strategyName, existingStrategyData: technicalAnalysis, strategyData: technicalAnalysis});
+    if(this.props.location.state.action === "edit") {
+      const { strategyId, strategyName, technicalAnalysis, action } = this.props.location.state;
+      this.setState({strategyId, strategyName, existingStrategyData: technicalAnalysis, strategyData: technicalAnalysis, action});
     } else {
-      this.setState({strategyName: "New Strategy"});
+      this.setState({strategyName: this.props.location.state.strategyName, action: this.props.location.state.action});
     }
 
     // Fill UI with data from database.
@@ -140,20 +140,38 @@ class StrategyEditor extends Component {
       "strategyData": this.state.strategyData
     }
 
-    // Patch request to update database
-    fetch(this.state.server + "/strategies/" + this.state.strategyId, {
-      method: 'PUT',
-      headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    .then(() => this.props.history.push('/strategy-manager'))
-    .catch(err => {
-      this.setState({submitting: false})
-      console.error(err)
-    });
+    if(this.state.action === "edit") {
+      // Patch request to update database
+      fetch(this.state.server + "/strategies/" + this.state.strategyId, {
+        method: 'PUT',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+      .then(() => this.props.history.push('/strategy-manager'))
+      .catch(err => {
+        this.setState({submitting: false})
+        console.error(err)
+      });
+    } else if(this.state.action === "new") {
+      console.log(body)
+      // Patch request to update database
+      fetch(this.state.server + "/strategies", {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+      .then(() => this.props.history.push('/strategy-manager'))
+      .catch(err => {
+        this.setState({submitting: false})
+        console.error(err)
+      });
+    }
   }
 
   render() {

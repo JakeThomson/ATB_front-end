@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import '../../css/strategy-manager/saved-strategies.css';
-import {ReactComponent as CloseSVG} from '../../images/close.svg';
+import {ReactComponent as AddSVG} from '../../images/close.svg';
 import {ReactComponent as HistorySVG} from '../../images/history.svg';
 import {ReactComponent as SuccessSVG} from '../../images/checked.svg';
 import { Link } from "react-router-dom";
@@ -91,13 +91,29 @@ export default class SavedStrategies extends Component {
     }
   }
 
+  generateNewStrategyName = () => {
+    let num = undefined;
+    let re = /^New\sStrategy\s?(\d*)/;
+    for(let i=0; i<this.props.savedStrategyData.length; i++) {
+      let match = re.exec(this.props.savedStrategyData[i].strategyName);
+      if(match !== null) {
+        if(match[1] === "" && num === undefined) {
+          num = 1;
+        } else if(parseInt(match[1]) === num) {
+          num = parseInt(match[1]) + 1;
+        }
+      }
+    }
+    return "New Strategy" + (num === undefined ? "" : " " + num);
+  }
+
   render() {
     return (
       <div id="selections-container" className="container d-flex py-2 px-3">
         <h5 className="col-8 px-0 strategy-editor-header">Saved strategies</h5>
-        <Link to="/strategy-editor" id="new-btn-container" onMouseDown={e => e.preventDefault()}>
+        <Link to={{pathname: "/strategy-editor", state: {strategyName: this.generateNewStrategyName(), action: "new"}}}  id="new-btn-container" onMouseDown={e => e.preventDefault()}>
           Create
-          <CloseSVG id="new-btn-icon"/>
+          <AddSVG id="new-btn-icon"/>
         </Link>
         <div id="selection-row-container">
           {

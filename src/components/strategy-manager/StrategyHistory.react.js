@@ -18,7 +18,7 @@ class SelectionConfig extends Component {
                   <Link 
                     to={{
                         pathname: "/strategy-editor",
-                        state: {...this.props.selected} 
+                        state: {...this.props.selected, action: "edit"} 
                       }} 
                     className="mx-auto my-3" 
                     onMouseDown={e => e.preventDefault()} 

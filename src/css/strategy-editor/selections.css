@@ -43,6 +43,35 @@
   margin-bottom: 3px;
 }
 
+
+#selection-row.invalid {
+  background-color: rgb(255, 154, 154);
+}
+#selection-row.invalid.selected {
+  background-color: rgb(230, 128, 128);
+}
+
+#selection-row.invalid > div > #remove-btn-container > #remove-btn-icon{
+  height: 65%; width: 65%;
+  fill:#be4848;
+  transition: 0.70s;
+  -webkit-transition: 0.70s;
+  -moz-transition: 0.70s;
+  -ms-transition: 0.70s;
+  -o-transition: 0.70s;
+  margin-right: auto;
+  margin-left: auto;
+}
+#selection-row.invalid > div > #remove-btn-container:hover > #remove-btn-icon{
+  cursor: pointer;
+  transition: 0.70s;
+  -webkit-transition: 0.70s;
+  -moz-transition: 0.70s;
+  -ms-transition: 0.70s;
+  -o-transition: 0.70s;
+  fill:#913030;
+}
+
 #selection-row.selected {
   background-color: rgb(235, 235, 235);
 }

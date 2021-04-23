@@ -5,23 +5,6 @@ import SavedStrategies from '../components/strategy-manager/SavedStrategies.reac
 import StrategyInfo from '../components/strategy-manager/StrategyInfo.react';
 
 class StrategyManager extends Component {
-  help = [
-    {
-      "strategyName": "Strategy 1", 
-      "technicalAnalysis": [{"name":"Moving Averages","config":{"longTermType":"SMA","shortTermType":"SMA","longTermDayPeriod":50,"shortTermDayPeriod":20}},{"name":"Bollinger Bands","config":{"dayPeriod":21}}],
-      "lastRun": "1 min ago", 
-      "active": true, 
-      "avgSuccess": 45, 
-      "avgReturns": 21
-    }, 
-    {
-      "strategyName": "Test Strategy", 
-      "technicalAnalysis": [{"name":"Moving Averages","config":{"longTermType":"SMA","shortTermType":"SMA","longTermDayPeriod":50,"shortTermDayPeriod":20}},{"name":"Bollinger Bands","config":{"dayPeriod":21}}], 
-      "lastRun": "12m ago", 
-      "active": false, 
-      "avgSuccess": 25,
-      "avgReturns": 21
-    }]
 
   constructor(props) {
     super(props);
@@ -34,7 +17,8 @@ class StrategyManager extends Component {
     this.state = {
       server: serverURL,
       selected: undefined,
-      savedStrategyData: []
+      savedStrategyData: [],
+      availableModules: []
     }
   }
 
@@ -50,6 +34,20 @@ class StrategyManager extends Component {
     .then(data => {
       this.setState({ 
         savedStrategyData: data
+      })
+    });
+
+    // Fill UI with data from database.
+    fetch(`${this.state.server}/strategies/modules`, {
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({ 
+        availableModules: Object.keys(data)
       })
     });
   }
@@ -93,7 +91,7 @@ class StrategyManager extends Component {
       const savedStrategyData = this.state.savedStrategyData.filter((strategy) => {
         return strategy.strategyId !== strategyId;
       });
-      this.setState({savedStrategyData});
+      this.setState({savedStrategyData, selected: undefined});
     })
     .catch(err => {
       console.error(err)
@@ -106,7 +104,7 @@ class StrategyManager extends Component {
         <div id="page-name-container" style={{fontSize: "2rem"}}>
           <h2 className="strategy-editor-header ml-4 text-nowrap overflow-hidden" style={{marginTop:".4rem", maxWidth:"86%"}} >Strategy Manager</h2>
         </div>
-        <SavedStrategies savedStrategyData={this.state.savedStrategyData} selected={this.state.selected} handleSelected={this.handleSelected}/>
+        <SavedStrategies savedStrategyData={this.state.savedStrategyData} selected={this.state.selected} handleSelected={this.handleSelected} availableModules={this.state.availableModules}/>
         <StrategyInfo selected={this.state.selected} onStartBacktestClick={this.onStartBacktestClick} onDeleteBacktestClick={this.onDeleteBacktestClick}/>
         <div className="background">
           <div id="bg-square-1"/>

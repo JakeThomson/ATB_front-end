@@ -6,6 +6,10 @@ import {ReactComponent as SuccessSVG} from '../../images/checked.svg';
 import { Link } from "react-router-dom";
 
 class SelectionRow extends Component {
+  constructor(props) {
+    super(props);
+    this.checkValid = this.checkValid.bind(this);
+  }
 
   handleStrategyClick = () => {
     this.props.handleStrategyClick(this.props.strategy);
@@ -14,6 +18,18 @@ class SelectionRow extends Component {
   handleDeleteClick = (e) => {
     e.stopPropagation();
     this.props.handleRemoveClick(this.props.strategy);
+  }
+  
+  checkValid = () => {
+    for(let i=0; i<this.props.strategy.technicalAnalysis.length; i++) {
+      if(this.props.availableModules.includes(this.props.strategy.technicalAnalysis[i].name)) {
+        console.log(true, this.props.availableModules, this.props.strategy.technicalAnalysis[i].name)
+        return true;
+      } else {
+        console.log(false, this.props.availableModules, this.props.strategy.technicalAnalysis[i].name)
+        return false;
+      }
+    }
   }
   
   render() {  
@@ -58,7 +74,7 @@ class SelectionRow extends Component {
     return (
         <div
           onClick={this.handleStrategyClick}
-          id="selection-row" className={"row col-12 mx-auto" + (this.props.selected ? " selected" : "")}
+          id="selection-row" className={"row col-12 mx-auto" + (this.checkValid() ? "" :  " invalid") + (this.props.selected ? " selected" : "")}
         >
           <div className="saved-strategy-name-container container row mx-auto px-0 justify-content-around">
             <h5 className="col-12 px-0 saved-strategy-name py-1">{this.props.strategy.strategyName}</h5>
@@ -117,7 +133,7 @@ export default class SavedStrategies extends Component {
         </Link>
         <div id="selection-row-container">
           {
-            this.props.savedStrategyData.map((strategy, i) => <SelectionRow selected={strategy === this.props.selected} strategy={strategy} handleStrategyClick={this.handleStrategyClick} key={i}/>)
+            this.props.savedStrategyData.map((strategy, i) => <SelectionRow selected={strategy === this.props.selected} availableModules={this.props.availableModules} strategy={strategy} handleStrategyClick={this.handleStrategyClick} key={i}/>)
           }
         </div>
       </div>

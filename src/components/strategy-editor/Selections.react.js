@@ -13,13 +13,13 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const SelectionList = React.memo(function SelectionList({ items, selected, handleModuleClick, handleRemoveClick }) {
+const SelectionList = React.memo(function SelectionList({ items, selected, handleModuleClick, handleRemoveClick, options }) {
   return items.map((item, index) => (
-    <SelectionRow method={item} index={index} selected={item === selected} handleModuleClick={handleModuleClick} handleRemoveClick={handleRemoveClick} key={item} />
+    <SelectionRow method={item} index={index} invalid={!options?.includes(item)} selected={item === selected} handleModuleClick={handleModuleClick} handleRemoveClick={handleRemoveClick} key={item} />
   ));
 });
 
-export default class App extends Component {
+export default class Selections extends Component {
   constructor(props) {
     super(props);
     this.onDragEnd = this.onDragEnd.bind(this);
@@ -102,6 +102,7 @@ export default class App extends Component {
                 <SelectionList 
                   items={this.state.items} 
                   selected={this.props.selected} 
+                  options={this.props.options}
                   handleModuleClick={this.handleModuleClick} 
                   handleRemoveClick={this.handleRemoveClick} 
                 />

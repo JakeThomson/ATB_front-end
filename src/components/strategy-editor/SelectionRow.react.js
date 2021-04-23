@@ -23,7 +23,7 @@ class SelectionRow extends Component {
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            id="selection-row" className={"row col-12 mx-auto" + (this.props.selected ? " selected" : "")}
+            id="selection-row" className={"row col-12 mx-auto" + (this.props.invalid ? " invalid" : "") + (this.props.selected ? " selected" : "")}
           >
             <h3 className="col-11 px-0 strategy-editor-header my-auto">{this.props.method}</h3>
             <div className="col-1 px-0">

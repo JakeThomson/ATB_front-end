@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Selections from '../components/strategy-editor/Selections.react';
 import SelectionConfig from '../components/strategy-editor/SelectionConfig.react';
 import '../css/strategy-editor/strategy-editor.css';
-import { Link, withRouter, useLocation } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import {ReactComponent as SaveSVG} from '../images/save-file.svg';
 import {ReactComponent as CloseSVG} from '../images/close.svg';
 import {ReactComponent as EditSVG} from '../images/pencil.svg';
@@ -36,8 +36,8 @@ class StrategyEditor extends Component {
 
   componentDidMount() {
     if(this.props.location.state) {
-      const { strategyName, existingStrategyData, strategyData } = this.props.location.state;
-      this.setState({strategyName, existingStrategyData, strategyData});
+      const { strategyId, strategyName, technicalAnalysis } = this.props.location.state;
+      this.setState({strategyId, strategyName, existingStrategyData: technicalAnalysis, strategyData: technicalAnalysis});
     } else {
       this.setState({strategyName: "New Strategy"});
     }
@@ -62,7 +62,7 @@ class StrategyEditor extends Component {
   }
 
   handleSave = (val) => {
-    this.setState({title: val});
+    this.setState({strategyName: val});
   }
 
   handleSelected = (selected) => {
@@ -109,7 +109,7 @@ class StrategyEditor extends Component {
 
   handleChange(event) {
     if(this.state.editing) {
-      this.setState({title: event.target.value});
+      this.setState({strategyName: event.target.value});
     }
   }
 
@@ -141,7 +141,7 @@ class StrategyEditor extends Component {
     }
 
     // Patch request to update database
-    fetch(this.state.server + "/strategies", {
+    fetch(this.state.server + "/strategies/" + this.state.strategyId, {
       method: 'PUT',
       headers: {
           Accept: 'application/json',

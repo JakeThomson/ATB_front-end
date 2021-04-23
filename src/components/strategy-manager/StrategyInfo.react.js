@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import '../../css/strategy-manager/strategy-history.css';
+import '../../css/strategy-manager/strategy-info.css';
 import { Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-class SelectionConfig extends Component {constructor(props) {
+class StrategyInfo extends Component {constructor(props) {
   super(props);
 
   this.state = {
@@ -69,6 +69,10 @@ class SelectionConfig extends Component {constructor(props) {
                     <div className="col-12 px-0 mb-1 text-center" style={{fontSize: "10pt"}}><i>Backtest has been running for 00:38:05</i></div>
                   : <div className="col-12 px-0 mb-1 text-center" style={{fontSize: "10pt"}}><i>Backtest last run {this.props.selected.lastRun}</i></div>
                 }
+                <div className="col-12 px-0 text-center">
+                  <h6 className="mb-0 mt-2">Selected Analysis Modules:</h6>
+                  <p className="mb--1">{this.props.selected.technicalAnalysis.map(a => a.name).join(", ")}</p>
+                </div>
                 <div className="col-6 px-0 text-center">
                   <h2 className="mb-0">{this.props.selected.avgSuccess}%</h2>
                   <h6>Avg. success rate</h6>
@@ -86,4 +90,4 @@ class SelectionConfig extends Component {constructor(props) {
   }
 }
 
-export default SelectionConfig;
+export default StrategyInfo;

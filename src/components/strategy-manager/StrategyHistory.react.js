@@ -15,7 +15,18 @@ class SelectionConfig extends Component {
               <div className="container row mx-auto px-0">
                 <div className="px-0 mx-auto mb-2">
                   <Button className="restart-backtest-btn py-1" onMouseDown={e => e.preventDefault()}>{this.props.selected.active ? "Restart" : "Start"} Backtest</Button>
-                  <Link to="/strategy-editor" className="mx-auto my-3" onMouseDown={e => e.preventDefault()} >
+                  <Link 
+                    to={{
+                        pathname: "/strategy-editor",
+                        state: {
+                          strategyName: this.props.selected.strategyName,
+                          existingStrategyData: this.props.selected.technicalAnalysis,
+                          strategyData: this.props.selected.technicalAnalysis
+                        } 
+                      }} 
+                    className="mx-auto my-3" 
+                    onMouseDown={e => e.preventDefault()} 
+                  >
                     <Button className="edit-backtest-btn py-1 mx-3" >
                       Edit
                     </Button>

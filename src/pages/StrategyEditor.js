@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import Selections from '../components/strategy-editor/Selections.react';
 import SelectionConfig from '../components/strategy-editor/SelectionConfig.react';
 import '../css/strategy-editor/strategy-editor.css';
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter, useLocation } from "react-router-dom";
 import {ReactComponent as SaveSVG} from '../images/save-file.svg';
 import {ReactComponent as CloseSVG} from '../images/close.svg';
 import {ReactComponent as EditSVG} from '../images/pencil.svg';
 
-
 class StrategyEditor extends Component {
+  
 
   constructor(props) {
     super(props);
@@ -22,10 +22,9 @@ class StrategyEditor extends Component {
     } else {
       serverURL = 'https://trading-api.jake-t.codes';
     }
-
     this.state = {
       server: serverURL,
-      title: "",
+      strategyName: "",
       editing: false,
       submitting: false,
       selected: undefined,
@@ -36,6 +35,13 @@ class StrategyEditor extends Component {
   }
 
   componentDidMount() {
+    if(this.props.location.state) {
+      const { strategyName, existingStrategyData, strategyData } = this.props.location.state;
+      this.setState({strategyName, existingStrategyData, strategyData});
+    } else {
+      this.setState({strategyName: "New Strategy"});
+    }
+
     // Fill UI with data from database.
     fetch(`${this.state.server}/strategies/modules`, {
       headers : { 
@@ -47,22 +53,6 @@ class StrategyEditor extends Component {
     .then(data => {
       this.setState({ 
         formConfigurations: data
-      })
-    });
-
-    // Fill UI with data from database.
-    fetch(`${this.state.server}/strategies`, {
-      headers : { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      this.setState({ 
-        title: data.strategyName,
-        existingStrategyData: data.technicalAnalysis,
-        strategyData: data.technicalAnalysis,
       })
     });
   }
@@ -146,7 +136,7 @@ class StrategyEditor extends Component {
     this.setState({submitting: true});
 
     const body = {
-      "strategyName": this.state.title,
+      "strategyName": this.state.strategyName,
       "strategyData": this.state.strategyData
     }
 
@@ -176,7 +166,7 @@ class StrategyEditor extends Component {
               <div className="col-12">
                 <input type="text" 
                   className="ml-0 px-2 w-100"
-                  value={this.state.title} 
+                  value={this.state.strategyName} 
                   onChange={this.handleChange} 
                   autoFocus={true} 
                   onBlur={() => this.handleRenameClick(false)}
@@ -190,7 +180,7 @@ class StrategyEditor extends Component {
             </div>
             :
             <div id="edit-btn-container" onMouseDown={e => e.preventDefault()} onClick={() => this.handleRenameClick(true)}>
-              <h2 className="strategy-editor-header ml-4 text-nowrap overflow-hidden" style={{marginTop:".4rem", maxWidth:"86%"}} >{this.state.title}</h2>
+              <h2 className="strategy-editor-header ml-4 text-nowrap overflow-hidden" style={{marginTop:".4rem", maxWidth:"86%"}} >{this.state.strategyName}</h2>
               <EditSVG id="edit-btn-icon" />
             </div>
           }

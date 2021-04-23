@@ -61,7 +61,7 @@ class SelectionRow extends Component {
           id="selection-row" className={"row col-12 mx-auto" + (this.props.selected ? " selected" : "")}
         >
           <div className="saved-strategy-name-container container row mx-auto px-0 justify-content-around">
-            <h5 className="col-12 px-0 saved-strategy-name py-1">{this.props.strategy.name}</h5>
+            <h5 className="col-12 px-0 saved-strategy-name py-1">{this.props.strategy.strategyName}</h5>
               { this.props.strategy.active === true ? 
                 <div className="d-flex">
                   <HistorySVG id="last-run-icon" className="my-auto mr-1"/>

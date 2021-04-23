@@ -75,6 +75,27 @@ class StrategyManager extends Component {
     this.props.socket.emit("restart");
   }
 
+  onDeleteBacktestClick = (strategyId) => {
+
+    // When restart button is clicked, emit restart socket event.
+    fetch(this.state.server + "/strategies/" + strategyId, {
+      method: 'DELETE',
+      headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+      },
+    })
+    .then(() => {
+      const savedStrategyData = this.state.savedStrategyData.filter((strategy) => {
+        return strategy.strategyId !== strategyId;
+      });
+      this.setState({savedStrategyData});
+    })
+    .catch(err => {
+      console.error(err)
+    });
+  }
+
   render() {
     return (
       <div id="wrapper">
@@ -82,7 +103,7 @@ class StrategyManager extends Component {
           <h2 className="strategy-editor-header ml-4 text-nowrap overflow-hidden" style={{marginTop:".4rem", maxWidth:"86%"}} >Strategy Manager</h2>
         </div>
         <SavedStrategies savedStrategyData={this.state.savedStrategyData} selected={this.state.selected} handleSelected={this.handleSelected}/>
-        <StrategyHistory selected={this.state.selected} onStartBacktestClick={this.onStartBacktestClick}/>
+        <StrategyHistory selected={this.state.selected} onStartBacktestClick={this.onStartBacktestClick} onDeleteBacktestClick={this.onDeleteBacktestClick}/>
         <div className="background">
           <div id="bg-square-1"/>
           <div id="bg-square-2"/>

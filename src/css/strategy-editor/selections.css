@@ -11,8 +11,28 @@
   position: absolute;
   border-bottom-right-radius: 12px;
   border-bottom-left-radius: 12px;
-  width: 290px; height: 245px;
+  width: 290px; height: 260px;
   left: 15px; top:50px;
+  overflow-y: auto;
+}
+/* width */
+#selection-row-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+#selection-row-container::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+#selection-row-container::-webkit-scrollbar-thumb {
+  background: rgb(192, 192, 192); 
+}
+
+/* Handle on hover */
+#selection-row-container::-webkit-scrollbar-thumb:hover {
+  background: rgb(141, 141, 141); 
 }
 
 #selection-row {

@@ -1,11 +1,25 @@
 import React, { Component } from 'react';
 import '../../css/strategy-manager/strategy-history.css';
-import { Button } from "react-bootstrap";
+import { Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-class SelectionConfig extends Component {
+class SelectionConfig extends Component {constructor(props) {
+  super(props);
+
+  this.state = {
+    show: false
+  }
+}
+
+  setShow = bool => {
+    // Sets the visible state of the modal.
+    this.setState({ show: bool});
+  }
 
   render() {
+    const handleClose = () => this.setShow(false);
+    const handleShow = () => this.setShow(true);
+
     return (
       <div id="selection-config-container" className="container py-2 px-3">
         <h5 className="row col-12 strategy-editor-header">Strategy info</h5>
@@ -27,7 +41,28 @@ class SelectionConfig extends Component {
                       Edit
                     </Button>
                   </Link>
-                  <Button className="delete-backtest-btn py-1" onMouseDown={e => e.preventDefault()}>Delete</Button>
+                  <Button className="delete-backtest-btn py-1" onMouseDown={e => e.preventDefault()} onClick={handleShow}>Delete</Button>
+                  <Modal 
+                    show={this.state.show} 
+                    onHide={handleClose}
+                  >
+                    <Modal.Header closeButton>
+                      <Modal.Title>Confirm Delete</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <p className="mb-2 mt-3">Are you sure you want to delete this entry?</p>
+                      <p className="mb-1"><b>Name:</b> {this.props.selected.strategyName}</p>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <p className="text-danger mb-1 mr-auto pr-3">Warning: This action cannot be undone.</p>
+                      <Button variant="secondary" onClick={handleClose} disabled={this.state.submitting}>
+                        Cancel
+                      </Button>
+                      <Button variant="danger" onClick={() => {this.props.onDeleteBacktestClick(this.props.selected.strategyId); handleClose();}}>
+                        Confirm
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
                 </div>
                 { 
                   this.props.selected.active ?

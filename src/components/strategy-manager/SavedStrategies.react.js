@@ -60,9 +60,8 @@ class SelectionRow extends Component {
           onClick={this.handleStrategyClick}
           id="selection-row" className={"row col-12 mx-auto" + (this.props.selected ? " selected" : "")}
         >
-          <div className="saved-strategy-name-container container row">
+          <div className="saved-strategy-name-container container row mx-auto px-0 justify-content-around">
             <h5 className="col-12 px-0 saved-strategy-name py-1">{this.props.strategy.name}</h5>
-            <div className="col-5 pl-0 pr-1">
               { this.props.strategy.active === true ? 
                 <div className="d-flex">
                   <HistorySVG id="last-run-icon" className="my-auto mr-1"/>
@@ -73,13 +72,10 @@ class SelectionRow extends Component {
                     <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.lastRun}</p>
                 </div>
               }
-            </div>
-            <div className="col-3 pl-0 pr-1">
               <div className="d-flex">
                   <SuccessSVG id="avg-success-icon" className="my-auto mr-1" style={{fill: getColor(this.props.strategy.avgSuccess)}}/>
                   <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.avgSuccess}%</p>
               </div>
-            </div>
           </div>
         </div>
     )

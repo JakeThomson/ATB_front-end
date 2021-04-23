@@ -1,0 +1,85 @@
+#strategy-info-container {
+  position: absolute;
+  width: 290px; height: 275px;
+  left: 15px; top:35px;
+  overflow-y: auto;
+}
+/* width */
+#strategy-info-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.restart-backtest-btn {
+  font-size: 14px;
+  height: auto;
+  padding: .175rem .75rem;
+  background-color: #9c9c9c; 
+  border-color: #9c9c9c;
+}
+.restart-backtest-btn:hover {
+  background-color: #838383; 
+  border-color: #838383;
+}
+.restart-backtest-btn:active {
+  background-color: #838383 !important; 
+  border-color: #838383 !important;
+}
+.restart-backtest-btn:focus {
+  background-color: rgb(131, 131, 131) !important; 
+  border-color: #838383 !important;
+  box-shadow: 0 0 0 0.2rem rgb(131 131 131 / 50%);
+}
+.restart-backtest-btn:disabled {
+  background-color: #6c757d; 
+  border-color: #6c757d;
+}
+
+.edit-backtest-btn {
+  font-size: 14px;
+  height: auto;
+  padding: .175rem .75rem;
+  background-color: #f19e66; 
+  border-color: #f19e66;
+}
+.edit-backtest-btn:hover {
+  background-color: #e2915b; 
+  border-color: #e2915b;
+}
+.edit-backtest-btn:active {
+  background-color: #e2915b !important; 
+  border-color: #e2915b !important;
+}
+.edit-backtest-btn:focus {
+  background-color: #e2915b !important; 
+  border-color: #e2915b !important;
+  box-shadow: 0 0 0 0.2rem rgb(226 145 91 / 50%);
+}
+.edit-backtest-btn:disabled {
+  background-color: #6c757d; 
+  border-color: #6c757d;
+}
+
+.delete-backtest-btn {
+  font-size: 14px;
+  height: auto;
+  padding: .175rem .75rem;
+  background-color: #f16666; 
+  border-color: #f16666;
+}
+.delete-backtest-btn:hover {
+  background-color: #e94f4f; 
+  border-color: #e94f4f;
+}
+.delete-backtest-btn:active {
+  background-color: #e94f4f !important; 
+  border-color: #e94f4f !important;
+}
+.delete-backtest-btn:focus {
+  background-color: rgb(233, 79, 79) !important; 
+  border-color: #e94f4f !important;
+  box-shadow: 0 0 0 0.2rem rgb(233 79 79 / 50%);
+}
+.delete-backtest-btn:disabled {
+  background-color: #6c757d; 
+  border-color: #6c757d;
+}

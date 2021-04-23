@@ -35,7 +35,7 @@ class StrategyEditor extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     // Fill UI with data from database.
     fetch(`${this.state.server}/strategies/modules`, {
       headers : { 

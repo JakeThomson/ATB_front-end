@@ -8,7 +8,23 @@ class StrategyManager extends Component {
     super(props);
     this.state = {
       selected: undefined,
-      savedStrategyData: [{"name": "Strategy 1", "lastRun": "1 min ago", "active": true, "avgSuccess": 45}, {"name": "Test Strategy", "lastRun": "12m ago", "avgSuccess":0}]
+      savedStrategyData: [
+        {
+          "strategyName": "Strategy 1", 
+          "technicalAnalysis": [{"name":"Moving Averages","config":{"longTermType":"SMA","shortTermType":"SMA","longTermDayPeriod":50,"shortTermDayPeriod":20}},{"name":"Bollinger Bands","config":{"dayPeriod":21}}],
+          "lastRun": "1 min ago", 
+          "active": true, 
+          "avgSuccess": 45, 
+          "avgReturns": 21
+        }, 
+        {
+          "strategyName": "Test Strategy", 
+          "technicalAnalysis": [{"name":"Moving Averages","config":{"longTermType":"SMA","shortTermType":"SMA","longTermDayPeriod":50,"shortTermDayPeriod":20}},{"name":"Bollinger Bands","config":{"dayPeriod":21}}], 
+          "lastRun": "12m ago", 
+          "active": false, 
+          "avgSuccess": 25,
+          "avgReturns": 21
+        }]
     }
   }
 
@@ -25,7 +41,7 @@ class StrategyManager extends Component {
           <h2 className="strategy-editor-header ml-4 text-nowrap overflow-hidden" style={{marginTop:".4rem", maxWidth:"86%"}} >Strategy Manager</h2>
         </div>
         <SavedStrategies savedStrategyData={this.state.savedStrategyData} selected={this.state.selected} handleSelected={this.handleSelected}/>
-        <StrategyHistory />
+        <StrategyHistory selected={this.state.selected} />
         <div className="background">
           <div id="bg-square-1"/>
           <div id="bg-square-2"/>

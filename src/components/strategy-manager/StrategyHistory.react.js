@@ -36,7 +36,7 @@ class SelectionConfig extends Component {
                 { 
                   this.props.selected.active ?
                     <div className="col-12 px-0 mb-1 text-center" style={{fontSize: "10pt"}}><i>Backtest has been running for 00:38:05</i></div>
-                  : null
+                  : <div className="col-12 px-0 mb-1 text-center" style={{fontSize: "10pt"}}><i>Backtest last run {this.props.selected.lastRun}</i></div>
                 }
                 <div className="col-6 px-0 text-center">
                   <h2 className="mb-0">{this.props.selected.avgSuccess}%</h2>

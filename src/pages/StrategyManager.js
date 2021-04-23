@@ -4,28 +4,53 @@ import SavedStrategies from '../components/strategy-manager/SavedStrategies.reac
 import StrategyHistory from '../components/strategy-manager/StrategyHistory.react';
 
 class StrategyManager extends Component {
+  help = [
+    {
+      "strategyName": "Strategy 1", 
+      "technicalAnalysis": [{"name":"Moving Averages","config":{"longTermType":"SMA","shortTermType":"SMA","longTermDayPeriod":50,"shortTermDayPeriod":20}},{"name":"Bollinger Bands","config":{"dayPeriod":21}}],
+      "lastRun": "1 min ago", 
+      "active": true, 
+      "avgSuccess": 45, 
+      "avgReturns": 21
+    }, 
+    {
+      "strategyName": "Test Strategy", 
+      "technicalAnalysis": [{"name":"Moving Averages","config":{"longTermType":"SMA","shortTermType":"SMA","longTermDayPeriod":50,"shortTermDayPeriod":20}},{"name":"Bollinger Bands","config":{"dayPeriod":21}}], 
+      "lastRun": "12m ago", 
+      "active": false, 
+      "avgSuccess": 25,
+      "avgReturns": 21
+    }]
+
   constructor(props) {
     super(props);
-    this.state = {
-      selected: undefined,
-      savedStrategyData: [
-        {
-          "strategyName": "Strategy 1", 
-          "technicalAnalysis": [{"name":"Moving Averages","config":{"longTermType":"SMA","shortTermType":"SMA","longTermDayPeriod":50,"shortTermDayPeriod":20}},{"name":"Bollinger Bands","config":{"dayPeriod":21}}],
-          "lastRun": "1 min ago", 
-          "active": true, 
-          "avgSuccess": 45, 
-          "avgReturns": 21
-        }, 
-        {
-          "strategyName": "Test Strategy", 
-          "technicalAnalysis": [{"name":"Moving Averages","config":{"longTermType":"SMA","shortTermType":"SMA","longTermDayPeriod":50,"shortTermDayPeriod":20}},{"name":"Bollinger Bands","config":{"dayPeriod":21}}], 
-          "lastRun": "12m ago", 
-          "active": false, 
-          "avgSuccess": 25,
-          "avgReturns": 21
-        }]
+    let serverURL = "";
+    if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+      serverURL = 'http://127.0.0.1:8080';
+    } else {
+      serverURL = 'https://trading-api.jake-t.codes';
     }
+    this.state = {
+      server: serverURL,
+      selected: undefined,
+      savedStrategyData: []
+    }
+  }
+
+  componentDidMount() {
+    // Fill UI with data from database.
+    fetch(`${this.state.server}/strategies`, {
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      this.setState({ 
+        savedStrategyData: data
+      })
+    });
   }
 
   handleSelected = (selected) => {

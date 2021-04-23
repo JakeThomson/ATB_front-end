@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from "react-router-dom";
 import '../css/strategy-manager/strategy-manager.css';
 import SavedStrategies from '../components/strategy-manager/SavedStrategies.react';
 import StrategyInfo from '../components/strategy-manager/StrategyInfo.react';
@@ -69,10 +70,13 @@ class StrategyManager extends Component {
       },
       body: JSON.stringify({"strategyId": strategyId}),
     })
+    .then(() => {
+      this.props.history.push('/');
+      this.props.socket.emit("restart");
+    })
     .catch(err => {
       console.error(err)
     });
-    this.props.socket.emit("restart");
   }
 
   onDeleteBacktestClick = (strategyId) => {
@@ -115,4 +119,4 @@ class StrategyManager extends Component {
   }
 }
 
-export default StrategyManager;
+export default withRouter(StrategyManager);

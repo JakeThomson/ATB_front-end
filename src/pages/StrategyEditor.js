@@ -71,14 +71,8 @@ class StrategyEditor extends Component {
     });
   }
 
-  handleRenameClick = (selected) => {
-    this.setState({selected, editing: !this.state.editing});
-  }
-
-  handleSelected = (selected) => {
-    this.setState({
-      selected,
-    });
+  handleRenameClick = () => {
+    this.setState({editing: !this.state.editing});
   }
 
   handleRemoveModuleClick = (method) => {

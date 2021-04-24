@@ -20,7 +20,7 @@ class Settings extends Component {
     }
 
     this.state = {
-      show: true,
+      show: false,
       error: "",
       successMsg: "",
       submitting: false,

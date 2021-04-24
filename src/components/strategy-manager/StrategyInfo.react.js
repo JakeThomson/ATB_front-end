@@ -3,17 +3,28 @@ import '../../css/strategy-manager/strategy-info.css';
 import { Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-class StrategyInfo extends Component {constructor(props) {
-  super(props);
+class StrategyInfo extends Component {
+  constructor(props) {
+    super(props);
 
-  this.state = {
-    show: false
+    this.state = {
+      show: false
+    }
   }
-}
 
   setShow = bool => {
     // Sets the visible state of the modal.
     this.setState({ show: bool});
+  }
+  
+  checkValid = () => {
+    for(let i=0; i<this.props.selected.technicalAnalysis.length; i++) {
+      if(this.props.availableModules.includes(this.props.selected.technicalAnalysis[i].name)) {
+        console.log(true, this.props.availableModules, this.props.selected.technicalAnalysis[i].name)
+        return true;
+      }
+    }
+    return false;
   }
 
   render() {
@@ -28,7 +39,7 @@ class StrategyInfo extends Component {constructor(props) {
             this.props.selected ?
               <div className="container row mx-auto px-0">
                 <div className="px-0 mx-auto mb-2">
-                  <Button className="restart-backtest-btn py-1" onMouseDown={e => e.preventDefault()} onClick={() => this.props.onStartBacktestClick(this.props.selected.strategyId)}>{this.props.selected.active ? "Restart" : "Start"} Backtest</Button>
+                  <Button disabled={!this.checkValid()} className="restart-backtest-btn py-1" onMouseDown={e => e.preventDefault()} onClick={() => this.props.onStartBacktestClick(this.props.selected.strategyId)}>{this.props.selected.active ? "Restart" : "Start"} Backtest</Button>
                   <Link 
                     to={{
                         pathname: "/strategy-editor",
@@ -64,6 +75,8 @@ class StrategyInfo extends Component {constructor(props) {
                     </Modal.Footer>
                   </Modal>
                 </div>
+                
+                {!this.checkValid() ? <div className="col-12 px-0 mb-1 text-center text-danger"><i>Strategy contains an invalid module</i></div> : null}
                 { 
                   this.props.selected.active ?
                     <div className="col-12 px-0 mb-1 text-center" style={{fontSize: "10pt"}}><i>Backtest has been running for 00:38:05</i></div>

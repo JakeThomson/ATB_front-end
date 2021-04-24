@@ -23,13 +23,10 @@ class SelectionRow extends Component {
   checkValid = () => {
     for(let i=0; i<this.props.strategy.technicalAnalysis.length; i++) {
       if(this.props.availableModules.includes(this.props.strategy.technicalAnalysis[i].name)) {
-        console.log(true, this.props.availableModules, this.props.strategy.technicalAnalysis[i].name)
         return true;
-      } else {
-        console.log(false, this.props.availableModules, this.props.strategy.technicalAnalysis[i].name)
-        return false;
       }
     }
+    return false;
   }
   
   render() {  

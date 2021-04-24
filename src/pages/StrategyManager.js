@@ -105,7 +105,7 @@ class StrategyManager extends Component {
           <h2 className="strategy-editor-header ml-4 text-nowrap overflow-hidden" style={{marginTop:".4rem", maxWidth:"86%"}} >Strategy Manager</h2>
         </div>
         <SavedStrategies savedStrategyData={this.state.savedStrategyData} selected={this.state.selected} handleSelected={this.handleSelected} availableModules={this.state.availableModules}/>
-        <StrategyInfo selected={this.state.selected} onStartBacktestClick={this.onStartBacktestClick} onDeleteBacktestClick={this.onDeleteBacktestClick}/>
+        <StrategyInfo selected={this.state.selected} onStartBacktestClick={this.onStartBacktestClick} onDeleteBacktestClick={this.onDeleteBacktestClick} availableModules={this.state.availableModules}/>
         <div className="background">
           <div id="bg-square-1"/>
           <div id="bg-square-2"/>

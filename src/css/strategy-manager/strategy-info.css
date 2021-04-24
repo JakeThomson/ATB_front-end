@@ -30,8 +30,8 @@
   box-shadow: 0 0 0 0.2rem rgb(131 131 131 / 50%);
 }
 .restart-backtest-btn:disabled {
-  background-color: #6c757d; 
-  border-color: #6c757d;
+  background-color: #bbc1cc; 
+  border-color: #bbc1cc;
 }
 
 .edit-backtest-btn {

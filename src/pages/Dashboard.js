@@ -11,7 +11,7 @@ import News from '../components/dashboard/News.react.js';
 import TradeStats from '../components/dashboard/TradeStats.react.js';
 import Settings from '../components/dashboard/Settings.react.js'
 
-class App extends Component {
+class Dashboard extends Component {
   _isMounted = false;
 
   constructor(props) {
@@ -245,7 +245,7 @@ class App extends Component {
             <TotalProfit totalValue={this.state.totalBalance} totalProfitLoss={this.state.totalProfitLoss} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />
             <SuccessRate pct={this.state.successRate} />
           </div>
-          <Settings socket={this.props.socket} onSettingsSaved={this.handleSettingsSaved} onGetSettings={this.handleGetSettings} savedSettings={this.state.settings} />
+          <Settings backtestOnline={this.state.backtestOnline} socket={this.props.socket} onSettingsSaved={this.handleSettingsSaved} onGetSettings={this.handleGetSettings} savedSettings={this.state.settings} />
         </div>
         <div className="background">
           <div id="bg-square-1"/>
@@ -258,4 +258,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default Dashboard;

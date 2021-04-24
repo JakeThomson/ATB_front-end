@@ -63,14 +63,19 @@ class Settings extends Component {
   }
 
   onRestart = () => {
-    // When restart button is clicked, emit restart socket event.
-    this.props.socket.emit("restart");
-    this.setShow(false);
+    if(this.props.backtestOnline) {
+      // When restart button is clicked, emit restart socket event.
+      this.props.socket.emit("restart");
+      this.setShow(false);
+    } else {
+      this.setState({ error: "Cannot restart backtest when backtesting system is offline." })
+    }
+
   }
 
   setShow = bool => {
     if(!bool){
-      this.setState({successMsg: ""});
+      this.setState({successMsg: "", error: ""});
     } else {
       this.getSettings();
     }

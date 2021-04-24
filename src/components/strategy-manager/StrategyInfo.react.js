@@ -20,7 +20,6 @@ class StrategyInfo extends Component {
   checkValid = () => {
     for(let i=0; i<this.props.selected.technicalAnalysis.length; i++) {
       if(this.props.availableModules.includes(this.props.selected.technicalAnalysis[i].name)) {
-        console.log(true, this.props.availableModules, this.props.selected.technicalAnalysis[i].name)
         return true;
       }
     }

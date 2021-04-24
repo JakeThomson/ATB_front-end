@@ -156,7 +156,6 @@ class StrategyEditor extends Component {
         console.error(err)
       });
     } else if(this.state.action === "new") {
-      console.log(body)
       // Patch request to update database
       fetch(this.state.server + "/strategies", {
         method: 'POST',

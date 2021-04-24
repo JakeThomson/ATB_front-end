@@ -50,11 +50,11 @@ class StrategyInfo extends Component {
                     className="mx-auto my-3" 
                     onMouseDown={e => e.preventDefault()} 
                   >
-                    <Button className="edit-backtest-btn py-1 mx-3" >
+                    <Button className="edit-backtest-btn py-1 mx-3">
                       Edit
                     </Button>
                   </Link>
-                  <Button className="delete-backtest-btn py-1" onMouseDown={e => e.preventDefault()} onClick={handleShow}>Delete</Button>
+                  <Button className="delete-backtest-btn py-1" onMouseDown={e => e.preventDefault()} onClick={handleShow} disabled={this.props.selected.strategyId === 69}>Delete</Button>
                   <Modal 
                     show={this.state.show} 
                     onHide={handleClose}

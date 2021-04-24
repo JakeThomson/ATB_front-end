@@ -80,6 +80,6 @@
   box-shadow: 0 0 0 0.2rem rgb(233 79 79 / 50%);
 }
 .delete-backtest-btn:disabled {
-  background-color: #6c757d; 
-  border-color: #6c757d;
+  background-color: #f07d89; 
+  border-color: #f07d89;
 }

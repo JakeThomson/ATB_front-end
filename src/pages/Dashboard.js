@@ -40,6 +40,7 @@ class Dashboard extends Component {
         closedTrades: [],
         backtestOnline: true,
         tradeStats: {},
+        backtestId: 0,
         settings: {
           startDate: moment("2015-01-01"),
           endDate: moment().startOf('day'),
@@ -58,7 +59,7 @@ class Dashboard extends Component {
     this.setupSocketListeners();
 
     // Fill UI with data from database.
-    fetch(`${this.state.server}/backtest_properties`, {
+    fetch(`${this.state.server}/backtests`, {
       headers : { 
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -66,7 +67,8 @@ class Dashboard extends Component {
     })
     .then(response => response.json())
     .then(data => {
-      this.setState({ 
+      this.setState({
+        backtestId: data.backtestId,
         backtestDate: data.backtestDate, 
         totalProfitLoss: data.totalProfitLoss,
         totalProfitLossPct: this.formatPct(data.totalProfitLossPct),
@@ -75,34 +77,36 @@ class Dashboard extends Component {
         availableBalance: data.availableBalance,
         successRate: data.successRate || 0,
         isPaused: data.isPaused,
-        backtestOnline: data.backtestOnline
+        backtestOnline: data.backtestOnline,
+        startDate: data.startDate
       })
-    });
-    
-    fetch(`${this.state.server}/trades`, {
-      headers : { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
     })
-    .then(response => response.json())
-    .then(data => {
-      if(this._isMounted) {
-        this.setState({openTrades: data[0], closedTrades: data[1]});
-      }
-    })
+    .then(() => {
+      fetch(`${this.state.server}/trades/${this.state.backtestId}`, {
+        headers : { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(this._isMounted) {
+          this.setState({openTrades: data[0], closedTrades: data[1]});
+        }
+      });
 
-    fetch(`${this.state.server}/trades/stats?date=${this.state.startDate}`, {
-      headers : { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      if(this._isMounted) {
-        this.setState({tradeStats: data});
-      }
+      fetch(`${this.state.server}/trades/stats?date=${this.state.startDate}`, {
+        headers : { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(this._isMounted) {
+          this.setState({tradeStats: data});
+        }
+      });
     });
   }
 
@@ -110,7 +114,7 @@ class Dashboard extends Component {
     if(this.props.socket !== undefined) {
 
       // Listen for updates to the backtest date.
-      this.props.socket.on('backtestPropertiesUpdated', (data) => {
+      this.props.socket.on('backtestUpdated', (data) => {
         const availableBalance = data.availableBalance,
               totalProfitLoss = data.totalProfitLoss,
               totalProfitLossPct = this.formatPct(data.totalProfitLossPct),
@@ -140,7 +144,7 @@ class Dashboard extends Component {
       // Listen for updates to the backtest date.
       this.props.socket.on('tradesUpdated', (data) => {
         // Grab all open and closed trades from database.
-        fetch(`${this.state.server}/trades`, {
+        fetch(`${this.state.server}/trades/${this.state.backtestId}`, {
           headers : { 
             'Content-Type': 'application/json',
             'Accept': 'application/json'

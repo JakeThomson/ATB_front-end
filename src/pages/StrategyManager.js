@@ -18,7 +18,7 @@ class StrategyManager extends Component {
     this.state = {
       server: serverURL,
       selected: undefined,
-      savedStrategyData: [],
+      savedStrategyData: undefined,
       availableModules: []
     }
   }

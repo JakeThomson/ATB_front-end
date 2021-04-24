@@ -110,13 +110,15 @@ export default class SavedStrategies extends Component {
   generateNewStrategyName = () => {
     let num = undefined;
     let re = /^New\sStrategy\s?(\d*)/;
-    for(let i=0; i<this.props.savedStrategyData.length; i++) {
-      let match = re.exec(this.props.savedStrategyData[i].strategyName);
-      if(match !== null) {
-        if(match[1] === "" && num === undefined) {
-          num = 1;
-        } else if(parseInt(match[1]) === num) {
-          num = parseInt(match[1]) + 1;
+    if(this.props.savedStrategyData !== undefined){
+      for(let i=0; i<this.props.savedStrategyData.length; i++) {
+        let match = re.exec(this.props.savedStrategyData[i].strategyName);
+        if(match !== null) {
+          if(match[1] === "" && num === undefined) {
+            num = 1;
+          } else if(parseInt(match[1]) === num) {
+            num = parseInt(match[1]) + 1;
+          }
         }
       }
     }
@@ -133,7 +135,10 @@ export default class SavedStrategies extends Component {
         </Link>
         <div id="selection-row-container">
           {
-            this.props.savedStrategyData.map((strategy, i) => <SelectionRow selected={strategy === this.props.selected} availableModules={this.props.availableModules} strategy={strategy} handleStrategyClick={this.handleStrategyClick} key={i}/>)
+            this.props.savedStrategyData === undefined ? null :
+            this.props.savedStrategyData.length === 0 ?
+            <div className="row col-12 mx-auto h-100 "><div className="m-auto" style={{position: "relative", bottom: "15px", fontSize: "13pt", fontWeight: "500", color:"#c2c2c2"}}>No saved strategies!</div></div>
+            : this.props.savedStrategyData.map((strategy, i) => <SelectionRow selected={strategy === this.props.selected} availableModules={this.props.availableModules} strategy={strategy} handleStrategyClick={this.handleStrategyClick} key={i}/>)
           }
         </div>
       </div>

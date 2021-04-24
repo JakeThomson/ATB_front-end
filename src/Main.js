@@ -2,6 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import StrategyEditor from './pages/StrategyEditor';
+import StrategyManager from './pages/StrategyManager';
 import socketClient from 'socket.io-client';
 
 class Main extends React.Component {  
@@ -28,6 +29,9 @@ class Main extends React.Component {
         <Route exact path='/' render={(props) => (
           <Dashboard {...props} socket={this.state.socket} />
         )}></Route>
+        <Route exact path='/strategy-manager' render={(props) => (
+          <StrategyManager {...props} socket={this.state.socket} />
+        )} ></Route>
         <Route exact path='/strategy-editor' render={(props) => (
           <StrategyEditor {...props} socket={this.state.socket} />
         )} ></Route>

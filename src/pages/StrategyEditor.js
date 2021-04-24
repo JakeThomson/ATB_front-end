@@ -7,8 +7,8 @@ import {ReactComponent as SaveSVG} from '../images/save-file.svg';
 import {ReactComponent as CloseSVG} from '../images/close.svg';
 import {ReactComponent as EditSVG} from '../images/pencil.svg';
 
-
 class StrategyEditor extends Component {
+  
 
   constructor(props) {
     super(props);
@@ -22,10 +22,9 @@ class StrategyEditor extends Component {
     } else {
       serverURL = 'https://trading-api.jake-t.codes';
     }
-
     this.state = {
       server: serverURL,
-      title: "",
+      strategyName: "",
       editing: false,
       submitting: false,
       selected: undefined,
@@ -36,6 +35,13 @@ class StrategyEditor extends Component {
   }
 
   componentDidMount() {
+    if(this.props.location.state.action === "edit") {
+      const { strategyId, strategyName, technicalAnalysis, action } = this.props.location.state;
+      this.setState({strategyId, strategyName, existingStrategyData: technicalAnalysis, strategyData: technicalAnalysis, action});
+    } else {
+      this.setState({strategyName: this.props.location.state.strategyName, action: this.props.location.state.action});
+    }
+
     // Fill UI with data from database.
     fetch(`${this.state.server}/strategies/modules`, {
       headers : { 
@@ -49,22 +55,6 @@ class StrategyEditor extends Component {
         formConfigurations: data
       })
     });
-
-    // Fill UI with data from database.
-    fetch(`${this.state.server}/strategies`, {
-      headers : { 
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-    })
-    .then(response => response.json())
-    .then(data => {
-      this.setState({ 
-        title: data.strategyName,
-        existingStrategyData: data.technicalAnalysis,
-        strategyData: data.technicalAnalysis,
-      })
-    });
   }
 
   handleClick(bool) {
@@ -72,7 +62,7 @@ class StrategyEditor extends Component {
   }
 
   handleSave = (val) => {
-    this.setState({title: val});
+    this.setState({strategyName: val});
   }
 
   handleSelected = (selected) => {
@@ -119,7 +109,7 @@ class StrategyEditor extends Component {
 
   handleChange(event) {
     if(this.state.editing) {
-      this.setState({title: event.target.value});
+      this.setState({strategyName: event.target.value});
     }
   }
 
@@ -146,24 +136,42 @@ class StrategyEditor extends Component {
     this.setState({submitting: true});
 
     const body = {
-      "strategyName": this.state.title,
+      "strategyName": this.state.strategyName,
       "strategyData": this.state.strategyData
     }
 
-    // Patch request to update database
-    fetch(this.state.server + "/strategies", {
-      method: 'PUT',
-      headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    })
-    .then(() => this.props.history.push('/'))
-    .catch(err => {
-      this.setState({submitting: false})
-      console.error(err)
-    });
+    if(this.state.action === "edit") {
+      // Patch request to update database
+      fetch(this.state.server + "/strategies/" + this.state.strategyId, {
+        method: 'PUT',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+      .then(() => this.props.history.push({pathname: '/strategy-manager', state: {strategyId: this.state.strategyId}}))
+      .catch(err => {
+        this.setState({submitting: false})
+        console.error(err)
+      });
+    } else if(this.state.action === "new") {
+      // Patch request to update database
+      fetch(this.state.server + "/strategies", {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+      .then(response => response.json())
+      .then((data) => this.props.history.push({pathname: '/strategy-manager', state: {strategyId: data.strategyId}}))
+      .catch(err => {
+        this.setState({submitting: false})
+        console.error(err)
+      });
+    }
   }
 
   render() {
@@ -176,7 +184,7 @@ class StrategyEditor extends Component {
               <div className="col-12">
                 <input type="text" 
                   className="ml-0 px-2 w-100"
-                  value={this.state.title} 
+                  value={this.state.strategyName} 
                   onChange={this.handleChange} 
                   autoFocus={true} 
                   onBlur={() => this.handleRenameClick(false)}
@@ -190,7 +198,7 @@ class StrategyEditor extends Component {
             </div>
             :
             <div id="edit-btn-container" onMouseDown={e => e.preventDefault()} onClick={() => this.handleRenameClick(true)}>
-              <h2 className="strategy-editor-header ml-4 text-nowrap overflow-hidden" style={{marginTop:".4rem", maxWidth:"86%"}} >{this.state.title}</h2>
+              <h2 className="strategy-editor-header ml-4 text-nowrap overflow-hidden" style={{marginTop:".4rem", maxWidth:"86%"}} >{this.state.strategyName}</h2>
               <EditSVG id="edit-btn-icon" />
             </div>
           }
@@ -198,7 +206,7 @@ class StrategyEditor extends Component {
         <button id="save-btn-container" onMouseDown={e => e.preventDefault()} onClick={this.handleSaveClick} >
           <SaveSVG id="save-btn-icon" />
         </button>
-        <Link to="/" id="back-btn-container" onMouseDown={e => e.preventDefault()}>
+        <Link to="/strategy-manager" id="back-btn-container" onMouseDown={e => e.preventDefault()}>
           <CloseSVG id="back-btn-icon" />
         </Link>
         <Selections handleSelected={this.handleSelected} strategyData={this.state.strategyData} selected={this.state.selected} handleModuleReorder={this.handleModuleReorder} handleAddModuleClick={this.handleAddModuleClick} handleRemoveModuleClick={this.handleRemoveModuleClick} options={Object.keys(this.state.formConfigurations)} />

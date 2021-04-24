@@ -78,12 +78,18 @@ class SelectionConfig extends Component {
       <div id="selection-config-container" className="container py-2 px-3">
         <h5 className="row col-12 strategy-editor-header">Configuration</h5>
         <div id="selection-config-editor-container">
-          {this.props.formConfigurations[this.props.selected]?.map(config => {
-            const value = this.getModuleConfigData(this.props.strategyData, config.id, this.props.selected)
-            return (
-              <ConfigFormItem method={this.props.selected} config={config} value={value} key={config.id} handleInputChange={this.props.handleInputChange} />
-            )
-          })}
+          {
+            this.props.selected === undefined ? null :
+            Object.keys(this.props.formConfigurations).includes(this.props.selected) ?
+              (this.props.formConfigurations[this.props.selected]?.map(config => {
+                const value = this.getModuleConfigData(this.props.strategyData, config.id, this.props.selected)
+                return (
+                  <ConfigFormItem method={this.props.selected} config={config} value={value} key={config.id} handleInputChange={this.props.handleInputChange} />
+                )
+              }))
+            :
+              <p>Module is no longer valid, it must be removed from the strategy.</p>
+          }
         </div>
       </div>
     )

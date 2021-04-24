@@ -20,7 +20,7 @@ class Settings extends Component {
     }
 
     this.state = {
-      show: false,
+      show: true,
       error: "",
       successMsg: "",
       submitting: false,
@@ -31,7 +31,8 @@ class Settings extends Component {
       capPct: 0,
       takeProfit: 0,
       stopLoss: 0,
-      server: serverURL
+      server: serverURL,
+      strategyName: null
     }
   }
 
@@ -56,21 +57,27 @@ class Settings extends Component {
         marketIndex: data.marketIndex,
         capPct: data.capPct,
         takeProfit: data.takeProfit,
-        stopLoss: data.stopLoss
+        stopLoss: data.stopLoss,
+        strategyName: data.strategyName
       })
       this.props.onGetSettings(data);
     });
   }
 
   onRestart = () => {
-    // When restart button is clicked, emit restart socket event.
-    this.props.socket.emit("restart");
-    this.setShow(false);
+    if(this.props.backtestOnline) {
+      // When restart button is clicked, emit restart socket event.
+      this.props.socket.emit("restart");
+      this.setShow(false);
+    } else {
+      this.setState({ error: "Cannot restart backtest when backtesting system is offline." })
+    }
+
   }
 
   setShow = bool => {
     if(!bool){
-      this.setState({successMsg: ""});
+      this.setState({successMsg: "", error: ""});
     } else {
       this.getSettings();
     }
@@ -288,11 +295,12 @@ class Settings extends Component {
               this.state.error !== "" ? <div className="text-danger col-12 px-0 pt-2 text-center settings-form-input pb-0 mb-0">{this.state.error}</div> : null
             }
             <div className="container row mx-0">
-              <Link to="/strategy-editor" className="mx-auto my-3" >
+              <Link to="/strategy-manager" className="mx-auto mt-3 mb-1" >
                 <Button className="settings-form-submit-btn py-1" style={{fontSize: "16px"}} >
-                  Open Strategy Editor
+                  Open Strategy Manager
                 </Button>
               </Link>
+              <div className="col-12 px-0 mb-2 text-center">Loaded strategy: <i>{this.state.strategyName === null ? <span className="text-danger">N/A</span> : this.state.strategyName}</i></div>
             </div>
             <form noValidate className="container px-0 mx-auto settings-form" onSubmit={this.handleSubmit}>
               <div className="row col-12 mx-0 px-1" >
@@ -424,7 +432,7 @@ class Settings extends Component {
             <Button variant="secondary" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="danger" onClick={this.onRestart}>
+            <Button disabled={this.state.strategyName === null} variant="danger" onClick={this.onRestart}>
               Restart backtest
             </Button>
           </Modal.Footer>

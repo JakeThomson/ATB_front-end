@@ -150,7 +150,7 @@ class StrategyEditor extends Component {
         },
         body: JSON.stringify(body),
       })
-      .then(() => this.props.history.push('/strategy-manager'))
+      .then(() => this.props.history.push({pathname: '/strategy-manager', state: {strategyId: this.state.strategyId}}))
       .catch(err => {
         this.setState({submitting: false})
         console.error(err)
@@ -165,7 +165,8 @@ class StrategyEditor extends Component {
         },
         body: JSON.stringify(body),
       })
-      .then(() => this.props.history.push('/strategy-manager'))
+      .then(response => response.json())
+      .then((data) => this.props.history.push({pathname: '/strategy-manager', state: {strategyId: data.strategyId}}))
       .catch(err => {
         this.setState({submitting: false})
         console.error(err)

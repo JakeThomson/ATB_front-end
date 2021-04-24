@@ -24,6 +24,7 @@ class StrategyManager extends Component {
   }
 
   componentDidMount() {
+
     // Fill UI with data from database.
     fetch(`${this.state.server}/strategies`, {
       headers : { 
@@ -33,8 +34,15 @@ class StrategyManager extends Component {
     })
     .then(response => response.json())
     .then(data => {
+      let selected = undefined;
+
+      if(this.props.location.state !== undefined) {
+        const { strategyId } = this.props.location.state;
+        selected = data.find(strategy => {return strategy.strategyId === strategyId});
+      }
       this.setState({ 
-        savedStrategyData: data
+        savedStrategyData: data,
+        selected
       })
     });
 

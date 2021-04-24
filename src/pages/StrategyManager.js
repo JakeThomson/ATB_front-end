@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { withRouter } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import '../css/strategy-manager/strategy-manager.css';
 import SavedStrategies from '../components/strategy-manager/SavedStrategies.react';
 import StrategyInfo from '../components/strategy-manager/StrategyInfo.react';
+import {ReactComponent as BackSVG} from '../images/back.svg';
 
 class StrategyManager extends Component {
 
@@ -101,6 +102,9 @@ class StrategyManager extends Component {
   render() {
     return (
       <div id="wrapper">
+       <Link to="/" id="strategy-manager-back-btn-container" onMouseDown={e => e.preventDefault()}>
+          <BackSVG id="back-btn-icon" />
+        </Link>
         <div id="page-name-container" style={{fontSize: "2rem"}}>
           <h2 className="strategy-editor-header ml-4 text-nowrap overflow-hidden" style={{marginTop:".4rem", maxWidth:"86%"}} >Strategy Manager</h2>
         </div>

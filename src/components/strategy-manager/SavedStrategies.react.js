@@ -21,12 +21,15 @@ class SelectionRow extends Component {
   }
   
   checkValid = () => {
+    if(this.props.availableModules.length === 0) {
+      return true;
+    }
     for(let i=0; i<this.props.strategy.technicalAnalysis.length; i++) {
-      if(this.props.availableModules.includes(this.props.strategy.technicalAnalysis[i].name)) {
-        return true;
+      if(!this.props.availableModules.includes(this.props.strategy.technicalAnalysis[i].name)) {
+        return false;
       }
     }
-    return false;
+    return true;
   }
   
   render() {  

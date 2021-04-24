@@ -14,8 +14,17 @@ const reorder = (list, startIndex, endIndex) => {
 };
 
 const SelectionList = React.memo(function SelectionList({ items, selected, handleModuleClick, handleRemoveClick, options }) {
+  function isValid(item) {
+    if(options.length === 0) {
+      return true;
+    }
+    if(!options.includes(item)) {
+      return false;
+    }
+    return true;
+  }
   return items.map((item, index) => (
-    <SelectionRow method={item} index={index} invalid={!options?.includes(item)} selected={item === selected} handleModuleClick={handleModuleClick} handleRemoveClick={handleRemoveClick} key={item} />
+    <SelectionRow method={item} index={index} invalid={!isValid(item)} selected={item === selected} handleModuleClick={handleModuleClick} handleRemoveClick={handleRemoveClick} key={item} />
   ));
 });
 

@@ -58,7 +58,8 @@ class Settings extends Component {
         capPct: data.capPct,
         takeProfit: data.takeProfit,
         stopLoss: data.stopLoss,
-        strategyName: data.strategyName
+        strategyName: data.strategyName,
+        backtestOnline: data.backtestOnline
       })
       this.props.onGetSettings(data);
     });

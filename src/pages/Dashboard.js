@@ -76,8 +76,6 @@ class Dashboard extends Component {
         totalBalance: data.totalBalance, 
         availableBalance: data.availableBalance,
         successRate: data.successRate || 0,
-        isPaused: data.isPaused,
-        backtestOnline: data.backtestOnline,
         startDate: data.startDate
       })
     })
@@ -124,6 +122,7 @@ class Dashboard extends Component {
               successRate = data.successRate,
               isPaused = data.isPaused,
               backtestOnline = data.backtestOnline,
+              backtestId = data.backtestId,
               tradeStats = data.tradeStats;
         
         // Only update the state of properties that were included in the socket payload.
@@ -137,6 +136,7 @@ class Dashboard extends Component {
           successRate: successRate ?? this.state.successRate,
           isPaused: isPaused ?? this.state.isPaused,
           backtestOnline: backtestOnline ?? this.state.backtestOnline,
+          backtestId: backtestId ?? this.state.backtestId,
           tradeStats: tradeStats ?? this.state.tradeStats
         });
       });
@@ -199,7 +199,7 @@ class Dashboard extends Component {
     const data = { isPaused: !currentlyIsPaused }
 
     // Patch request to update database
-    fetch(this.state.server + "/backtest_properties/is_paused", {
+    fetch(this.state.server + "/backtest_settings/is_paused", {
       method: 'PATCH',
       headers: {
           Accept: 'application/json',
@@ -224,8 +224,10 @@ class Dashboard extends Component {
         marketIndex: data.marketIndex,
         capPct: data.capPct,
         takeProfit: data.takeProfit,
-        stopLoss: data.stopLoss
-      }
+        stopLoss: data.stopLoss,
+        backtestOnline: data.backtestOnline
+      },
+      isPaused: data.isPaused
      });
   }
 

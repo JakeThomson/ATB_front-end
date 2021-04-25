@@ -183,7 +183,7 @@ export default class SavedStrategies extends Component {
             this.props.savedStrategyData === undefined ? null :
             this.props.savedStrategyData.length === 0 ?
             <div className="row col-12 mx-auto h-100 "><div className="m-auto" style={{position: "relative", bottom: "15px", fontSize: "13pt", fontWeight: "500", color:"#c2c2c2"}}>No saved strategies!</div></div>
-            : this.props.savedStrategyData.map((strategy, i) => <SelectionRow selected={strategy === this.props.selected} availableModules={this.props.availableModules} strategy={strategy} handleStrategyClick={this.handleStrategyClick} key={i}/>)
+            : this.props.savedStrategyData.map((strategy, i) => <SelectionRow selected={strategy.strategyId === this.props.selected?.strategyId} availableModules={this.props.availableModules} strategy={strategy} handleStrategyClick={this.handleStrategyClick} key={i}/>)
           }
         </div>
       </div>

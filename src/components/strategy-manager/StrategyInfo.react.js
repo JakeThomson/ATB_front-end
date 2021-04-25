@@ -82,8 +82,8 @@ class Backtest extends Component {
 
     return (
       <div id="backtest-container" className="container row px-0 mx-0">
-        <div className="col-4 px-0">
-          <Plot data={[this.props.totalProfitLossGraph.data[0]]} layout={this.resizeFigure(80, 30)} config={{'staticPlot': true}} /> 
+        <div className="d-flex col-4 px-0">
+          <Plot className="my-auto" data={this.props.totalProfitLossGraph.data} layout={this.resizeFigure(90, 30)} config={{'staticPlot': true}} /> 
         </div>
         <div className="col-5 px-0">
           <div id="backtest-stat-text">Success rate: <span style={{color: getColor(this.props.successRate)}}><b>{Math.round(this.props.successRate*10)/10}%</b></span></div>
@@ -124,6 +124,20 @@ class StrategyInfo extends Component {
     }
   }
 
+  componentDidMount() {
+    this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.selected?.strategyId !== prevProps.selected?.strategyId) {
+      this.setState({activeCardKey: "0"});
+    }
+  }
+
   setShow = bool => {
     // Sets the visible state of the modal.
     this.setState({ show: bool});
@@ -139,20 +153,6 @@ class StrategyInfo extends Component {
       }
     }
     return true;
-  }
-
-  componentDidMount() {
-    this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
-  }
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  componentDidUpdate(prevProps) {
-    // Typical usage (don't forget to compare props):
-    if (this.props.selected !== prevProps.selected) {
-      this.setState({activeCardKey: "0"});
-    }
   }
 
   changeCard = () => {

@@ -197,7 +197,7 @@ class StrategyEditor extends Component {
             </div>
           }
         </div>
-        <button id="save-btn-container" onMouseDown={e => e.preventDefault()} onClick={this.handleSaveClick} >
+        <button disabled={this.state.strategyId === 69} id="save-btn-container" onMouseDown={e => e.preventDefault()} onClick={this.handleSaveClick} >
           <SaveSVG id="save-btn-icon" />
         </button>
         <Link to="/strategy-manager" id="back-btn-container" onMouseDown={e => e.preventDefault()}>

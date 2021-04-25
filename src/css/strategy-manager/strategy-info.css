@@ -1,12 +1,12 @@
 #strategy-info-container {
   position: absolute;
-  width: 290px; height: 275px;
-  left: 15px; top:35px;
+  width: 290px; height: 235px;
+  left: 15px; top:75px;
   overflow-y: auto;
 }
 /* width */
 #strategy-info-container::-webkit-scrollbar {
-  width: 6px;
+  width: 0px;
 }
 
 .restart-backtest-btn {
@@ -82,4 +82,22 @@
 .delete-backtest-btn:disabled {
   background-color: #f07d89; 
   border-color: #f07d89;
+}
+
+#arrow-icon{
+  height: 14px; width: 14px;
+  fill:#949494;
+  transition: 0.30s;
+  -webkit-transition: 0.30s;
+  -moz-transition: 0.30s;
+  -ms-transition: 0.30s;
+  -o-transition: 0.30s;
+}
+#arrow-icon.flip {
+  transition: 0.30s;
+  -webkit-transition: 0.30s;
+  -moz-transition: 0.30s;
+  -ms-transition: 0.30s;
+  -o-transition: 0.30s;
+  transform: rotate(180deg);
 }

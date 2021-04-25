@@ -15,8 +15,8 @@ class SelectionRow extends Component {
       relativeTime: {
         future: 'in %s',
         past: '%s ago',
-        s:  '1s',
-        ss: '%ss',
+        s:  '%ds',
+        ss: '%ds',
         m:  '1m',
         mm: '%dm',
         h:  '1h',
@@ -31,6 +31,13 @@ class SelectionRow extends Component {
     });
 
     this.checkValid = this.checkValid.bind(this);
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   handleStrategyClick = () => {

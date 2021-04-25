@@ -47,7 +47,7 @@ class StrategyManager extends Component {
           backtest.datetimeStarted = moment(backtest.datetimeStarted);
         })
       })
-
+      
       this.setState({ 
         savedStrategyData: data,
         selected

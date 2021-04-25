@@ -89,7 +89,7 @@ class Backtest extends Component {
           <div id="backtest-stat-text">Success rate: <span style={{color: getColor(this.props.successRate)}}><b>{Math.round(this.props.successRate*10)/10}%</b></span></div>
           <div id="backtest-stat-text">Profit/Loss: <span style={{color: this.props.totalProfitLossPct < 0 ? "rgb(211, 63, 73)" : "green"}}><b>{(this.props.totalProfitLossPct > 0 ? "+" : "") + Math.round(this.props.totalProfitLossPct*10)/10}%</b></span></div>
         </div>
-      <div className="col-3 px-1 my-auto" id="backtest-stat-text" style={{color: "#949494"}}>{this.props.datetimeFinished.fromNow()}</div>
+      <div className="col-3 px-1 my-auto" id="backtest-stat-text" style={{color: "#949494"}}>{isNaN(this.props.datetimeFinished) ? "In progress" : this.props.datetimeFinished.fromNow()}</div>
       </div>
     )
   }
@@ -141,8 +141,29 @@ class StrategyInfo extends Component {
     return true;
   }
 
+  componentDidMount() {
+    this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
+  }
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  componentDidUpdate(prevProps) {
+    // Typical usage (don't forget to compare props):
+    if (this.props.selected !== prevProps.selected) {
+      this.setState({activeCardKey: "0"});
+    }
+  }
+
   changeCard = () => {
     this.setState({activeCardKey: this.state.activeCardKey === "0" ? "1" : "0"})
+  }
+
+  getRunningTime = () => {
+    var start = this.props.selected.backtests[0].datetimeStarted; //todays date
+    var end = moment(); // another date
+    var duration = moment.duration(end.diff(start));
+    return `${duration.hours() < 10 ? "0" + duration.hours() : duration.hours()}:${duration.minutes() < 10 ? "0" + duration.minutes() : duration.minutes()}:${duration.seconds() < 10 ? "0" + duration.seconds() : duration.seconds()}`;
   }
 
   render() {
@@ -201,7 +222,7 @@ class StrategyInfo extends Component {
                             { 
                               this.props.selected.active 
                               ?
-                                <div className="col-12 px-0 mb-1 text-center" style={{fontSize: "10pt"}}><i>Backtest has been running for 00:38:05</i></div>
+                                <div className="col-12 px-0 mb-1 text-center" style={{fontSize: "10pt"}}><i>Backtest has been running for {this.getRunningTime()}</i></div>
                               : 
                                 this.props.selected.backtests[0] === undefined 
                                 ?

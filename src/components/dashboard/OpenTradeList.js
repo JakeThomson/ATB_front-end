@@ -60,12 +60,14 @@ class OpenTradeList extends Component {
               {this.props.openTrades.map(({ tradeId, ticker, shareQty, investmentTotal, currentPrice, figure, profitLossPct }) => 
                 <OpenTradeRow 
                   key={tradeId}
+                  tradeId={tradeId}
                   ticker={ticker} 
                   tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
                   currentPrice={currentPrice.toFixed(2)}
                   profitLossPct={profitLossPct}
                   figData={figure.data}
                   figLayout={figure.layout}
+                  handleClick={this.props.handleShow}
                 />
               )}
             </div>

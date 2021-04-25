@@ -9,7 +9,7 @@ import Plot from 'react-plotly.js';
 class Backtest extends Component {
   constructor(props) {
     super(props);
-    moment.locale('en', {
+    moment.updateLocale('en', {
       relativeTime: {
         future: '%s',
         past: '%s ago',
@@ -99,7 +99,7 @@ class StrategyInfo extends Component {
   constructor(props) {
     super(props);
 
-    moment.locale('en', {
+    moment.updateLocale('en', {
       relativeTime: {
         future: 'in %s',
         past: '%s ago',

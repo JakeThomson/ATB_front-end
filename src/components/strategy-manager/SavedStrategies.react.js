@@ -11,7 +11,7 @@ class SelectionRow extends Component {
   constructor(props) {
     super(props);
 
-    moment.locale('en', {
+    moment.updateLocale('en', {
       relativeTime: {
         future: 'in %s',
         past: '%s ago',

@@ -9,7 +9,8 @@ import SuccessRate from '../components/dashboard/SuccessRate.react.js';
 import WorldFlow from '../components/dashboard/WorldFlow.react.js';
 import News from '../components/dashboard/News.react.js';
 import TradeStats from '../components/dashboard/TradeStats.react.js';
-import Settings from '../components/dashboard/Settings.react.js'
+import Settings from '../components/dashboard/Settings.react.js';
+import TradeModal from '../components/dashboard/TradeViewModal.react';
 
 class Dashboard extends Component {
   _isMounted = false;
@@ -41,6 +42,7 @@ class Dashboard extends Component {
         backtestOnline: true,
         tradeStats: {},
         backtestId: 0,
+        showTradeModal: false,
         settings: {
           startDate: moment("2015-01-01"),
           endDate: moment().startOf('day'),
@@ -236,15 +238,23 @@ class Dashboard extends Component {
     this.props.socket.off("tradesUpdated");
     this.props.socket.off("updateStats");
   }
+  
+  setShowTradeModal = (bool, tradeId) => {
+    console.log(tradeId);
+    // Sets the visible state of the modal.
+    this.setState({ showTradeModal: bool});
+  }  
 
   render() {
+    const handleCloseTradeModal = (tradeId) => this.setShowTradeModal(false, tradeId);
+    const handleShowTradeModal = (tradeId) => this.setShowTradeModal(true, tradeId);
     return (
       <div id="wrapper">
         <div id="content">
           <WorldFlow isPaused={this.state.isPaused} date={this.state.backtestDate} playPauseClicked={this.togglePlayPause} backtestOnline={this.state.backtestOnline}/>
           <OpenTradeStats openTrades={this.state.openTrades} />
-          <OpenTradeList openTrades={this.state.openTrades}/>
-          <ClosedTradeList closedTrades={this.state.closedTrades}/>
+          <OpenTradeList openTrades={this.state.openTrades} handleShow={handleShowTradeModal}/>
+          <ClosedTradeList closedTrades={this.state.closedTrades} handleShow={tradeId => handleShowTradeModal(tradeId)}/>
           <News />
           <div id="trade-stats-container">
             <TradeStats backtestDate={this.state.backtestDate} stats={this.state.tradeStats} />
@@ -252,6 +262,7 @@ class Dashboard extends Component {
             <SuccessRate pct={this.state.successRate} />
           </div>
           <Settings backtestOnline={this.state.backtestOnline} socket={this.props.socket} onSettingsSaved={this.handleSettingsSaved} onGetSettings={this.handleGetSettings} savedSettings={this.state.settings} />
+          <TradeModal show={this.state.showTradeModal} openTrades={this.state.openTrades} closedTrades={this.state.closedTrades} handleClose={handleCloseTradeModal}/>
         </div>
         <div className="background">
           <div id="bg-square-1"/>

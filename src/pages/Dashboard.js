@@ -96,7 +96,7 @@ class Dashboard extends Component {
         }
       });
 
-      fetch(`${this.state.server}/trades/stats?date=${this.state.startDate}`, {
+      fetch(`${this.state.server}/trades/${this.state.backtestId}/stats?date=${this.state.startDate}`, {
         headers : { 
           'Content-Type': 'application/json',
           'Accept': 'application/json'
@@ -164,7 +164,7 @@ class Dashboard extends Component {
       // Listen for updates to the backtest date.
       this.props.socket.on('updateStats', (data) => {
         // Grab all open and closed trades from database.
-        fetch(`${this.state.server}/trades/stats?date=${this.state.startDate}`, {
+        fetch(`${this.state.server}/trades/${this.state.backtestId}/stats?date=${this.state.startDate}`, {
           headers : { 
             'Content-Type': 'application/json',
             'Accept': 'application/json'

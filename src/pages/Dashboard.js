@@ -43,6 +43,7 @@ class Dashboard extends Component {
         tradeStats: {},
         backtestId: 0,
         showTradeModal: false,
+        tradeModalFocusId: undefined,
         settings: {
           startDate: moment("2015-01-01"),
           endDate: moment().startOf('day'),
@@ -240,13 +241,12 @@ class Dashboard extends Component {
   }
   
   setShowTradeModal = (bool, tradeId) => {
-    console.log(tradeId);
     // Sets the visible state of the modal.
-    this.setState({ showTradeModal: bool});
+    this.setState({ showTradeModal: bool, tradeModalFocus: tradeId});
   }  
 
   render() {
-    const handleCloseTradeModal = (tradeId) => this.setShowTradeModal(false, tradeId);
+    const handleCloseTradeModal = () => this.setShowTradeModal(false, undefined);
     const handleShowTradeModal = (tradeId) => this.setShowTradeModal(true, tradeId);
     return (
       <div id="wrapper">
@@ -262,7 +262,7 @@ class Dashboard extends Component {
             <SuccessRate pct={this.state.successRate} />
           </div>
           <Settings backtestOnline={this.state.backtestOnline} socket={this.props.socket} onSettingsSaved={this.handleSettingsSaved} onGetSettings={this.handleGetSettings} savedSettings={this.state.settings} />
-          <TradeModal show={this.state.showTradeModal} openTrades={this.state.openTrades} closedTrades={this.state.closedTrades} handleClose={handleCloseTradeModal}/>
+          <TradeModal show={this.state.showTradeModal} selectedTradeId={this.state.tradeModalFocus} openTrades={this.state.openTrades} closedTrades={this.state.closedTrades} handleClose={handleCloseTradeModal}/>
         </div>
         <div className="background">
           <div id="bg-square-1"/>

@@ -84,7 +84,6 @@ class StrategyManager extends Component {
 
         if(totalProfitLossGraph !== undefined && successRate !== undefined && backtestId !== undefined && this.state.selected !== undefined) {
           if(this.state.selected.active === true) {
-            console.log(data)
             this.setState(prevState => ({
               selected: {
                   ...prevState.selected,

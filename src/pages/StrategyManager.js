@@ -4,6 +4,7 @@ import '../css/strategy-manager/strategy-manager.css';
 import SavedStrategies from '../components/strategy-manager/SavedStrategies.react';
 import StrategyInfo from '../components/strategy-manager/StrategyInfo.react';
 import {ReactComponent as BackSVG} from '../images/back.svg';
+import moment from 'moment';
 
 class StrategyManager extends Component {
 
@@ -24,7 +25,6 @@ class StrategyManager extends Component {
   }
 
   componentDidMount() {
-
     // Fill UI with data from database.
     fetch(`${this.state.server}/strategies`, {
       headers : { 
@@ -40,6 +40,14 @@ class StrategyManager extends Component {
         const { strategyId } = this.props.location.state;
         selected = data.find(strategy => {return strategy.strategyId === strategyId});
       }
+
+      data.forEach((strategy, i) => {
+        strategy.backtests.forEach((backtest, j) => {
+          backtest.datetimeFinished = moment(backtest.datetimeFinished);
+          backtest.datetimeStarted = moment(backtest.datetimeStarted);
+        })
+      })
+
       this.setState({ 
         savedStrategyData: data,
         selected

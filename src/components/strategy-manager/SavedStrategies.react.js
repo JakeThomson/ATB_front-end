@@ -4,10 +4,31 @@ import {ReactComponent as AddSVG} from '../../images/close.svg';
 import {ReactComponent as HistorySVG} from '../../images/history.svg';
 import {ReactComponent as SuccessSVG} from '../../images/checked.svg';
 import { Link } from "react-router-dom";
+import moment from 'moment';
 
 class SelectionRow extends Component {
   constructor(props) {
     super(props);
+
+    moment.locale('en', {
+      relativeTime: {
+        future: 'in %s',
+        past: '%s ago',
+        s:  '1s',
+        ss: '%ss',
+        m:  '1m',
+        mm: '%dm',
+        h:  '1h',
+        hh: '%dh',
+        d:  '1d',
+        dd: '%dd',
+        M:  '1M',
+        MM: '%dM',
+        y:  '1Y',
+        yy: '%dY'
+      }
+    });
+
     this.checkValid = this.checkValid.bind(this);
   }
 
@@ -63,6 +84,9 @@ class SelectionRow extends Component {
 
     function getColor(percent) // percent [0..100]
     {
+      if(percent === "N/A") {
+        return 'rgba(250,0,0,0.3)'
+      }
       const color = context.getImageData(percent, 0, 1, 1); // x, y, width, height
       const rgba = color.data;
       
@@ -78,19 +102,28 @@ class SelectionRow extends Component {
         >
           <div className="saved-strategy-name-container container row mx-auto px-0 justify-content-around">
             <h5 className="col-12 px-0 saved-strategy-name py-1">{this.props.strategy.strategyName}</h5>
-              { this.props.strategy.active === true ? 
-                <div className="d-flex">
-                  <HistorySVG id="last-run-icon" className="my-auto mr-1"/>
-                  <p className="m-0" style={{fontSize: "10pt"}}>Running...</p>
-                </div> :
-                <div className="d-flex">
+              { this.props.strategy.active === true 
+                ? 
+                  <div className="d-flex">
                     <HistorySVG id="last-run-icon" className="my-auto mr-1"/>
-                    <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.lastRun}</p>
-                </div>
+                    <p className="m-0" style={{fontSize: "10pt"}}>Running...</p>
+                  </div> 
+                :
+                  this.props.strategy.backtests[0] === undefined 
+                  ?
+                    <div className="d-flex">
+                      <HistorySVG id="last-run-icon" className="my-auto mr-1" style={{opacity: "50%"}}/>
+                      <p className="m-0" style={{fontSize: "10pt"}}>No history</p>
+                    </div>
+                  : 
+                    <div className="d-flex">
+                      <HistorySVG id="last-run-icon" className="my-auto mr-1"/>
+                      <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.backtests[0].datetimeFinished.fromNow()}</p>
+                    </div>
               }
               <div className="d-flex">
                   <SuccessSVG id="avg-success-icon" className="my-auto mr-1" style={{fill: getColor(this.props.strategy.avgSuccess)}}/>
-                  <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.avgSuccess}%</p>
+                  <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.avgSuccess === "N/A" ? this.props.strategy.avgSuccess : this.props.strategy.avgSuccess + "%"}</p>
               </div>
           </div>
         </div>

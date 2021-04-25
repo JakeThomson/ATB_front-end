@@ -2,10 +2,30 @@ import React, { Component } from 'react';
 import '../../css/strategy-manager/strategy-info.css';
 import { Modal, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import moment from 'moment';
 
 class StrategyInfo extends Component {
   constructor(props) {
     super(props);
+
+    moment.locale('en', {
+      relativeTime: {
+        future: 'in %s',
+        past: '%s ago',
+        s:  '1s',
+        ss: '%ss',
+        m:  '1m',
+        mm: '%dm',
+        h:  '1h',
+        hh: '%dh',
+        d:  '1d',
+        dd: '%dd',
+        M:  '1M',
+        MM: '%dM',
+        y:  '1Y',
+        yy: '%dY'
+      }
+    });
 
     this.state = {
       show: false
@@ -80,20 +100,26 @@ class StrategyInfo extends Component {
                 
                 {!this.checkValid() ? <div className="col-12 px-0 mb-1 text-center text-danger"><i>Strategy contains an invalid module</i></div> : null}
                 { 
-                  this.props.selected.active ?
+                  this.props.selected.active 
+                  ?
                     <div className="col-12 px-0 mb-1 text-center" style={{fontSize: "10pt"}}><i>Backtest has been running for 00:38:05</i></div>
-                  : <div className="col-12 px-0 mb-1 text-center" style={{fontSize: "10pt"}}><i>Backtest last run {this.props.selected.lastRun}</i></div>
+                  : 
+                    this.props.selected.backtests[0] === undefined 
+                    ?
+                      <div className="col-12 px-0 mb-1 text-center" style={{fontSize: "10pt"}}><i>Strategy has not yet run a full backtest</i></div>
+                    :
+                      <div className="col-12 px-0 mb-1 text-center" style={{fontSize: "10pt"}}><i>Backtest last run {this.props.selected.backtests[0].datetimeFinished.fromNow()}</i></div>
                 }
                 <div className="col-12 px-0 text-center">
                   <h6 className="mb-0 mt-2">Selected Analysis Modules:</h6>
                   <p className="mb--1">{this.props.selected.technicalAnalysis.map(a => a.name).join(", ")}</p>
                 </div>
                 <div className="col-6 px-0 text-center">
-                  <h2 className="mb-0">{this.props.selected.avgSuccess}%</h2>
+                  <h2 className="mb-0">{this.props.selected.avgSuccess === "N/A" ? this.props.selected.avgSuccess : this.props.selected.avgSuccess + "%"}</h2>
                   <h6>Avg. success rate</h6>
                 </div>
                 <div className="col-6 px-0 text-center">
-                  <h2 className="mb-0">+{this.props.selected.avgSuccess/2}%</h2>
+                  <h2 className="mb-0">{this.props.selected.avgReturns === "N/A" ? this.props.selected.avgReturns : "+" + this.props.selected.avgReturns + "%"}</h2>
                   <h6>Avg. returns</h6>
                 </div>
               </div>

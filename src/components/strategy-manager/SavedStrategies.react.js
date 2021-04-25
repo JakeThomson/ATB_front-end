@@ -3,6 +3,7 @@ import '../../css/strategy-manager/saved-strategies.css';
 import {ReactComponent as AddSVG} from '../../images/close.svg';
 import {ReactComponent as HistorySVG} from '../../images/history.svg';
 import {ReactComponent as SuccessSVG} from '../../images/checked.svg';
+import {ReactComponent as ProfitSVG} from '../../images/profitloss.svg';
 import { Link } from "react-router-dom";
 import moment from 'moment';
 
@@ -100,7 +101,7 @@ class SelectionRow extends Component {
           onClick={this.handleStrategyClick}
           id="selection-row" className={"row col-12 mx-auto" + (this.checkValid() ? "" :  " invalid") + (this.props.selected ? " selected" : "")}
         >
-          <div className="saved-strategy-name-container container row mx-auto px-0 justify-content-around">
+          <div className="saved-strategy-name-container container row mx-auto px-0 justify-content-around" style={{marginBottom: "3px"}}>
             <h5 className="col-12 px-0 saved-strategy-name py-1">{this.props.strategy.strategyName}</h5>
               { this.props.strategy.active === true 
                 ? 
@@ -123,7 +124,11 @@ class SelectionRow extends Component {
               }
               <div className="d-flex">
                   <SuccessSVG id="avg-success-icon" className="my-auto mr-1" style={{fill: getColor(this.props.strategy.avgSuccess)}}/>
-                  <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.avgSuccess === "N/A" ? this.props.strategy.avgSuccess : this.props.strategy.avgSuccess + "%"}</p>
+                  <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.avgSuccess === "N/A" ? this.props.strategy.avgSuccess : Math.round(this.props.strategy.avgSuccess*10)/10 + "%"}</p>
+              </div>
+              <div className="d-flex">
+                  <ProfitSVG id="avg-success-icon" className="my-auto mr-1" style={{fill: this.props.strategy.avgReturns < 0 ? "rgb(211, 63, 73)" : "green", opacity: this.props.strategy.avgReturns === "N/A" ? "40%" : "100%" }}/>
+                  <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.avgSuccess === "N/A" ? this.props.strategy.avgSuccess : Math.round(this.props.strategy.avgReturns*10)/10 + "%"}</p>
               </div>
           </div>
         </div>

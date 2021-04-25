@@ -1,12 +1,24 @@
-#strategy-info-container {
-  position: absolute;
-  width: 290px; height: 235px;
-  left: 15px; top:75px;
+.strategy-info-container {
+  width: 290px; height: 195px;
+  margin: 6px 0;
+  padding-bottom: 0;
   overflow-y: auto;
 }
 /* width */
-#strategy-info-container::-webkit-scrollbar {
-  width: 0px;
+.strategy-info-container::-webkit-scrollbar {
+  width: 6px;
+}
+/* Track */
+.strategy-info-container::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+} 
+/* Handle */
+.strategy-info-container::-webkit-scrollbar-thumb {
+  background: rgb(216, 216, 216); 
+}
+/* Handle on hover */
+.strategy-info-container::-webkit-scrollbar-thumb:hover {
+  background: rgb(179, 179, 179); 
 }
 
 .restart-backtest-btn {
@@ -84,6 +96,56 @@
   border-color: #f07d89;
 }
 
+.chevron__line1, .chevron__line2 {
+  stroke-width: 10;
+  stroke-linecap: round;
+  -webkit-transition: -webkit-transform 0.4s, stroke 0.4s;
+  transition: transform 0.4s, stroke 0.4s;
+}
+.chevron__line1 {
+  -webkit-transform-origin: 50px 50px;
+  transform-origin: 50px 50px;
+}
+.chevron__line2 {
+  -webkit-transform-origin: 50px 50px;
+  transform-origin: 50px 50px;
+}
+.chevron--down, .chevron--up {
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+.chevron--down .chevron__container, .chevron--up .chevron__container {
+  -webkit-transition: -webkit-transform 0.4s;
+  transition: transform 0.4s;
+  -webkit-transform: translateY(13px);
+  transform: translateY(13px);
+}
+.chevron--down .chevron__line1, .chevron--up .chevron__line1 {
+  stroke: #949494;
+  -webkit-transform: rotate(40deg);
+  transform: rotate(40deg);
+}
+.chevron--down .chevron__line2, .chevron--up .chevron__line2 {
+  stroke: #949494;
+  -webkit-transform: rotate(-40deg);
+  transform: rotate(-40deg);
+}
+.chevron--up .chevron__container {
+  -webkit-transform: translateY(-2px);
+  transform: translateY(-2px);
+}
+.chevron--up .chevron__line1 {
+  stroke: #949494;
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+.chevron--up .chevron__line2 {
+  stroke: #949494;
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
 #arrow-icon{
   height: 14px; width: 14px;
   fill:#949494;
@@ -99,5 +161,20 @@
   -moz-transition: 0.30s;
   -ms-transition: 0.30s;
   -o-transition: 0.30s;
-  transform: rotate(180deg);
+  transform: rotate(-90deg);
+}
+
+#backtest-container {
+  padding: 3px 0;
+  margin-bottom: 4px;
+}
+
+#backtest-separator {
+  margin: 5px;
+}
+
+#backtest-stat-text {
+  font-family: Helvetica;
+  font-size: 9pt;
+  color: #343434;
 }

@@ -57,16 +57,16 @@ class OpenTradeList extends Component {
           <div id="at-container">
             <p id="at-header">Open trades</p>
             <div id="ot-list-container">
-              {this.props.openTrades.map(({ tradeId, ticker, shareQty, investmentTotal, currentPrice, figure, profitLossPct }) => 
+              {this.props.openTrades.map(({ tradeId, ticker, shareQty, investmentTotal, currentPrice, priceGaugeFigure, profitLossPct }) => 
                 <OpenTradeRow 
                   key={tradeId}
-                  tradeId={tradeId}
+                   tradeId={tradeId}
                   ticker={ticker} 
                   tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
                   currentPrice={currentPrice.toFixed(2)}
                   profitLossPct={profitLossPct}
-                  figData={figure.data}
-                  figLayout={figure.layout}
+                  figData={priceGaugeFigure.data}
+                  figLayout={priceGaugeFigure.layout}
                   handleClick={this.props.handleShow}
                 />
               )}

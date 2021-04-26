@@ -91,6 +91,7 @@ class Dashboard extends Component {
       })
       .then(response => response.json())
       .then(data => {
+        console.log(data);
         if(this._isMounted) {
           this.setState({openTrades: data[0], closedTrades: data[1]});
         }

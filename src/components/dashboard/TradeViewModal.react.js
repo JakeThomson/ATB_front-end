@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import '../../css/dashboard/trade-modal.css';
-import { Modal, Button } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import Plot from 'react-plotly.js';
 
 class TradeModal extends Component {

@@ -62,7 +62,7 @@ class ClosedTradeList extends Component {
             <div id="ct-container">
             <p id="ct-header">Closed trades</p>
                 <div id="ct-list-container">
-                  {this.props.closedTrades.map(({ tradeId, ticker, shareQty, investmentTotal, profitLoss, figure, profitLossPct }) => 
+                  {this.props.closedTrades.map(({ tradeId, ticker, shareQty, investmentTotal, profitLoss, simpleFigure, profitLossPct }) => 
                       <ClosedTradeRow 
                         key={tradeId}
                         tradeId={tradeId}
@@ -70,8 +70,8 @@ class ClosedTradeList extends Component {
                         tradeQty={this.formatTradeQty(shareQty, investmentTotal)}
                         profitLossPct={profitLossPct}
                         profitLossVal={this.formatCurrency(profitLoss, true)} 
-                        figData={figure.data}
-                        figLayout={figure.layout}
+                        figData={simpleFigure.data}
+                        figLayout={simpleFigure.layout}
                         handleClick={this.props.handleShow}
                       />
                   )}

@@ -91,7 +91,6 @@ class Dashboard extends Component {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         if(this._isMounted) {
           this.setState({openTrades: data[0], closedTrades: data[1]});
         }
@@ -107,6 +106,20 @@ class Dashboard extends Component {
       .then(data => {
         if(this._isMounted) {
           this.setState({tradeStats: data});
+        }
+      });
+
+      fetch(`${this.state.server}/backtest_settings/available`, {
+        headers : { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if(this._isMounted) {
+          this.setState({backtestOnline: data.backtestOnline});
         }
       });
     });

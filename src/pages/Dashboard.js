@@ -117,7 +117,6 @@ class Dashboard extends Component {
       })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         if(this._isMounted) {
           this.setState({backtestOnline: data.backtestOnline});
         }
@@ -269,7 +268,7 @@ class Dashboard extends Component {
           <OpenTradeStats openTrades={this.state.openTrades} />
           <OpenTradeList openTrades={this.state.openTrades} handleShow={handleShowTradeModal}/>
           <ClosedTradeList closedTrades={this.state.closedTrades} handleShow={tradeId => handleShowTradeModal(tradeId)}/>
-          <News />
+          {/* <News /> */}
           <div id="trade-stats-container">
             <TradeStats backtestDate={this.state.backtestDate} stats={this.state.tradeStats} />
             <TotalProfit totalValue={this.state.totalBalance} totalProfitLoss={this.state.totalProfitLoss} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />

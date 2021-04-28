@@ -2,7 +2,7 @@
     position: absolute;
     background: white;
     border-radius: 16px;
-    width: 211px; height: 163px;
+    width: 211px; height: 263px;
     left: 260px; top: 178px;
     box-shadow: 0px -0px 9px -2px rgba(0,0,0,0.1);
 }
@@ -17,7 +17,7 @@
 
 #ot-list-container {
     position: absolute;
-    width: 191px;  height: 135px;
+    width: 191px;  height: 230px;
     left: 10px; top: 25px;
     overflow-x: hidden;
     overflow-y: auto;

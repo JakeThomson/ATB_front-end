@@ -17,7 +17,7 @@
 
 #ct-list-container {
   position: absolute;
-  width: 252px;  height: 315px;
+  width: 252px;  height: 310px;
   left: 10px; top: 25px;  
   overflow-x: hidden;
   overflow-y: auto;

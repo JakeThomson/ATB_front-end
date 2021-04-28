@@ -9,7 +9,29 @@ class TradeModal extends Component {
 
     this.state = {
       tradeType: undefined,
-      selected: undefined
+      selected: undefined,
+      tracking: true,
+      storedAxisRange: [] 
+    }
+  }
+
+  componentDidMount() {
+    let tradeType = "";
+    let selected = this.props.openTrades.find(obj => {
+      return obj.tradeId === this.props.selectedTradeId;
+    });
+    if(selected === undefined) {
+      selected = this.props.closedTrades.find(obj => {
+        return obj.tradeId === this.props.selectedTradeId;
+      });
+      tradeType = "closed";
+    } else {
+      tradeType = "open";
+    }
+
+    if(selected !== undefined) {
+      const storedAxisRange = [selected.figure.layout.xaxis.range, selected.figure.layout.yaxis.range];
+      this.setState({selected, tradeType, storedAxisRange});
     }
   }
 
@@ -27,17 +49,16 @@ class TradeModal extends Component {
       } else {
         tradeType = "open";
       }
+
       if(selected !== undefined) {
-        this.setState({selected, tradeType});
+        const storedAxisRange = [selected.figure.layout.xaxis.range, selected.figure.layout.yaxis.range];
+        if(!this.state.tracking) {
+          selected.figure.layout = this.state.selected.figure.layout;
+        }
+        this.setState({selected, tradeType, storedAxisRange});
       }
     }
   }
-
-
-  setShow = bool => {
-    // Sets the visible state of the modal.
-    this.setState({ show: bool});
-  }  
 
   resizeFigure = (width, height) => {
     let figureLayout = {...this.state.selected.figure.layout};
@@ -46,11 +67,38 @@ class TradeModal extends Component {
     return figureLayout;
   }
 
+  handleDoubleClick = () => {
+    let selected = this.state.selected;
+    const tracking = this.state.tracking;
+
+    if(tracking) {
+      selected.figure.layout.xaxis.autorange = true;
+      delete selected.figure.layout.xaxis.range;
+      selected.figure.layout.yaxis.autorange = true;
+      delete selected.figure.layout.yaxis.range;
+      this.setState({selected, tracking: false});
+    } else {
+      selected.figure.layout.xaxis.autorange = false;
+      selected.figure.layout.xaxis.range = this.state.storedAxisRange[0];
+      selected.figure.layout.yaxis.autorange = false;
+      selected.figure.layout.yaxis.range = this.state.storedAxisRange[1];
+      this.setState({selected, tracking: true});
+    }
+  }
+
+  handleRelayout = (e) => {
+    if(Object.keys(e).length > 0) {
+      console.log("no longer tracking");
+      this.setState({tracking: false});
+    }
+  }
+
   render() {
     return (
       <Modal 
         show={this.props.show} 
         onHide={this.props.handleClose}
+        style={{overflowY: "hidden"}}
       >
         <Modal.Header closeButton className="pb-2">
           <Modal.Title style={{fontSize: "25pt"}}>
@@ -98,7 +146,7 @@ class TradeModal extends Component {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Plot data={this.state.selected?.figure.data} layout={this.state.selected?.figure.layout} config={{'displayModeBar': false, "showTips": false}} />
+          <Plot data={this.state.selected?.figure.data} layout={this.state.selected?.figure.layout} config={{'displayModeBar': false, "showTips": false, doubleClick: false}} onRelayout={this.handleRelayout} onDoubleClick={this.handleDoubleClick} />
         </Modal.Footer>
       </Modal>
     )

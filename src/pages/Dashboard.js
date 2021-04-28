@@ -7,7 +7,7 @@ import TotalProfit from '../components/dashboard/TotalProfit.react.js';
 import OpenTradeStats from '../components/dashboard/OpenTradeStats.react.js';
 import SuccessRate from '../components/dashboard/SuccessRate.react.js';
 import WorldFlow from '../components/dashboard/WorldFlow.react.js';
-import News from '../components/dashboard/News.react.js';
+// import News from '../components/dashboard/News.react.js';
 import TradeStats from '../components/dashboard/TradeStats.react.js';
 import Settings from '../components/dashboard/Settings.react.js';
 import TradeModal from '../components/dashboard/TradeViewModal.react';

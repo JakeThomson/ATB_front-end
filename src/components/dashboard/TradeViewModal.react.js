@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import '../../css/dashboard/trade-modal.css';
 import { Modal } from "react-bootstrap";
 import Plot from 'react-plotly.js';
+import lodash from 'lodash';
 
 class TradeModal extends Component {
   constructor(props) {
@@ -11,7 +12,8 @@ class TradeModal extends Component {
       tradeType: undefined,
       selected: undefined,
       tracking: true,
-      storedAxisRange: [] 
+      storedAxisRange: [],
+      aged: false
     }
   }
 
@@ -29,9 +31,10 @@ class TradeModal extends Component {
       tradeType = "open";
     }
 
+    selected = lodash.cloneDeep(selected);
+
     if(selected !== undefined) {
-      const storedAxisRange = [selected.figure.layout.xaxis.range, selected.figure.layout.yaxis.range];
-      this.setState({selected, tradeType, storedAxisRange});
+      this.setState({selected, tradeType});
     }
   }
 
@@ -50,12 +53,27 @@ class TradeModal extends Component {
         tradeType = "open";
       }
 
+      let prevSelected = prevProps.openTrades.find(obj => {
+        return obj.tradeId === this.props.selectedTradeId;
+      });
+      if(prevSelected === undefined) {
+        prevSelected = prevProps.closedTrades.find(obj => {
+          return obj.tradeId === this.props.selectedTradeId;
+        });
+      }
+
+      if(selected === undefined && prevSelected !== undefined) {
+        const storedAxisRange = [prevSelected.figure.layout.xaxis.range, prevSelected.figure.layout.yaxis.range];
+        this.setState({aged: true, storedAxisRange});
+      }
+
+      selected = lodash.cloneDeep(selected);
+
       if(selected !== undefined) {
-        const storedAxisRange = [selected.figure.layout.xaxis.range, selected.figure.layout.yaxis.range];
         if(!this.state.tracking) {
           selected.figure.layout = this.state.selected.figure.layout;
         }
-        this.setState({selected, tradeType, storedAxisRange});
+        this.setState({selected, tradeType});
       }
     }
   }
@@ -68,10 +86,14 @@ class TradeModal extends Component {
   }
 
   handleDoubleClick = () => {
-    let selected = this.state.selected;
+    let selected =  lodash.cloneDeep(this.state.selected);
     const tracking = this.state.tracking;
 
     if(tracking) {
+      if(!this.state.aged){
+        const storedAxisRange = [selected.figure.layout.xaxis.range, selected.figure.layout.yaxis.range];
+        this.setState({storedAxisRange});
+      }
       selected.figure.layout.xaxis.autorange = true;
       delete selected.figure.layout.xaxis.range;
       selected.figure.layout.yaxis.autorange = true;
@@ -79,16 +101,37 @@ class TradeModal extends Component {
       this.setState({selected, tracking: false});
     } else {
       selected.figure.layout.xaxis.autorange = false;
-      selected.figure.layout.xaxis.range = this.state.storedAxisRange[0];
+      selected.figure.layout.xaxis.range = lodash.cloneDeep(this.state.storedAxisRange[0]);
       selected.figure.layout.yaxis.autorange = false;
-      selected.figure.layout.yaxis.range = this.state.storedAxisRange[1];
+      selected.figure.layout.yaxis.range = lodash.cloneDeep(this.state.storedAxisRange[1]);
       this.setState({selected, tracking: true});
     }
   }
 
   handleRelayout = (e) => {
     if(Object.keys(e).length > 0) {
-      console.log("no longer tracking");
+      if(this.state.tracking) {
+        let selected = this.props.openTrades.find(obj => {
+          return obj.tradeId === this.props.selectedTradeId;
+        });
+        if(selected === undefined) {
+          selected = this.props.closedTrades.find(obj => {
+            return obj.tradeId === this.props.selectedTradeId;
+          });
+        }
+        
+        selected = lodash.cloneDeep(selected);
+
+        if(!this.state.aged){
+          let storedAxisRange;
+          if(selected === undefined) {
+            storedAxisRange = [this.state.selected.figure.layout.xaxis.range, this.state.selected.figure.layout.yaxis.range];
+          } else {
+            storedAxisRange = [selected.figure.layout.xaxis.range, selected.figure.layout.yaxis.range];
+          }
+          this.setState({storedAxisRange});
+        }
+      }
       this.setState({tracking: false});
     }
   }

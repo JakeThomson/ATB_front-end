@@ -275,8 +275,12 @@ class Dashboard extends Component {
             <SuccessRate pct={this.state.successRate} />
           </div>
           <Settings backtestOnline={this.state.backtestOnline} socket={this.props.socket} onSettingsSaved={this.handleSettingsSaved} onGetSettings={this.handleGetSettings} savedSettings={this.state.settings} />
-          <TradeModal show={this.state.showTradeModal} selectedTradeId={this.state.tradeModalFocus} openTrades={this.state.openTrades} closedTrades={this.state.closedTrades} handleClose={handleCloseTradeModal}/>
-        </div>
+          {
+            this.state.showTradeModal ?
+              <TradeModal show={this.state.showTradeModal} selectedTradeId={this.state.tradeModalFocus} openTrades={this.state.openTrades} closedTrades={this.state.closedTrades} handleClose={handleCloseTradeModal}/>
+            : null
+          }
+          </div>
         <div className="background">
           <div id="bg-square-1"/>
           <div id="bg-square-2"/>

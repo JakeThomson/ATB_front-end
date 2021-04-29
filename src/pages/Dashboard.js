@@ -199,7 +199,7 @@ class Dashboard extends Component {
       return undefined
     }
 
-    const decimalPts = Math.abs(number) >= 10 ? 1 : 2 
+    const decimalPts = Math.abs(number) >= 100 ? 0 : Math.abs(number) >= 10 ? 1 : 2 
 
     const sign = number < 0 ? "" : "+";
     const formattedPct = "("+sign+number.toFixed(decimalPts).toString()+"%)";

@@ -130,12 +130,10 @@
 }
 #save-btn-container:disabled{
   cursor: default;
-  opacity: 50%;
 }
 #save-btn-container:disabled > #save-btn-icon{
   cursor: default;
-  opacity: 50%;
-  fill:#949494 !important;
+  fill:rgba(148, 148, 148, 0.5) !important;
 }
 
 #back-btn-container {

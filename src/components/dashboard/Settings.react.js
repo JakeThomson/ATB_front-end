@@ -37,11 +37,14 @@ class Settings extends Component {
   }
 
   componentDidMount() {
+    // Update settings every time settings modal is opened.
     this.getSettings();
   }
 
+  /**
+   * Gets the currently saved backtest settings from the database.
+   */
   getSettings = () => {
-    // Fill UI with data from database.
     fetch(`${this.state.server}/backtest_settings`, {
       headers : { 
         'Content-Type': 'application/json',
@@ -50,6 +53,7 @@ class Settings extends Component {
     })
     .then(response => response.json())
     .then(data => {
+      // Fill UI with data from database.
       this.setState({ 
         startDate: moment(data.startDate), 
         endDate: moment(data.endDate),
@@ -61,21 +65,30 @@ class Settings extends Component {
         strategyName: data.strategyName,
         backtestOnline: data.backtestOnline
       })
+      // Send new data to Dashboard.
       this.props.onGetSettings(data);
     });
   }
 
+  /**
+   * When restart button is clicked, emit restart socket event.
+   */
   onRestart = () => {
     if(this.props.backtestOnline) {
-      // When restart button is clicked, emit restart socket event.
+      // Only emit event if the backtesting platform is online. 
       this.props.socket.emit("restart");
       this.setShow(false);
     } else {
+      // Else, display error.
       this.setState({ error: "Cannot restart backtest when backtesting system is offline." })
     }
 
   }
 
+  /**
+   * Changes the visibility of the settings modal.
+   * @param {bool} bool - True to set visible, False to set hidden. 
+   */
   setShow = bool => {
     if(!bool){
       this.setState({successMsg: "", error: ""});
@@ -83,10 +96,13 @@ class Settings extends Component {
       this.getSettings();
     }
 
-    // Sets the visible state of the modal.
     this.setState({ show: bool});
   }
 
+  /**
+   * Handles the change of information in the text and number input fields.
+   * @param {Object} event - Event object containing new input data.
+   */
   handleInputChange = event => {
     let target = event.target,
           value = target.value,
@@ -102,6 +118,11 @@ class Settings extends Component {
     })
   }
 
+  /**
+   * Handles the change of information in the start date date picker.
+   * @param {Object} startDate - The newly chosen start date.
+   * @param {Object} event - Event object containing new input data
+   */
   handleStartDateChange = (startDate, event) => {
     // If it is a valid date, the datepicker will automatically convert it to a datetime object.
     if(this.state.startDate !== "" && typeof(startDate) === "object") {
@@ -115,6 +136,11 @@ class Settings extends Component {
     }
   }
 
+  /**
+   * Handles the change of information in the end date date picker.
+   * @param {Object} endDate - The newly chosen end date.
+   * @param {Object} event - Event object containing new input data
+   */
   handleEndDateChange = (endDate, event) => {
     // If it is a valid date, the datepicker will automatically convert it to a datetime object.
     if(this.state.endDate !== "" && typeof(endDate) === "object") {
@@ -128,7 +154,13 @@ class Settings extends Component {
     }
   }
 
+  /**
+   * Checks to see if the data being submitted is valid.
+   * @param {Object} data - The data to be validated. 
+   * @returns {bool}
+   */
   validSubmission = (data) => {
+    // If start date is less than a month before the end date, then it is invalid.
     if(moment(data.startDate).isAfter(moment(data.endDate).subtract(1, 'months'))) {
       this.setState({
         error: `Start date must be at least a month before the end date.`,
@@ -136,20 +168,8 @@ class Settings extends Component {
       })
       return false;
     }
-    if(moment(data.startDate).isAfter(moment(data.endDate).subtract(1, 'months'))) {
-      this.setState({
-        error: `Start date must be at least a month before the end date.`,
-        submitting: false
-      })
-      return false;
-    }
-    if(moment(data.endDate).isSameOrAfter(moment().startOf("day"))) {
-      this.setState({
-        error: `End date must be before today.`,
-        submitting: false
-      })
-      return false;
-    }
+
+    // Cannot accept start balances below 500.
     if(data.startBalance < 500) {
       this.setState({
         error: `Starting balance must be £500 or more.`,
@@ -157,6 +177,8 @@ class Settings extends Component {
       })
       return false;
     }
+
+    // Capital percent spent per trade cannot be less than 1 or greater than 100.
     if(100 < data.capPct || data.capPct <= 0) {
       this.setState({
         error: `Balance % spent per trade must be between 1-100.`,
@@ -164,6 +186,8 @@ class Settings extends Component {
       })
       return false;
     }
+
+    // If take profit is less than stop loss it is invalid 
     if(data.takeProfit <= data.stopLoss){
       this.setState({
         error: `Take profit must be higher than the stop loss.`,
@@ -171,6 +195,8 @@ class Settings extends Component {
       })
       return false;
     }
+
+    // If take profit is less than 1 it is invalid.
     if(data.takeProfit <= 1){
       this.setState({
         error: `Take profit must be higher than 1.`,
@@ -178,6 +204,8 @@ class Settings extends Component {
       })
       return false;
     }
+
+    // If stop loss is higher than 1 it is invalid.
     if(data.stopLoss >= 1){
       this.setState({
         error: `Stop loss must be less than 1.`,
@@ -188,6 +216,10 @@ class Settings extends Component {
     return true;
   }
 
+  /**
+   * Handle the form submit event.
+   * @param {Object} e - Submit event object holding form data. 
+   */
   handleSubmit = (e) => {
     e.preventDefault();
 
@@ -225,6 +257,7 @@ class Settings extends Component {
           successMsg: 'Settings saved, backtest must be restarted for changes to take effect.',
           submitting: false
         });
+        // Update saved settings in the Dashboard.
         this.props.onSettingsSaved(data);
       })
       .catch(err => {
@@ -238,6 +271,10 @@ class Settings extends Component {
     }
   }
 
+  /**
+   * If the settings have not been changed, then make the save button inactive.
+   * @returns {bool}
+   */
   checkSettingsDifferent = () => {
     // Deep clone component state, that the actual states are not altered.
     const same = 
@@ -252,20 +289,34 @@ class Settings extends Component {
     return same;
   }
 
+  /**
+   * Called by date picker to ensure those date are greyed out and cannot be selected.
+   * @param {String} date - Date in the date selector.
+   * @returns {bool}
+   */
   validStartDate = ( date ) => {
+    // Don't allow days before 2010-01-01 to be selected.
     if(moment(date).isBefore(moment("2010-01-01"))) {
       return false;
     }
+    // Do not allow dates after the selected start date to be selected.
     if(moment(date).isAfter(moment(this.state.endDate))) {
       return false;
     }
     return true;
   };
-  
+
+  /**
+   * Called by date picker to ensure those date are greyed out and cannot be selected.
+   * @param {String} date - Date in the date selector.
+   * @returns {bool}
+   */
   validEndDate = ( date ) => {
+    // Don't allow days after today to be selected.
     if(moment(date).isAfter(moment().startOf("day"))) {
       return false;
     }
+    // Do not allow dates before the selected start date to be selected.
     if(moment(date).isBefore(moment(this.state.startDate))) {
       return false;
     }

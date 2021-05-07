@@ -29,6 +29,12 @@ class Backtest extends Component {
     });
   }
 
+  /**
+   * Set the size of the interactive figure.
+   * @param {int} width 
+   * @param {int} height 
+   * @returns {Object} - A new layout object.
+   */
   resizeFigure = (width, height) => {
     let figureLayout = {...this.props.totalProfitLossGraph.layout};
     figureLayout.width = width;
@@ -36,13 +42,16 @@ class Backtest extends Component {
     return figureLayout;
   }
 
-  
-
   render() {  
     const WIDTH = 101; // 0 to 100
     const HEIGHT = 1;
     let context;
 
+    /**
+     * Changes colour of text based on percentage value using a 3 colour gradient.
+     * Solution obtained from https://stackoverflow.com/a/63234313.
+     * @param {String[]} gradientColors - Array of colours to use as a gradient.
+     */
     function initCanvas(gradientColors) // gradientColors [colorA, colorB, ..]
     {
       // Canvas
@@ -67,6 +76,12 @@ class Backtest extends Component {
       context.fillRect(0, 0, WIDTH, HEIGHT); // x, y, width, height
     }
 
+    /**
+     * Gets colour from gradient based on value.
+     * Solution obtained from https://stackoverflow.com/a/63234313.
+     * @param {int} percent - The percentage to be mapped to a colour.
+     * @returns {String} - rgba string.
+     */
     function getColor(percent) // percent [0..100]
     {
       if(percent === "N/A") {
@@ -78,6 +93,7 @@ class Backtest extends Component {
       return `rgb(${ rgba[0] }, ${ rgba[1] }, ${ rgba[2] })`;
     }
 
+    // Gradient of colours to move through based on values 0-100.
     initCanvas(['red', '#D11D1D', 'orange', 'green', '#14D717', 'lime']);
 
     return (
@@ -124,25 +140,38 @@ class StrategyInfo extends Component {
     }
   }
 
+  /**
+   * Updates the component every second (used for updating the 'time running' info).
+   */
   componentDidMount() {
     this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
   }
+  /**
+   * Remove the update interval on unmount.
+   */
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
   componentDidUpdate(prevProps) {
-    // Typical usage (don't forget to compare props):
+    // If the selected strategy has changed, then minimise backtest accordian.
     if (this.props.selected?.strategyId !== prevProps.selected?.strategyId) {
       this.setState({activeCardKey: "0"});
     }
   }
 
+  /**
+   * Changes the visibility of the add module modal.
+   * @param {bool} bool - True to set visible, False to set hidden. 
+   */
   setShow = bool => {
-    // Sets the visible state of the modal.
     this.setState({ show: bool});
   }
-  
+
+  /**
+   * Checks to see if the strategy contains any invalid modules, changes style of container if it does.
+   * @returns {bool}
+   */
   checkValid = () => {
     if(this.props.availableModules.length === 0) {
       return true;
@@ -155,10 +184,17 @@ class StrategyInfo extends Component {
     return true;
   }
 
+  /**
+   * Expand/minimise past backtest tab.
+   */
   changeCard = () => {
     this.setState({activeCardKey: this.state.activeCardKey === "0" ? "1" : "0"})
   }
 
+  /**
+   * If backtest is running, calculate and format the total time it has been running for.
+   * @returns {String} - Formatted time in 'hh:mm:ss'.
+   */
   getRunningTime = () => {
     var start = this.props.selected.backtests[0].datetimeStarted; //todays date
     var end = moment(); // another date

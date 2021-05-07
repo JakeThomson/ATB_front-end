@@ -4,7 +4,12 @@ import SelectionRow from './SelectionRow.react';
 import AddModule from './AddModule.react';
 import '../../css/strategy-editor/selections.css';
 
-// a little function to help us with reordering the result
+/* This component features code fragments from the react-beautiful-dnd examples and samples at:
+   https://react-beautiful-dnd.netlify.app/?path=/story/single-vertical-list--basic */
+
+/**
+ * Reorder the selected modules around when dragging component.
+ */
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
@@ -13,6 +18,9 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
+/**
+ * Component holding all selected analysis modules.
+ */
 const SelectionList = React.memo(function SelectionList({ items, selected, handleModuleClick, handleRemoveClick, options }) {
   function isValid(item) {
     if(options.length === 0) {
@@ -37,6 +45,9 @@ export default class Selections extends Component {
     }
   }
 
+  /**
+   * When an analysis module is added/removed, update the list of selected modules.
+   */
   componentDidUpdate(prevProps) {
     if (prevProps.strategyData !== this.props.strategyData) {
       let items = this.props.strategyData.map(a => a.name);
@@ -44,8 +55,11 @@ export default class Selections extends Component {
     }
   }
 
+  /**
+   * When dropping analysis module.
+   */
   onDragEnd(result) {
-    // dropped outside the list
+    // Dropped outside the list
     if (!result.destination) {
       return;
     }
@@ -66,14 +80,23 @@ export default class Selections extends Component {
     });
   }
 
+  /**
+   * When a module in the list is clicked, then bring up its config options.
+   * @param {Object} method - Data on the module clicked on.
+   */
   handleModuleClick = (method) => {
     if(this.props.selected !== method) {
       this.props.handleSelected(method);
     } else {
+      // Unfocus on second click.
       this.props.handleSelected(undefined);
     }
   }
 
+  /**
+   * Remove the analysis module from the strategy on delete click. 
+   * @param {Object} method - Data on the module to be removed.
+   */
   handleRemoveClick = (method) => {
     if(this.state.items.includes(method)) {
       if(this.props.selected === method) {
@@ -87,6 +110,10 @@ export default class Selections extends Component {
     }
   }
 
+  /**
+   * Add the analysis module to the strategy.
+   * @param {Object} method - Data on the module to be removed.
+   */
   handleAddModuleClick = (method) => {
     if(!this.state.items.includes(method)) {
       const items = this.state.items.concat(method)
@@ -97,8 +124,6 @@ export default class Selections extends Component {
     }
   }
 
-  // Normally you would want to split things out into separate components.
-  // But in this example everything is just done in one place for simplicity
   render() {
     return (
       <div id="selections-container" className="container py-2 px-3">

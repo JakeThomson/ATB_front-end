@@ -7,8 +7,8 @@ import {ReactComponent as SaveSVG} from '../images/save-file.svg';
 import {ReactComponent as CloseSVG} from '../images/close.svg';
 import {ReactComponent as EditSVG} from '../images/pencil.svg';
 
+
 class StrategyEditor extends Component {
-  
 
   constructor(props) {
     super(props);
@@ -34,6 +34,9 @@ class StrategyEditor extends Component {
     }
   }
 
+  /**
+   * When component mounts, then grab all the available analysis modules from backtesting platform/database.
+   */
   componentDidMount() {
     if(this.props.location.state.action === "edit") {
       const { strategyId, strategyName, technicalAnalysis, action } = this.props.location.state;
@@ -57,24 +60,27 @@ class StrategyEditor extends Component {
     });
   }
 
-  handleClick(bool) {
-    this.setState({editing: bool});
-  }
-
-  handleSave = (val) => {
-    this.setState({strategyName: val});
-  }
-
+  /**
+   * When analysis module is clicked, set it as the focus.
+   * @param {Object} selected 
+   */
   handleSelected = (selected) => {
     this.setState({
       selected,
     });
   }
 
+  /**
+   * When user clicks on strategy name, set state to in or out of editing mode.
+   */
   handleRenameClick = () => {
     this.setState({editing: !this.state.editing});
   }
 
+  /**
+   * Remove the analysis module from the strategy on delete click. 
+   * @param {Object} method - Data on the module to be removed.
+   */
   handleRemoveModuleClick = (method) => {
     const newStrategyData = this.state.strategyData.filter(item => item.name !== method);
     this.setState({
@@ -82,6 +88,10 @@ class StrategyEditor extends Component {
     })
   }
 
+  /**
+   * Add the analysis module to the strategy.
+   * @param {Object} method - Data on the module to be removed.
+   */
   handleAddModuleClick = (method) => {
     const config = {};
 
@@ -101,14 +111,23 @@ class StrategyEditor extends Component {
     })
   }
 
+  /**
+   * Handle change of strategy name.
+   * @param {Object} event - Event object containing information on new strategy name.
+   */
   handleChange(event) {
     if(this.state.editing) {
       this.setState({strategyName: event.target.value});
     }
   }
 
+  /**
+   * Handle change of input form data.
+   * @param {Object} event - Object containing information on new form data.
+   */
   handleFormInputChange(event) {
     let newStrategyData = JSON.parse(JSON.stringify(this.state.strategyData));
+    // Update data in strategyData object with the new data.
     for(var i = 0; i < this.state.strategyData.length; i += 1) {
       if(this.state.strategyData[i].name === event.target.getAttribute('form')) {
         newStrategyData[i].config[event.target.id] = event.target.type === "number" ? parseInt(event.target.value) : event.target.value;
@@ -117,7 +136,9 @@ class StrategyEditor extends Component {
     this.setState({strategyData: newStrategyData});
   }
 
-  // a little function to help us with reordering the result
+  /**
+   *  Reorder the analysis modules after drag and drop.
+   */
   handleModuleReorder = (startIndex, endIndex) => {
     const result = Array.from(this.state.strategyData);
     const [removed] = result.splice(startIndex, 1);
@@ -126,6 +147,9 @@ class StrategyEditor extends Component {
     this.setState({strategyData: result});
   };
 
+  /**
+   * Send new strategy data to database, post if creating strategy, put if editing a strategy.
+   */
   handleSaveClick = (e) => {
     this.setState({submitting: true});
 
@@ -150,7 +174,7 @@ class StrategyEditor extends Component {
         console.error(err)
       });
     } else if(this.state.action === "new") {
-      // Patch request to update database
+      // Post request to update database
       fetch(this.state.server + "/strategies", {
         method: 'POST',
         headers: {
@@ -173,28 +197,29 @@ class StrategyEditor extends Component {
       <div id="wrapper">
         <div id="strategy-name-container" style={{fontSize: "2rem"}}>
           {
-            this.state.editing ? 
-            <div id="edit-btn-container" className="row col-12 mx-auto px-0">
-              <div className="col-12">
-                <input type="text" 
-                  className="ml-0 px-2 w-100"
-                  value={this.state.strategyName} 
-                  onChange={this.handleChange} 
-                  autoFocus={true} 
-                  onBlur={() => this.handleRenameClick(false)}
-                  onKeyDown={(e) => {
-                    if(e.key === 'Enter') {
-                      this.setState({editing: false})
-                    }
-                  }}
-                />
+            this.state.editing 
+            ? 
+              <div id="edit-btn-container" className="row col-12 mx-auto px-0">
+                <div className="col-12">
+                  <input type="text" 
+                    className="ml-0 px-2 w-100"
+                    value={this.state.strategyName} 
+                    onChange={this.handleChange} 
+                    autoFocus={true} 
+                    onBlur={() => this.handleRenameClick(false)}
+                    onKeyDown={(e) => {
+                      if(e.key === 'Enter') {
+                        this.setState({editing: false})
+                      }
+                    }}
+                  />
+                </div>
               </div>
-            </div>
             :
-            <div id="edit-btn-container" onMouseDown={e => e.preventDefault()} onClick={() => this.handleRenameClick(true)}>
-              <h2 className="strategy-editor-header ml-4 text-nowrap overflow-hidden" style={{marginTop:".4rem", maxWidth:"86%"}} >{this.state.strategyName}</h2>
-              <EditSVG id="edit-btn-icon" />
-            </div>
+              <div id="edit-btn-container" onMouseDown={e => e.preventDefault()} onClick={() => this.handleRenameClick(true)}>
+                <h2 className="strategy-editor-header ml-4 text-nowrap overflow-hidden" style={{marginTop:".4rem", maxWidth:"86%"}} >{this.state.strategyName}</h2>
+                <EditSVG id="edit-btn-icon" />
+              </div>
           }
         </div>
         <button disabled={this.state.strategyId === 69} id="save-btn-container" onMouseDown={e => e.preventDefault()} onClick={this.handleSaveClick} >

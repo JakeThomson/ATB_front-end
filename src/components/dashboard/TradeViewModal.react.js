@@ -17,11 +17,18 @@ class TradeModal extends Component {
     }
   }
 
+  /**
+   * On mount, grab information about the clicked trade from the open/closed trade arrays.
+   */
   componentDidMount() {
     let tradeType = "";
+
+    // Find trade in open trades array using the selected trade's strategyId.
     let selected = this.props.openTrades.find(obj => {
       return obj.tradeId === this.props.selectedTradeId;
     });
+
+    // If not found in open trades, search in closed trades.
     if(selected === undefined) {
       selected = this.props.closedTrades.find(obj => {
         return obj.tradeId === this.props.selectedTradeId;
@@ -31,16 +38,21 @@ class TradeModal extends Component {
       tradeType = "open";
     }
 
+    // Store a deep clone of the selected trade into state, so that the original cannot be altered by the interactive graph.
     selected = lodash.cloneDeep(selected);
-
     if(selected !== undefined) {
       this.setState({selected, tradeType});
     }
   }
 
+  /**
+   * Called every time there has been an update to the component.
+   */
   componentDidUpdate(prevProps) {
+    // Only run code if the selectedTradeId, openTrades array or closedTrades array has changed.
     if (prevProps.selectedTradeId !== this.props.selectedTradeId || prevProps.openTrades !== this.props.openTrades || prevProps.closedTrades !== this.props.closedTrades) {
       let tradeType = "";
+      // Get the updated trade from the open/closed trades table.
       let selected = this.props.openTrades.find(obj => {
         return obj.tradeId === this.props.selectedTradeId;
       });
@@ -52,7 +64,8 @@ class TradeModal extends Component {
       } else {
         tradeType = "open";
       }
-
+      
+      // Get the state of the selected trade in previous state.
       let prevSelected = prevProps.openTrades.find(obj => {
         return obj.tradeId === this.props.selectedTradeId;
       });
@@ -62,13 +75,14 @@ class TradeModal extends Component {
         });
       }
 
+      // If the selected trade is now no longer visible on the closedTrades list, then set flag to ensure the component does not update anymore.
       if(selected === undefined && prevSelected !== undefined) {
         const storedAxisRange = [prevSelected.figure.layout.xaxis.range, prevSelected.figure.layout.yaxis.range];
         this.setState({aged: true, storedAxisRange});
       }
 
+      // Store a deep clone of the selected trade into state, so that the original cannot be altered by the interactive graph.
       selected = lodash.cloneDeep(selected);
-
       if(selected !== undefined) {
         if(!this.state.tracking) {
           selected.figure.layout = this.state.selected.figure.layout;
@@ -78,6 +92,12 @@ class TradeModal extends Component {
     }
   }
 
+  /**
+   * Set the size of the interactive figure.
+   * @param {int} width 
+   * @param {int} height 
+   * @returns {Object} - A new layout object.
+   */
   resizeFigure = (width, height) => {
     let figureLayout = {...this.state.selected.figure.layout};
     figureLayout.width = width;
@@ -85,11 +105,16 @@ class TradeModal extends Component {
     return figureLayout;
   }
 
+  /**
+   * When user souble clicks on interactive graph, either zoom out to show entire dataset, or show default range
+   * (dependent on the current state of the graph)
+   */
   handleDoubleClick = () => {
     let selected =  lodash.cloneDeep(this.state.selected);
     const tracking = this.state.tracking;
 
     if(tracking) {
+      //If graph is at default view, then zoom out to show full dataset.
       if(!this.state.aged){
         const storedAxisRange = [selected.figure.layout.xaxis.range, selected.figure.layout.yaxis.range];
         this.setState({storedAxisRange});
@@ -100,6 +125,7 @@ class TradeModal extends Component {
       delete selected.figure.layout.yaxis.range;
       this.setState({selected, tracking: false});
     } else {
+      // If graph is not at default view, then set back to default view.
       selected.figure.layout.xaxis.autorange = false;
       selected.figure.layout.xaxis.range = lodash.cloneDeep(this.state.storedAxisRange[0]);
       selected.figure.layout.yaxis.autorange = false;
@@ -108,8 +134,13 @@ class TradeModal extends Component {
     }
   }
 
+  /**
+   * Custom function to handle the panning functionality of the to allow the double click functionality to still work.
+   * @param {Object} e - Event with information on new graph range data. 
+   */
   handleRelayout = (e) => {
     if(Object.keys(e).length > 0) {
+      // If event is a panning event.
       if(this.state.tracking) {
         let selected = this.props.openTrades.find(obj => {
           return obj.tradeId === this.props.selectedTradeId;

@@ -5,17 +5,17 @@ import '../../css/strategy-editor/selection-config.css';
 class NumberForm extends Component {
   render() {
     return (
-        <input 
-          form={this.props.method}
-          className="form-control" 
-          id={this.props.id}
-          type="number"
-          name={this.props.id} 
-          value={this.props.value} 
-          onChange={this.props.handleInputChange}
-          required 
-          autoComplete="off"
-        />
+      <input 
+        form={this.props.method}
+        className="form-control" 
+        id={this.props.id}
+        type="number"
+        name={this.props.id} 
+        value={this.props.value} 
+        onChange={this.props.handleInputChange}
+        required 
+        autoComplete="off"
+      />
     )
   }
 }
@@ -23,26 +23,33 @@ class NumberForm extends Component {
 class MultiSelect extends Component {
   render() {
     return (
-          <select form={this.props.method} className="form-control" id={this.props.id} name={this.props.id} value={this.props.value} onChange={this.props.handleInputChange}>
-              {this.props.options.map(option => <option value={option} key={this.props.id+"-"+option}>{option}</option>)}
-          </select>
+      <select 
+        form={this.props.method} 
+        className="form-control" 
+        id={this.props.id} 
+        name={this.props.id} 
+        value={this.props.value} 
+        onChange={this.props.handleInputChange}
+      >
+        {this.props.options.map(option => <option value={option} key={this.props.id+"-"+option}>{option}</option>)}
+      </select>
     )
   }
 }
 
 const UnrecognisedFormType = config => {
-    return (
-        <div>
-            Unrecognised form type
-        </div>
-    )
+  return (
+    <div>
+      Unrecognised form type
+    </div>
+  )
 }
 
 class ConfigFormItem extends Component {
         
   formItems = {
-      number: NumberForm,
-      multiSelect: MultiSelect
+    number: NumberForm,
+    multiSelect: MultiSelect
   };
 
   render() {
@@ -84,7 +91,13 @@ class SelectionConfig extends Component {
               (this.props.formConfigurations[this.props.selected]?.map(config => {
                 const value = this.getModuleConfigData(this.props.strategyData, config.id, this.props.selected)
                 return (
-                  <ConfigFormItem method={this.props.selected} config={config} value={value} key={config.id} handleInputChange={this.props.handleInputChange} />
+                  <ConfigFormItem 
+                    method={this.props.selected} 
+                    config={config} 
+                    value={value} 
+                    key={config.id} 
+                    handleInputChange={this.props.handleInputChange} 
+                  />
                 )
               }))
             :

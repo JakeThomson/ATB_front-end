@@ -7,7 +7,6 @@ import TotalProfit from '../components/dashboard/TotalProfit.react.js';
 import OpenTradeStats from '../components/dashboard/OpenTradeStats.react.js';
 import SuccessRate from '../components/dashboard/SuccessRate.react.js';
 import WorldFlow from '../components/dashboard/WorldFlow.react.js';
-// import News from '../components/dashboard/News.react.js';
 import TradeStats from '../components/dashboard/TradeStats.react.js';
 import Settings from '../components/dashboard/Settings.react.js';
 import TradeModal from '../components/dashboard/TradeViewModal.react';
@@ -56,6 +55,9 @@ class Dashboard extends Component {
     }
   }
 
+  /**
+   * On mount, set up socket listeners and get information on backtest form the database.
+   */
   componentDidMount() {
     this._isMounted = true;
 
@@ -124,10 +126,13 @@ class Dashboard extends Component {
     });
   }
 
+  /**
+   * Sets up socket listeners from the data access API, enables real-time updates on the backtest.
+   */
   setupSocketListeners() {
     if(this.props.socket !== undefined) {
 
-      // Listen for updates to the backtest date.
+      // Listen for updates to the backtest.
       this.props.socket.on('backtestUpdated', (data) => {
         const availableBalance = data.availableBalance,
               totalProfitLoss = data.totalProfitLoss,
@@ -157,7 +162,7 @@ class Dashboard extends Component {
         });
       });
 
-      // Listen for updates to the backtest date.
+      // Listen for updates to open/closed trades.
       this.props.socket.on('tradesUpdated', (data) => {
         // Grab all open and closed trades from database.
         fetch(`${this.state.server}/trades/${this.state.backtestId}`, {
@@ -174,7 +179,7 @@ class Dashboard extends Component {
         })
       });
 
-      // Listen for updates to the backtest date.
+      // Listen for updates to the backtest stats.
       this.props.socket.on('updateStats', (data) => {
         // Grab all open and closed trades from database.
         fetch(`${this.state.server}/trades/${this.state.backtestId}/stats?date=${this.state.startDate}`, {
@@ -193,6 +198,11 @@ class Dashboard extends Component {
     }
   }
 
+  /**
+   * Format percentage value to allow it to fit within the space of the div containing it.
+   * @param {*} number - The percentage value to be formatted.
+   * @returns {String} - The formatted percentage
+   */
   formatPct = (number) => {
     // Format percent to allow it to fit within the space of the div containing it.
     if(number === undefined) {
@@ -206,8 +216,10 @@ class Dashboard extends Component {
     return formattedPct
   }
 
+  /**
+   * Update the pause state in the backtest when playpause button is clicked.
+   */
   togglePlayPause = () => {
-    // Update the pause state in the backtest when playpause button is clicked.
     const currentlyIsPaused = this.state.isPaused
 
     this.setState({ isPaused: !currentlyIsPaused });
@@ -227,10 +239,18 @@ class Dashboard extends Component {
     .catch(err => console.error(err));
   }
 
+  /**
+   * When settings are successfully updated, store them in state.
+   * @param {Object} data 
+   */
   handleSettingsSaved = (data) => {
     this.setState({ settings: data });
   }
 
+  /**
+   * Store settings from database in state.
+   * @param {Object} data 
+   */
   handleGetSettings = (data) => {
     this.setState({
       settings: {
@@ -247,14 +267,21 @@ class Dashboard extends Component {
      });
   }
 
+  /**
+   * When component unmounts (changing page), then remove socket listeners.
+   */
   componentWillUnmount() {
     this._isMounted = false;
     this.props.socket.off("tradesUpdated");
     this.props.socket.off("updateStats");
   }
   
+  /**
+   * Sets the visible state of the modal.
+   * @param {bool} bool 
+   * @param {int} tradeId 
+   */
   setShowTradeModal = (bool, tradeId) => {
-    // Sets the visible state of the modal.
     this.setState({ showTradeModal: bool, tradeModalFocus: tradeId});
   }  
 
@@ -268,7 +295,6 @@ class Dashboard extends Component {
           <OpenTradeStats openTrades={this.state.openTrades} />
           <OpenTradeList openTrades={this.state.openTrades} handleShow={handleShowTradeModal}/>
           <ClosedTradeList closedTrades={this.state.closedTrades} handleShow={tradeId => handleShowTradeModal(tradeId)}/>
-          {/* <News /> */}
           <div id="trade-stats-container">
             <TradeStats backtestDate={this.state.backtestDate} stats={this.state.tradeStats} />
             <TotalProfit totalValue={this.state.totalBalance} totalProfitLoss={this.state.totalProfitLoss} totalPct={this.state.totalProfitLossPct} figure={this.state.totalProfitLossGraph} />

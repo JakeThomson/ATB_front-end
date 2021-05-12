@@ -7,11 +7,14 @@ import {ReactComponent as ProfitSVG} from '../../images/profitloss.svg';
 import { Link } from "react-router-dom";
 import moment from 'moment';
 
+/**
+ * Container for strategy object in list.
+ */
 class SelectionRow extends Component {
   constructor(props) {
     super(props);
 
-    moment.locale('en', {
+    moment.updateLocale('en', {
       relativeTime: {
         future: 'in %s',
         past: '%s ago',
@@ -33,22 +36,39 @@ class SelectionRow extends Component {
     this.checkValid = this.checkValid.bind(this);
   }
 
+  /**
+   * Updates the component every second (used for updating the 'time running' info).
+   */
   componentDidMount() {
     this.interval = setInterval(() => this.setState({ time: Date.now() }), 1000);
   }
+  /**
+   * Remove the update interval on unmount.
+   */
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
+  /**
+   * Display strategy info on click.
+   */
   handleStrategyClick = () => {
     this.props.handleStrategyClick(this.props.strategy);
   }
 
+  /**
+   * Remove the strategy from the list of strategies on delete.
+   * @param {Object} e - Object holding info on the strategy.
+   */
   handleDeleteClick = (e) => {
     e.stopPropagation();
     this.props.handleRemoveClick(this.props.strategy);
   }
   
+  /**
+   * Checks to see if the strategy contains any invalid modules, changes style of container if it does.
+   * @returns {bool}
+   */
   checkValid = () => {
     if(this.props.availableModules.length === 0) {
       return true;
@@ -66,7 +86,12 @@ class SelectionRow extends Component {
     const HEIGHT = 1;
     let context;
 
-    function initCanvas(gradientColors) // gradientColors [colorA, colorB, ..]
+    /**
+     * Changes colour of text based on percentage value using a 3 colour gradient.
+     * Solution obtained from https://stackoverflow.com/a/63234313.
+     * @param {String[]} gradientColors - Array of colours to use as a gradient.
+     */
+    function initCanvas(gradientColors)
     {
       // Canvas
       const canvasElement = document.createElement("CANVAS");
@@ -90,6 +115,12 @@ class SelectionRow extends Component {
       context.fillRect(0, 0, WIDTH, HEIGHT); // x, y, width, height
     }
 
+    /**
+     * Gets colour from gradient based on value.
+     * Solution obtained from https://stackoverflow.com/a/63234313.
+     * @param {int} percent - The percentage to be mapped to a colour.
+     * @returns {String} - rgba string.
+     */
     function getColor(percent) // percent [0..100]
     {
       if(percent === "N/A") {
@@ -101,49 +132,55 @@ class SelectionRow extends Component {
       return `rgb(${ rgba[0] }, ${ rgba[1] }, ${ rgba[2] })`;
     }
 
+    // Gradient of colours to move through based on values 0-100.
     initCanvas(['red', '#D11D1D', 'orange', 'green', '#14D717', 'lime']);
 
     return (
-        <div
-          onClick={this.handleStrategyClick}
-          id="selection-row" className={"row col-12 mx-auto" + (this.checkValid() ? "" :  " invalid") + (this.props.selected ? " selected" : "")}
-        >
-          <div className="saved-strategy-name-container container row mx-auto px-0 justify-content-around" style={{marginBottom: "3px"}}>
-            <h5 className="col-12 px-0 saved-strategy-name py-1">{this.props.strategy.strategyName}</h5>
-              { this.props.strategy.active === true 
-                ? 
+      <div
+        onClick={this.handleStrategyClick}
+        id="selection-row" className={"row col-12 mx-auto" + (this.checkValid() ? "" :  " invalid") + (this.props.selected ? " selected" : "")}
+      >
+        <div className="saved-strategy-name-container container row mx-auto px-0 justify-content-around" style={{marginBottom: "3px"}}>
+          <h5 className="col-12 px-0 saved-strategy-name py-1">{this.props.strategy.strategyName}</h5>
+            { this.props.strategy.active === true 
+              ? 
+                <div className="d-flex">
+                  <HistorySVG id="last-run-icon" className="my-auto mr-1"/>
+                  <p className="m-0" style={{fontSize: "10pt"}}>Running...</p>
+                </div> 
+              :
+                this.props.strategy.backtests[0] === undefined 
+                ?
+                  <div className="d-flex">
+                    <HistorySVG id="last-run-icon" className="my-auto mr-1" style={{opacity: "50%"}}/>
+                    <p className="m-0" style={{fontSize: "10pt"}}>No history</p>
+                  </div>
+                : 
                   <div className="d-flex">
                     <HistorySVG id="last-run-icon" className="my-auto mr-1"/>
-                    <p className="m-0" style={{fontSize: "10pt"}}>Running...</p>
-                  </div> 
-                :
-                  this.props.strategy.backtests[0] === undefined 
-                  ?
-                    <div className="d-flex">
-                      <HistorySVG id="last-run-icon" className="my-auto mr-1" style={{opacity: "50%"}}/>
-                      <p className="m-0" style={{fontSize: "10pt"}}>No history</p>
-                    </div>
-                  : 
-                    <div className="d-flex">
-                      <HistorySVG id="last-run-icon" className="my-auto mr-1"/>
-                      <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.backtests[0].datetimeFinished.fromNow()}</p>
-                    </div>
-              }
-              <div className="d-flex">
-                  <SuccessSVG id="avg-success-icon" className="my-auto mr-1" style={{fill: getColor(this.props.strategy.avgSuccess)}}/>
-                  <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.avgSuccess === "N/A" ? this.props.strategy.avgSuccess : Math.round(this.props.strategy.avgSuccess*10)/10 + "%"}</p>
-              </div>
-              <div className="d-flex">
-                  <ProfitSVG id="avg-success-icon" className="my-auto mr-1" style={{fill: this.props.strategy.avgReturns < 0 ? "rgb(211, 63, 73)" : "green", opacity: this.props.strategy.avgReturns === "N/A" ? "40%" : "100%" }}/>
-                  <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.avgSuccess === "N/A" ? this.props.strategy.avgSuccess : Math.round(this.props.strategy.avgReturns*10)/10 + "%"}</p>
-              </div>
-          </div>
+                    <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.backtests[0].datetimeFinished.fromNow()}</p>
+                  </div>
+            }
+            <div className="d-flex">
+                <SuccessSVG id="avg-success-icon" className="my-auto mr-1" style={{fill: getColor(this.props.strategy.avgSuccess)}}/>
+                <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.avgSuccess === "N/A" ? this.props.strategy.avgSuccess : Math.round(this.props.strategy.avgSuccess*10)/10 + "%"}</p>
+            </div>
+            <div className="d-flex">
+                <ProfitSVG id="avg-success-icon" className="my-auto mr-1" style={{fill: this.props.strategy.avgReturns < 0 ? "rgb(211, 63, 73)" : "green", opacity: this.props.strategy.avgReturns === "N/A" ? "40%" : "100%" }}/>
+                <p className="m-0" style={{fontSize: "10pt"}}>{this.props.strategy.avgSuccess === "N/A" ? this.props.strategy.avgSuccess : Math.round(this.props.strategy.avgReturns*10)/10 + "%"}</p>
+            </div>
         </div>
+      </div>
     )
   }
 }
 
 export default class SavedStrategies extends Component {
+
+  /**
+   * When a strategy in the list is clicked, then bring up its information.
+   * @param {Object} method - Data on the strategy clicked on.
+   */
   handleStrategyClick = (method) => {
     if(this.props.selected !== method) {
       this.props.handleSelected(method);
@@ -152,21 +189,29 @@ export default class SavedStrategies extends Component {
     }
   }
 
+  /**
+   * When a new strategy is created, generate a new strategy name in the format 'New Strategy n', where n is 1 higher than the last strategy name following this format.
+   * @returns {String} - Unique strategy name.
+   */
   generateNewStrategyName = () => {
     let num = undefined;
+    // Use a regex to find other strategies in list with names that follow the 'New Strategy n' format.
     let re = /^New\sStrategy\s?(\d*)/;
     if(this.props.savedStrategyData !== undefined){
       for(let i=0; i<this.props.savedStrategyData.length; i++) {
         let match = re.exec(this.props.savedStrategyData[i].strategyName);
         if(match !== null) {
           if(match[1] === "" && num === undefined) {
+            // If match but it doesn't have a number, then n needs to be 1.
             num = 1;
           } else if(parseInt(match[1]) === num) {
+            // If match, set n 1 higher than the highest in list.
             num = parseInt(match[1]) + 1;
           }
         }
       }
     }
+    // Return the unique new strategy name.
     return "New Strategy" + (num === undefined ? "" : " " + num);
   }
 
@@ -180,10 +225,13 @@ export default class SavedStrategies extends Component {
         </Link>
         <div id="selection-row-container">
           {
-            this.props.savedStrategyData === undefined ? null :
-            this.props.savedStrategyData.length === 0 ?
-            <div className="row col-12 mx-auto h-100 "><div className="m-auto" style={{position: "relative", bottom: "15px", fontSize: "13pt", fontWeight: "500", color:"#c2c2c2"}}>No saved strategies!</div></div>
-            : this.props.savedStrategyData.map((strategy, i) => <SelectionRow selected={strategy.strategyId === this.props.selected?.strategyId} availableModules={this.props.availableModules} strategy={strategy} handleStrategyClick={this.handleStrategyClick} key={i}/>)
+            this.props.savedStrategyData === undefined ? null 
+            :
+              this.props.savedStrategyData.length === 0 
+              ?
+                <div className="row col-12 mx-auto h-100 "><div className="m-auto" style={{position: "relative", bottom: "15px", fontSize: "13pt", fontWeight: "500", color:"#c2c2c2"}}>No saved strategies!</div></div>
+              : 
+                this.props.savedStrategyData.map((strategy, i) => <SelectionRow selected={strategy.strategyId === this.props.selected?.strategyId} availableModules={this.props.availableModules} strategy={strategy} handleStrategyClick={this.handleStrategyClick} key={i}/>)
           }
         </div>
       </div>

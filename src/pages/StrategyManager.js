@@ -24,6 +24,9 @@ class StrategyManager extends Component {
     }
   }
 
+  /**
+   * When component mounts, set up socket listeners and get list of strategies from database.
+   */
   componentDidMount() {
     
     this.setupSocketListeners();
@@ -39,6 +42,7 @@ class StrategyManager extends Component {
     .then(data => {
       let selected = undefined;
 
+      // If visiting page from strategyEditor view, then automatically focus on the last edited strategy.
       if(this.props.location.state !== undefined) {
         const { strategyId } = this.props.location.state;
         selected = data.find(strategy => {return strategy.strategyId === strategyId});
@@ -72,6 +76,9 @@ class StrategyManager extends Component {
     });
   }
 
+  /**
+   * Sets up socket listeners from the data access API, enables real-time updates on the backtest.
+   */
   setupSocketListeners() {
     if(this.props.socket !== undefined) {
 
@@ -103,12 +110,20 @@ class StrategyManager extends Component {
     }
   }
 
+  /**
+   * When strategy is clicked, set it as the focus.
+   * @param {Object} selected 
+   */
   handleSelected = (selected) => {
     this.setState({
       selected,
     });
   }
 
+  /**
+   * When start/restart backtest button is clicked, then start a new backtest in the backtesting platform and redirect to the dashboard view.
+   * @param {int} strategyId - ID of the strategy to start.
+   */
   onStartBacktestClick = (strategyId) => {
     // When restart button is clicked, emit restart socket event.
     fetch(this.state.server + "/backtest_settings/strategy", {
@@ -128,8 +143,11 @@ class StrategyManager extends Component {
     });
   }
 
+  /**
+   * When delete button is clicked, remove the strategy from the database and strategy list.
+   * @param {int} strategyId - ID of the strategy to delete.
+   */
   onDeleteBacktestClick = (strategyId) => {
-
     // When restart button is clicked, emit restart socket event.
     fetch(this.state.server + "/strategies/" + strategyId, {
       method: 'DELETE',

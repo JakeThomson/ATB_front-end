@@ -9,6 +9,10 @@ class SelectionRow extends Component {
     this.props.handleModuleClick(this.props.method);
   }
 
+  /**
+   * Remove the analysis module from the strategy on delete click. 
+   * @param {Object} e - OnClick event object with data on module clicked.
+   */
   handleRemoveClick = (e) => {
     e.stopPropagation();
     this.props.handleRemoveClick(this.props.method);

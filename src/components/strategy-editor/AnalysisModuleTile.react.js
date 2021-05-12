@@ -10,6 +10,9 @@ class AnalysisModuleTile extends Component {
     }
   }
 
+  /**
+   * Add the module to the strategy on tile click.
+   */
   handleClick = () => {
     if(!this.state.disabled) {
       this.props.handleClick(this.props.method);

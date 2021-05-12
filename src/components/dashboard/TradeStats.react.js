@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import '../../css/dashboard/trade-stats.css';
 
+/**
+ * Container to hold statistic.
+ */
 export const Statistic = ({label, data}) => (
   <div id="stats-box" className="text-center" style={{maxWidth: "60px"}}>
     <p style={{minHeight: "23px", fontWeight: "600", fontSize: "16px", margin: 0}}>{data}</p>
@@ -9,16 +12,12 @@ export const Statistic = ({label, data}) => (
 )
 
 class TradeStats extends Component {
-  state = {
-    focus: "monthly"
-  }
 
-  handleClick = (focus) => {
-    this.setState({
-      focus
-    });
-  }
-
+  /**
+  * Format percentage value to allow it to fit within the space of the div containing it.
+  * @param {*} number - The percentage value to be formatted.
+  * @returns {String} - The formatted percentage.
+  */
   formatPct = (number) => {
     // Format percent to allow it to fit within the space of the div containing it.
     if(number === undefined || number === null) {
@@ -26,7 +25,6 @@ class TradeStats extends Component {
     }
 
     const decimalPts = Math.abs(number) >= 10 ? 1 : 2 
-
     const formattedPct = number.toFixed(decimalPts).toString()+"%";
     return formattedPct
   }

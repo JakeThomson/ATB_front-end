@@ -11,17 +11,22 @@ class AddModule extends Component {
       show: false,
     }
   }
-
+  
+  /**
+   * Changes the visibility of the add module modal.
+   * @param {bool} bool - True to set visible, False to set hidden. 
+   */
   setShow = bool => {
-    // Sets the visible state of the modal.
     this.setState({ show: bool});
   }
 
+  // Handle click on hide modal buttons.
   handleClick = (method) => {
     this.setState({ show: false })
     this.props.handleClick(method)
   }
 
+  // Disable module choice if it already in the strategy. 
   isSelected = (method) => {
     if(this.props.selectedModules.includes(method)){
       return true;
@@ -51,7 +56,6 @@ class AddModule extends Component {
               {this.props.options.map((method, index) => 
                 <AnalysisModuleTile method={method} disabled={(method) => this.isSelected(method)} handleClick={this.handleClick} key={method}/>
               )}
-            
             </div>
           </Modal.Body>
         </Modal>

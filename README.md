@@ -1,6 +1,6 @@
 # Algorithmic Trading Backtesting System - User Interface
 
-This application is the frontend code that runs the backtesting platform within the Algorithmic Trading Backtesting System. The other components of the system can be found here:
+This application is the frontend code that runs the user interface within the Algorithmic Trading Backtesting System. The other components of the system can be found here:
 - [Backtesting Platform](https://github.com/JakeThomson/ATB_back-end)
 - [Data Access API](https://github.com/JakeThomson/ATB_data-access-api)
 
